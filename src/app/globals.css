@@ -1,0 +1,165 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   Design tokens — CoreTech
+   Palette neutre claire + accent corail, typo Inter Tight + DM Mono
+   ============================================================ */
+@layer base {
+  :root {
+    /* Palette CoreTech */
+    --color-bg: #f9f9fa;
+    --color-surface: #141416;
+    --color-text: #101012;
+    --color-muted: #6e6e75;
+    --color-faint: #9c9ca3;
+    --color-border: #e3e3e7;
+    --color-border-soft: #ececef;
+    --color-card: #ffffff;
+    --color-elev: #f3f3f5;
+    --color-accent: #e2402a;
+    --color-accent-soft: #b8331f;
+
+    /* Tokens globaux */
+    --radius: 16px;
+    --radius-pill: 999px;
+    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.06);
+    --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.06);
+    --shadow-lg: 0 18px 40px rgba(15, 23, 42, 0.10);
+  }
+
+  html { color-scheme: light; }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body), 'DM Mono', ui-monospace, monospace;
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display), 'Inter Tight', system-ui, sans-serif;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+  }
+  h1 { letter-spacing: -0.035em; }
+
+  *:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--color-accent) 35%, var(--color-bg));
+    color: var(--color-text);
+  }
+
+  /* Liens underline-slide façon CoreTech */
+  a { color: inherit; transition: opacity .2s ease, color .2s ease; }
+  a:hover { opacity: .75; }
+}
+
+@layer components {
+  /* Cartes — CoreTech : surface claire, bordure fine, radius --radius */
+  .card {
+    @apply bg-white border border-border rounded-2xl;
+    box-shadow: var(--shadow-sm);
+  }
+  .card-hover {
+    @apply transition-all duration-300 hover:-translate-y-0.5;
+  }
+  .card-hover:hover { box-shadow: var(--shadow-md); }
+
+  /* Boutons — pill, aplats, typo mono small-caps */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full font-medium
+           transition-all duration-200 px-5 py-2.5 text-[13px] tracking-[0.02em]
+           disabled:opacity-50 disabled:cursor-not-allowed select-none;
+    font-family: var(--font-body), 'DM Mono', ui-monospace, monospace;
+  }
+  .btn-primary {
+    @apply btn bg-text text-bg border border-text hover:opacity-85;
+  }
+  .btn-ghost {
+    @apply btn bg-white text-text border border-border hover:border-text;
+  }
+  .btn-outline {
+    @apply btn bg-transparent text-text border border-border hover:bg-bg-elev;
+  }
+
+  /* Badges — pill, typo mono */
+  .badge {
+    @apply inline-flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full
+           border border-border text-muted bg-white;
+    font-family: var(--font-body), 'DM Mono', ui-monospace, monospace;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .badge-accent {
+    @apply badge text-accent border-accent/25 bg-accent/5;
+  }
+  .badge-success {
+    @apply badge text-success border-success/25 bg-success/5;
+  }
+  .badge-warning {
+    @apply badge text-warning border-warning/25 bg-warning/5;
+  }
+  .badge-danger {
+    @apply badge text-danger border-danger/25 bg-danger/5;
+  }
+
+  /* Form — CoreTech input (border focus accent) */
+  .input {
+    @apply w-full bg-white border border-border rounded-2xl px-4 py-2.5
+           text-sm text-text placeholder:text-faint
+           focus:border-accent focus:outline-none transition-colors;
+    font-family: var(--font-body), 'DM Mono', ui-monospace, monospace;
+  }
+  .label {
+    @apply block text-xs font-medium text-muted mb-1;
+  }
+
+  /* Sections / titres courts */
+  .section-title {
+    @apply font-display text-xl text-text tracking-tight;
+  }
+  .stat-card {
+    @apply card p-4 flex flex-col gap-1;
+  }
+
+  /* Séparateur discret */
+  .hair-rule { @apply h-px w-full bg-border; }
+
+  /* Card highlight (surface sombre, comme .m-card-highlight CoreTech) */
+  .card-highlight {
+    background: var(--color-surface);
+    color: var(--color-bg);
+    border: 1px solid var(--color-surface);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-lg);
+  }
+  .card-highlight .badge { color: var(--color-bg); opacity: .7; background: transparent; }
+}
+
+/* Helpers utilitaires — composants CoreTech-like */
+@layer utilities {
+  .surface-soft { background-color: var(--color-surface); }
+  .text-mono    { font-family: var(--font-body), 'DM Mono', monospace; }
+  .text-display { font-family: var(--font-display), 'Inter Tight', system-ui, sans-serif; }
+
+  /* Anim légère de l'XP / progress */
+  .progress-bar {
+    @apply h-2 rounded-full bg-bg-elev overflow-hidden;
+  }
+  .progress-bar > .progress-fill {
+    @apply h-full bg-accent transition-all duration-500 ease-smooth;
+  }
+}

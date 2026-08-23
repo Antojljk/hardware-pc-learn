@@ -1,0 +1,267 @@
+// HardwarePC - schema Prisma (SQLite pour dev local, compatible PostgreSQL en prod)
+// Pour passer en Postgres : changer provider en "postgresql" et DATABASE_URL.
+
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================
+// UTILISATEURS & SESSIONS
+// ============================================================
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  username     String   @unique
+  passwordHash String
+  isGuest      Boolean  @default(false)
+  xp           Int      @default(0)
+  streak       Int      @default(0)
+  lastActiveAt DateTime?
+  createdAt    DateTime @default(now())
+
+  progress            LessonProgress[]
+  quizAttempts        QuizAttempt[]
+  examAttempts        ExamAttempt[]
+  interviewAttempts   InterviewAttempt[]
+  diagnosticAttempts  DiagnosticAttempt[]
+  configBuilds        ConfigBuild[]
+  reviewCards         ReviewCard[]
+  badgesUnlocked      BadgesOnUsers[]
+  reviews             Review[]
+  sessions            Session[]
+}
+
+model Session {
+  token     String   @id
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ============================================================
+// COURS & PARCOURS
+// ============================================================
+model Track {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  level       String
+  description String
+  order       Int
+  lessons     Lesson[]
+}
+
+model Lesson {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  trackId       String
+  title         String
+  level         String
+  durationMin   Int
+  order         Int
+  objective     String
+  simple        String
+  technical     String
+  examples      String
+  mistakes      String
+  keyTakeaways  String
+  diagram       String?
+  track         Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  progress      LessonProgress[]
+}
+
+model LessonProgress {
+  id        String   @id @default(cuid())
+  userId    String
+  lessonId  String
+  completed Boolean  @default(false)
+  score     Int      @default(0)
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  @@unique([userId, lessonId])
+}
+
+// ============================================================
+// QUIZ
+// ============================================================
+model QuizQuestion {
+  id          String   @id @default(cuid())
+  category    String
+  difficulty  String
+  type        String   // mcq | truefalse | short | scenario
+  prompt      String
+  choices     String   // JSON array
+  answer      String
+  explanation String
+  xpReward    Int      @default(10)
+}
+
+model QuizAttempt {
+  id        String   @id @default(cuid())
+  userId    String
+  mode      String   // free | adaptive
+  category  String?
+  score     Int
+  total     Int
+  details   String   // JSON: [{questionId, correct, chosen}]
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ============================================================
+// EXAMENS
+// ============================================================
+model Exam {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  level       String
+  durationSec Int
+  questionIds String   // JSON array
+}
+
+model ExamAttempt {
+  id           String   @id @default(cuid())
+  userId       String
+  examId       String
+  score        Int
+  total        Int
+  timeSpentSec Int
+  details      String   // JSON
+  createdAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ============================================================
+// ENTRETIENS
+// ============================================================
+model InterviewAttempt {
+  id         String   @id @default(cuid())
+  userId     String
+  role       String   // monteur | technicien | support | vendeur | stage
+  level      String   // debutant | intermediaire | avance | expert
+  score      Int
+  feedback   String   // JSON: {strengths, improvements, idealAnswers}
+  transcript String   // JSON: [{question, answer, evaluation}]
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ============================================================
+// DIAGNOSTICS
+// ============================================================
+model DiagnosticScenario {
+  id         String   @id @default(cuid())
+  slug       String   @unique
+  title      String
+  symptoms   String   // JSON array
+  steps      String   // JSON object
+  category   String
+  difficulty String
+}
+
+model DiagnosticAttempt {
+  id          String   @id @default(cuid())
+  userId      String
+  scenarioId  String
+  stepsChosen String   // JSON array
+  score       Int
+  evaluation  String   // JSON
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ============================================================
+// CONSTRUCTEUR PC
+// ============================================================
+model Component {
+  id       String  @id @default(cuid())
+  type     String  // cpu | gpu | ram | motherboard | ssd | psu | case | cooler
+  brand    String
+  model    String
+  price    Int
+  specs    String  // JSON
+  category String? // for ram: ddr4/ddr5, for motherboard: am4/am5/lga1700...
+}
+
+model ConfigBuild {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  components  String   // JSON object {cpu, gpu, ram, ...}
+  constraints String?  // JSON
+  score       Int?
+  feedback    String?
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ============================================================
+// GLOSSAIRE
+// ============================================================
+model GlossaryTerm {
+  id         String  @id @default(cuid())
+  slug       String  @unique
+  term       String
+  simple     String
+  technical  String
+  example    String?
+  level      String  // debutant | intermediaire | avance | expert
+  categories String  // comma-separated
+}
+
+// ============================================================
+// REVISIONS ESPACEES
+// ============================================================
+model ReviewCard {
+  id       String   @id @default(cuid())
+  userId   String
+  termSlug String
+  ease     Float    @default(2.5)
+  interval Int      @default(1)
+  dueAt    DateTime @default(now())
+  reps     Int      @default(0)
+  lapses   Int      @default(0)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([userId, termSlug])
+}
+
+// ============================================================
+// BADGES
+// ============================================================
+model Badge {
+  id          String  @id @default(cuid())
+  slug        String  @unique
+  name        String
+  description String
+  icon        String
+  unlockedBy  BadgesOnUsers[]
+}
+
+model BadgesOnUsers {
+  userId     String
+  badgeId    String
+  unlockedAt DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge      Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  @@id([userId, badgeId])
+}
+
+// ============================================================
+// AVIS
+// ============================================================
+model Review {
+  id        String   @id @default(cuid())
+  userId    String
+  rating    Int
+  message   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([createdAt])
+}
