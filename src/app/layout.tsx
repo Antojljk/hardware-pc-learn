@@ -5,6 +5,7 @@ import { Sidebar } from '@/components/shell/Sidebar';
 import { TopBar } from '@/components/shell/TopBar';
 import { MobileNav } from '@/components/shell/MobileNav';
 import { SessionProvider } from '@/components/shell/SessionProvider';
+import { getCurrentUser } from '@/lib/auth';
 
 // Polices alignées sur la référence CoreTech : Inter Tight (display) + DM Mono (body)
 const display = Inter_Tight({
@@ -26,11 +27,12 @@ export const metadata: Metadata = {
     "Plateforme d'apprentissage interactive du hardware informatique : cours, quiz, examens, entretiens blancs, diagnostics PC et constructeur de configuration.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const user = await getCurrentUser();
   return (
     <html lang="fr" className={`${display.variable} ${body.variable}`}>
       <body>
-        <SessionProvider>
+        <SessionProvider username={user?.username ?? null}>
           <div className="min-h-screen flex bg-bg text-text">
             <Sidebar />
             <div className="flex-1 flex flex-col min-w-0 lg:ml-72">
