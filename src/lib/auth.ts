@@ -40,6 +40,7 @@ export async function createSession(userId: string) {
     .sign(SECRET);
   cookies().set(COOKIE, token, {
     httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
     maxAge: TTL_DAYS * 86400,
