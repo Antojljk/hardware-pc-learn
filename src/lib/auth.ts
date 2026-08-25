@@ -3,11 +3,27 @@ import { cookies } from 'next/headers';
 import bcrypt from 'bcryptjs';
 import { prisma } from './prisma';
 
-const SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'dev-secret-hardware-pc-learn-please-change-in-prod-9k2'
-);
 const COOKIE = 'hwl_session';
 const TTL_DAYS = 30;
+const MIN_SECRET_LENGTH = 32;
+const DEV_FALLBACK_SECRET = 'dev-secret-hardware-pc-learn-please-change-in-prod-9k2';
+
+function resolveJwtSecret(): Uint8Array {
+  const secret = process.env.JWT_SECRET;
+  const isProd = process.env.NODE_ENV === 'production';
+
+  if (!secret || secret.length < MIN_SECRET_LENGTH) {
+    if (isProd) {
+      throw new Error(
+        `JWT_SECRET manquant ou trop court (${MIN_SECRET_LENGTH} caractères minimum requis en production).`
+      );
+    }
+    return new TextEncoder().encode(DEV_FALLBACK_SECRET);
+  }
+  return new TextEncoder().encode(secret);
+}
+
+const SECRET = resolveJwtSecret();
 
 export async function hashPassword(password: string) {
   return bcrypt.hash(password, 10);
