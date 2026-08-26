@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://hardware-pc-learn-3zmsiaq0x-antoine-drutel.vercel.app/sitemap.xml

@@ -5,11 +5,12 @@ import { cn } from '@/lib/utils';
 import {
   LayoutDashboard, BookOpen, Compass, Brain, FileCheck2, MessageSquareQuote,
   Stethoscope, PcCase, Library, BarChart3, TrendingUp, User, Settings, Wrench,
-  Activity, Sparkles, Hammer, ShieldCheck, Bot, Star,
+  Activity, Sparkles, Hammer, ShieldCheck, Bot, Star, ShoppingBag,
 } from 'lucide-react';
 
 const ITEMS = [
-  { href: '/',            label: 'Dashboard',        icon: LayoutDashboard },
+  { href: '/vente',       label: 'Vente',            icon: ShoppingBag },
+  { href: '/dashboard',   label: 'Dashboard',        icon: LayoutDashboard },
   { href: '/cours',       label: 'Cours',            icon: BookOpen },
   { href: '/parcours',    label: 'Parcours',         icon: Compass },
   { href: '/quiz',        label: 'Quiz',             icon: Brain },
@@ -35,19 +36,19 @@ const ITEMS = [
 export function Sidebar() {
   const path = usePathname();
   return (
-    <aside className="hidden lg:flex fixed inset-y-0 left-0 w-72 flex-col border-r border-border bg-white">
-      <div className="px-6 h-20 flex items-center gap-3 border-b border-border">
-        <div className="w-10 h-10 rounded-2xl bg-text grid place-items-center text-bg">
+    <aside className="hidden lg:flex fixed inset-y-0 left-0 w-72 flex-col border-r border-border bg-bg-soft">
+      <Link href="/" className="px-6 h-20 flex items-center gap-3 border-b border-border">
+        <div className="w-10 h-10 rounded-2xl bg-accent grid place-items-center text-[#001818]">
           <PcCase className="w-5 h-5" />
         </div>
         <div className="leading-tight">
-          <div className="font-display font-semibold tracking-tight text-[15px]">HardwarePC</div>
-          <div className="text-[10px] text-muted uppercase tracking-[0.12em] text-mono">Apprends · Progresse</div>
+          <div className="font-display font-semibold tracking-tight text-[15px] text-text">HardwarePC</div>
+          <div className="text-[10px] text-muted uppercase tracking-[0.12em]">Apprends · Progresse</div>
         </div>
-      </div>
+      </Link>
       <nav className="flex-1 overflow-y-auto p-3 space-y-0.5">
         {ITEMS.map(item => {
-          const active = item.href === '/' ? path === '/' : path.startsWith(item.href);
+          const active = item.href === '/dashboard' ? path === '/dashboard' : path.startsWith(item.href);
           return (
             <Link
               key={item.href}
@@ -60,12 +61,12 @@ export function Sidebar() {
               )}
             >
               <item.icon className={cn('w-4 h-4', active ? 'text-bg' : 'text-muted')} />
-              <span className="text-mono">{item.label}</span>
+              <span>{item.label}</span>
             </Link>
           );
         })}
       </nav>
-      <div className="p-4 text-[10px] text-faint uppercase tracking-[0.14em] border-t border-border text-mono">
+      <div className="p-4 text-[10px] text-faint uppercase tracking-[0.14em] border-t border-border">
         v1.0 · 100% local
       </div>
     </aside>

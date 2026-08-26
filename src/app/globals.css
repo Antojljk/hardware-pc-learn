@@ -3,38 +3,42 @@
 @tailwind utilities;
 
 /* ============================================================
-   Design tokens — CoreTech
-   Palette neutre claire + accent corail, typo Inter Tight + DM Mono
+   Design tokens — HardwarePC
+   Palette dark + accent teal #2dd4d4, typo Inter
+   Reproduit le design de "accueil hardware pc".
    ============================================================ */
 @layer base {
   :root {
-    /* Palette CoreTech */
-    --color-bg: #f9f9fa;
-    --color-surface: #141416;
-    --color-text: #101012;
-    --color-muted: #6e6e75;
-    --color-faint: #9c9ca3;
-    --color-border: #e3e3e7;
-    --color-border-soft: #ececef;
-    --color-card: #ffffff;
-    --color-elev: #f3f3f5;
-    --color-accent: #e2402a;
-    --color-accent-soft: #b8331f;
+    /* Palette HardwarePC (référence AccueilHardwarePC) */
+    --color-bg: #000000;
+    --color-bg-soft: #0f1414;
+    --color-surface: #0f1414;
+    --color-text: #ffffff;
+    --color-muted: #9ca3af;
+    --color-faint: #6b7575;
+    --color-border: #1f2a2a;
+    --color-border-soft: #162222;
+    --color-card: #0f1414;
+    --color-elev: #162020;
+    --color-accent: #2dd4d4;
+    --color-accent-soft: #26b6b6;
+    --color-btn-bg: #2dd4d4;
+    --color-btn-text: #001818;
 
     /* Tokens globaux */
     --radius: 16px;
     --radius-pill: 999px;
-    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.06);
-    --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.06);
-    --shadow-lg: 0 18px 40px rgba(15, 23, 42, 0.10);
+    --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 10px 24px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 24px 50px rgba(0, 0, 0, 0.5);
   }
 
-  html { color-scheme: light; }
+  html { color-scheme: dark; }
 
   body {
     background-color: var(--color-bg);
     color: var(--color-text);
-    font-family: var(--font-body), 'DM Mono', ui-monospace, monospace;
+    font-family: var(--font-body), 'Inter', system-ui, -apple-system, sans-serif;
     font-size: 15px;
     line-height: 1.55;
     -webkit-font-smoothing: antialiased;
@@ -43,7 +47,7 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-display), 'Inter Tight', system-ui, sans-serif;
+    font-family: var(--font-display), 'Inter', system-ui, -apple-system, sans-serif;
     font-weight: 600;
     line-height: 1.1;
     letter-spacing: -0.02em;
@@ -57,70 +61,78 @@
     border-radius: 6px;
   }
   ::selection {
-    background: color-mix(in srgb, var(--color-accent) 35%, var(--color-bg));
-    color: var(--color-text);
+    background: var(--color-accent);
+    color: var(--color-btn-text);
   }
 
-  /* Liens underline-slide façon CoreTech */
+  /* Liens — cohérence avec le design de référence */
   a { color: inherit; transition: opacity .2s ease, color .2s ease; }
-  a:hover { opacity: .75; }
+  a:hover { opacity: .85; }
 }
 
 @layer components {
-  /* Cartes — CoreTech : surface claire, bordure fine, radius --radius */
+  /* Cartes — HardwarePC : surface sombre, bordure fine, radius --radius */
   .card {
-    @apply bg-white border border-border rounded-2xl;
+    @apply bg-bg-soft border border-border rounded-2xl;
     box-shadow: var(--shadow-sm);
   }
   .card-hover {
     @apply transition-all duration-300 hover:-translate-y-0.5;
   }
-  .card-hover:hover { box-shadow: var(--shadow-md); }
+  .card-hover:hover { box-shadow: var(--shadow-md); border-color: color-mix(in srgb, var(--color-accent) 40%, var(--color-border)); }
 
-  /* Boutons — pill, aplats, typo mono small-caps */
+  /* Boutons — pill, alignés sur l'AccueilHardwarePC (m-btn / m-btn-outline) */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full font-medium
-           transition-all duration-200 px-5 py-2.5 text-[13px] tracking-[0.02em]
-           disabled:opacity-50 disabled:cursor-not-allowed select-none;
-    font-family: var(--font-body), 'DM Mono', ui-monospace, monospace;
+    @apply inline-flex items-center justify-center gap-2 rounded-full font-semibold
+           transition-all duration-200 px-5 py-2.5 text-[14px]
+           disabled:opacity-50 disabled:cursor-not-allowed select-none whitespace-nowrap;
   }
   .btn-primary {
-    @apply btn bg-text text-bg border border-text hover:opacity-85;
+    @apply btn bg-accent text-[#001818] border border-accent;
   }
+  .btn-primary:hover { filter: brightness(1.1); opacity: 1; }
   .btn-ghost {
-    @apply btn bg-white text-text border border-border hover:border-text;
+    @apply btn bg-bg-soft text-text border border-border;
   }
+  .btn-ghost:hover { background: var(--color-border); opacity: 1; }
   .btn-outline {
-    @apply btn bg-transparent text-text border border-border hover:bg-bg-elev;
+    @apply btn bg-transparent text-text border border-border;
   }
+  .btn-outline:hover { background: var(--color-bg-soft); border-color: var(--color-accent); opacity: 1; }
+  .btn-on-surface {
+    @apply btn bg-text text-bg border border-text;
+  }
+  .btn-on-surface:hover { filter: brightness(0.92); opacity: 1; }
 
-  /* Badges — pill, typo mono */
+  /* Badges — pill, accent teal */
   .badge {
     @apply inline-flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full
-           border border-border text-muted bg-white;
-    font-family: var(--font-body), 'DM Mono', ui-monospace, monospace;
+           border border-border text-muted bg-bg-soft;
     letter-spacing: 0.06em;
     text-transform: uppercase;
   }
   .badge-accent {
-    @apply badge text-accent border-accent/25 bg-accent/5;
+    @apply badge text-accent border-accent/30;
+    background: color-mix(in srgb, var(--color-accent) 15%, transparent);
   }
   .badge-success {
-    @apply badge text-success border-success/25 bg-success/5;
+    @apply badge text-success border-success/30;
+    background: color-mix(in srgb, var(--color-success, #3ecf8e) 12%, transparent);
   }
   .badge-warning {
-    @apply badge text-warning border-warning/25 bg-warning/5;
+    @apply badge text-warning border-warning/30;
+    background: color-mix(in srgb, var(--color-warning, #f5a524) 12%, transparent);
   }
   .badge-danger {
-    @apply badge text-danger border-danger/25 bg-danger/5;
+    @apply badge text-danger border-danger/30;
+    background: color-mix(in srgb, var(--color-danger, #ef4444) 12%, transparent);
   }
 
-  /* Form — CoreTech input (border focus accent) */
+  /* Form — HardwarePC input */
   .input {
-    @apply w-full bg-white border border-border rounded-2xl px-4 py-2.5
+    @apply w-full bg-bg-soft border border-border rounded-2xl px-4 py-2.5
            text-sm text-text placeholder:text-faint
            focus:border-accent focus:outline-none transition-colors;
-    font-family: var(--font-body), 'DM Mono', ui-monospace, monospace;
   }
   .label {
     @apply block text-xs font-medium text-muted mb-1;
@@ -137,29 +149,57 @@
   /* Séparateur discret */
   .hair-rule { @apply h-px w-full bg-border; }
 
-  /* Card highlight (surface sombre, comme .m-card-highlight CoreTech) */
+  /* Card highlight (sombre, façon AccueilHardwarePC) */
   .card-highlight {
-    background: var(--color-surface);
-    color: var(--color-bg);
-    border: 1px solid var(--color-surface);
+    background: linear-gradient(135deg,
+      color-mix(in srgb, var(--color-accent) 18%, var(--color-surface)),
+      var(--color-surface));
+    color: var(--color-text);
+    border: 1px solid color-mix(in srgb, var(--color-accent) 30%, var(--color-border));
     border-radius: var(--radius);
-    padding: 1.5rem;
+    padding: 2rem;
     box-shadow: var(--shadow-lg);
   }
-  .card-highlight .badge { color: var(--color-bg); opacity: .7; background: transparent; }
+  .card-highlight .badge { color: var(--color-text); opacity: .7; background: transparent; }
 }
 
-/* Helpers utilitaires — composants CoreTech-like */
+/* Helpers utilitaires */
 @layer utilities {
   .surface-soft { background-color: var(--color-surface); }
-  .text-mono    { font-family: var(--font-body), 'DM Mono', monospace; }
-  .text-display { font-family: var(--font-display), 'Inter Tight', system-ui, sans-serif; }
+  .text-display { font-family: var(--font-display), 'Inter', system-ui, sans-serif; }
+  .text-mono { font-family: var(--font-body), 'Inter', ui-monospace, monospace; }
+  .glow-accent { text-shadow: 0 0 40px color-mix(in srgb, var(--color-accent) 50%, transparent); }
 
-  /* Anim légère de l'XP / progress */
   .progress-bar {
     @apply h-2 rounded-full bg-bg-elev overflow-hidden;
   }
   .progress-bar > .progress-fill {
     @apply h-full bg-accent transition-all duration-500 ease-smooth;
   }
+}
+
+/* Compat : alias utilisés par les anciennes pages (CoreTech).
+   Le nouveau palette dark les fait retomber correctement. */
+@layer utilities {
+  .bg-bg-soft { background-color: var(--color-bg-soft); }
+  .bg-bg-elev { background-color: var(--color-bg-elev); }
+  .bg-bg-card { background-color: var(--color-card); }
+  .text-text-soft { color: var(--color-text); opacity: 0.7; }
+  .text-text-mute { color: var(--color-muted); }
+  .border-brand-blue { border-color: var(--color-accent); }
+  .text-brand-blue { color: var(--color-accent); }
+  .bg-brand-blue { background-color: var(--color-accent); }
+  .border-success\/15 { border-color: color-mix(in srgb, var(--color-success, #3ecf8e) 15%, transparent); }
+  .border-success\/25 { border-color: color-mix(in srgb, var(--color-success, #3ecf8e) 25%, transparent); }
+  .border-success\/30 { border-color: color-mix(in srgb, var(--color-success, #3ecf8e) 30%, transparent); }
+  .bg-success\/5, .bg-success\/10, .bg-success\/15 { background-color: color-mix(in srgb, var(--color-success, #3ecf8e) 12%, transparent); }
+  .text-success { color: var(--color-success, #3ecf8e); }
+  .border-warning\/25, .border-warning\/30 { border-color: color-mix(in srgb, var(--color-warning, #f5a524) 25%, transparent); }
+  .bg-warning\/5, .bg-warning\/10, .bg-warning\/15 { background-color: color-mix(in srgb, var(--color-warning, #f5a524) 12%, transparent); }
+  .text-warning { color: var(--color-warning, #f5a524); }
+  .border-danger\/25, .border-danger\/30 { border-color: color-mix(in srgb, var(--color-danger, #ef4444) 25%, transparent); }
+  .bg-danger\/5, .bg-danger\/10, .bg-danger\/15 { background-color: color-mix(in srgb, var(--color-danger, #ef4444) 12%, transparent); }
+  .text-danger { color: var(--color-danger, #ef4444); }
+  .border-accent\/25, .border-accent\/30, .border-accent\/40 { border-color: color-mix(in srgb, var(--color-accent) 30%, transparent); }
+  .bg-accent\/5, .bg-accent\/10, .bg-accent\/15 { background-color: color-mix(in srgb, var(--color-accent) 12%, transparent); }
 }

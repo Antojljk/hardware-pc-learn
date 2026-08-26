@@ -25,8 +25,10 @@ export default async function GlossaryPage({ searchParams }: { searchParams: { q
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-2xl font-bold flex items-center gap-2"><Library className="w-5 h-5 text-brand-blue" /> Glossaire</h1>
-        <p className="text-text-soft text-sm">{terms.length} termes techniques expliqués simplement et en détail.</p>
+        <h1 className="text-3xl sm:text-4xl font-display font-semibold tracking-tight text-text flex items-center gap-3">
+          <Library className="w-6 h-6 text-accent" /> Glossaire
+        </h1>
+        <p className="text-muted mt-2 text-[15px]">{terms.length} termes techniques expliqués simplement et en détail.</p>
       </header>
 
       <GlossarySearch terms={formatted} initial={searchParams.q || ''} />

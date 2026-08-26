@@ -6,60 +6,57 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Palette CoreTech — neutre claire + accent corail
+        // Palette HardwarePC — dark + accent teal (alignée sur l'AccueilHardwarePC de référence)
         bg: {
-          DEFAULT: '#f9f9fa',
-          soft: '#ffffff',
-          card: '#ffffff',
-          elev: '#f3f3f5',
+          DEFAULT: '#000000',
+          soft: '#0f1414',
+          card: '#0f1414',
+          elev: '#162020',
         },
         surface: {
-          DEFAULT: '#141416',
-          soft: '#1d1d22',
+          DEFAULT: '#0f1414',
+          soft: '#162020',
         },
         border: {
-          DEFAULT: '#e3e3e7',
-          soft: '#ececef',
+          DEFAULT: '#1f2a2a',
+          soft: '#162222',
         },
-        // Accent unique — corail CoreTech
+        // Accent teal
         accent: {
-          DEFAULT: '#e2402a',
-          soft: '#b8331f',
-          mute: '#7a2417',
+          DEFAULT: '#2dd4d4',
+          soft: '#26b6b6',
+          mute: '#1a8a8a',
         },
         text: {
-          DEFAULT: '#101012',
-          soft: '#6e6e75',
-          mute: '#9c9ca3',
+          DEFAULT: '#ffffff',
+          soft: '#cbd5d5',
+          mute: '#9ca3af',
         },
-        muted: '#6e6e75',
-        faint: '#9c9ca3',
-        // États conservés mais assagis
+        muted: '#9ca3af',
+        faint: '#6b7575',
+        // États conservés
         success: '#3ecf8e',
         warning: '#f5a524',
         danger: '#ef4444',
         brand: {
-          blue: '#3b82f6',
+          blue: '#2dd4d4',
         },
       },
       fontFamily: {
-        // branchées sur les CSS vars posées par next/font dans layout.tsx
-        display: ['var(--font-display)', 'Inter Tight', 'system-ui', 'sans-serif'],
-        body: ['var(--font-body)', 'DM Mono', 'ui-monospace', 'monospace'],
-        sans: ['var(--font-body)', 'DM Mono', 'system-ui', 'sans-serif'],
-        mono: ['var(--font-body)', 'DM Mono', 'ui-monospace', 'monospace'],
+        display: ['var(--font-display)', 'Inter', 'system-ui', 'sans-serif'],
+        body: ['var(--font-body)', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-body)', 'Inter', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-body)', 'Inter', 'system-ui', 'monospace'],
       },
       fontSize: {
-        // Tailles d'affichage inspirées CoreTech
-        hero: ['clamp(2.5rem, 6vw, 4.5rem)', { lineHeight: '1.02', letterSpacing: '-0.04em' }],
-        heading: ['clamp(1.5rem, 2.5vw, 2.25rem)', { lineHeight: '1.1', letterSpacing: '-0.025em' }],
+        hero: ['clamp(2.5rem, 6vw, 5rem)', { lineHeight: '1.02', letterSpacing: '-0.02em' }],
+        heading: ['clamp(1.75rem, 3.5vw, 3rem)', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
         display: ['1.125rem', { lineHeight: '1.35', letterSpacing: '-0.01em' }],
       },
       boxShadow: {
-        // Ombres CoreTech — diffuses, subtiles
-        card: '0 1px 2px rgba(15,23,42,0.04), 0 1px 3px rgba(15,23,42,0.06)',
-        elev: '0 8px 24px rgba(15,23,42,0.06)',
-        ring: '0 0 0 1px #e3e3e7',
+        card: '0 4px 12px rgba(0, 0, 0, 0.3)',
+        elev: '0 10px 24px rgba(0, 0, 0, 0.4)',
+        ring: '0 0 0 1px #1f2a2a',
       },
       borderRadius: {
         DEFAULT: '16px',

@@ -1,50 +1,62 @@
 import type { Metadata } from 'next';
-import { Inter_Tight, DM_Mono } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import './globals.css';
-import { Sidebar } from '@/components/shell/Sidebar';
-import { TopBar } from '@/components/shell/TopBar';
-import { MobileNav } from '@/components/shell/MobileNav';
-import { SessionProvider } from '@/components/shell/SessionProvider';
-import { getCurrentUser } from '@/lib/auth';
 
-// Polices alignées sur la référence CoreTech : Inter Tight (display) + DM Mono (body)
-const display = Inter_Tight({
+// Polices alignées sur l'AccueilHardwarePC de référence : Inter (display + body)
+const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
   variable: '--font-display',
   display: 'swap',
 });
-const body = DM_Mono({
-  subsets: ['latin'],
-  weight: ['300', '400', '500'],
-  variable: '--font-body',
-  display: 'swap',
-});
+
+// URL canonique de production — utilisée comme base pour canonical, OG et sitemap.
+const SITE_URL = 'https://hardware-pc-learn-3zmsiaq0x-antoine-drutel.vercel.app';
 
 export const metadata: Metadata = {
-  title: 'HardwarePC — Apprends le hardware PC',
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: 'HardwarePC — Apprends le hardware PC',
+    template: '%s · HardwarePC',
+  },
   description:
     "Plateforme d'apprentissage interactive du hardware informatique : cours, quiz, examens, entretiens blancs, diagnostics PC et constructeur de configuration.",
+  applicationName: 'HardwarePC',
+  alternates: {
+    canonical: '/',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'fr_FR',
+    url: SITE_URL,
+    siteName: 'HardwarePC',
+    title: 'HardwarePC — Apprends le hardware PC',
+    description:
+      "Plateforme d'apprentissage interactive du hardware informatique : cours, quiz, examens, entretiens blancs, diagnostics PC et constructeur de configuration.",
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'HardwarePC — Apprends le hardware PC',
+    description:
+      "Plateforme d'apprentissage interactive du hardware informatique : cours, quiz, examens, entretiens blancs, diagnostics PC et constructeur de configuration.",
+  },
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const user = await getCurrentUser();
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={`${display.variable} ${body.variable}`}>
-      <body>
-        <SessionProvider username={user?.username ?? null}>
-          <div className="min-h-screen flex bg-bg text-text">
-            <Sidebar />
-            <div className="flex-1 flex flex-col min-w-0 lg:ml-72">
-              <TopBar />
-              <main className="flex-1 px-6 sm:px-10 py-10 pb-28 lg:pb-12 max-w-7xl w-full mx-auto">
-                {children}
-              </main>
-              <MobileNav />
-            </div>
-          </div>
-        </SessionProvider>
-      </body>
+    <html lang="fr" className={inter.variable} style={{ ['--font-body' as string]: `var(${inter.variable})` }}>
+      <body>{children}</body>
     </html>
   );
 }

@@ -29,7 +29,7 @@ export function AuthForm() {
       });
       const data = await res.json();
       if (!res.ok) { setError(data.error); return; }
-      router.push('/');
+      router.push('/dashboard');
       router.refresh();
     } catch { setError('Erreur réseau'); }
     finally { setLoading(false); }
@@ -40,20 +40,20 @@ export function AuthForm() {
     try {
       const res = await fetch('/api/auth?action=guest', { method: 'POST' });
       if (!res.ok) { setError('Impossible de créer la session invité'); return; }
-      router.push('/');
+      router.push('/dashboard');
       router.refresh();
     } finally { setLoading(false); }
   }
 
   return (
-    <div className="card p-6 space-y-4">
-      <div className="flex bg-bg-elev rounded-lg p-1 border border-border">
+    <div className="card p-6 sm:p-8 space-y-5">
+      <div className="flex bg-bg-elev rounded-full p-1 border border-border">
         {(['login', 'register'] as Mode[]).map(m => (
           <button
             key={m}
             type="button"
             onClick={() => setMode(m)}
-            className={`flex-1 py-1.5 rounded-md text-sm font-medium transition ${mode === m ? 'bg-brand-blue text-white' : 'text-text-soft'}`}
+            className={`flex-1 py-2 rounded-full text-sm font-medium transition ${mode === m ? 'bg-accent text-[#001818]' : 'text-muted hover:text-text'}`}
           >
             {m === 'login' ? 'Connexion' : 'Inscription'}
           </button>
@@ -77,9 +77,9 @@ export function AuthForm() {
         {error && <div className="text-danger text-sm bg-danger/10 border border-danger/30 rounded-lg px-3 py-2">{error}</div>}
         <button className="btn-primary w-full" disabled={loading}>{loading ? '…' : mode === 'register' ? 'Créer mon compte' : 'Se connecter'}</button>
       </form>
-      <div className="relative my-2"><div className="absolute inset-0 flex items-center"><div className="w-full border-t border-border" /></div><div className="relative flex justify-center"><span className="bg-bg-card px-2 text-xs text-text-mute">ou</span></div></div>
+      <div className="relative my-2"><div className="absolute inset-0 flex items-center"><div className="w-full border-t border-border" /></div><div className="relative flex justify-center"><span className="bg-bg-soft px-2 text-xs text-muted">ou</span></div></div>
       <button onClick={guest} disabled={loading} className="btn-outline w-full">Continuer en invité</button>
-      <p className="text-xs text-text-mute text-center">Tes données restent locales. Aucune information envoyée à un serveur externe.</p>
+      <p className="text-xs text-muted text-center">Tes données restent locales. Aucune information envoyée à un serveur externe.</p>
     </div>
   );
 }
