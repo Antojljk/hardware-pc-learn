@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     let score = 0;
 
     // Pour chaque étape idéale, bonus si choisie tôt
-    ideal.forEach((stepId, idx) => {
+    ideal.forEach((stepId) => {
       if (stepsChosen.includes(stepId)) {
         score += 25;
         const s = SCENARIO_STEPS.find(x => x.id === stepId);

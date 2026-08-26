@@ -46,7 +46,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       ok: true, score: avg, xpAwarded,
       feedback: { strengths, improvements },
-      transcript: transcript.map((t, i) => ({ question: INTERVIEW_QUESTIONS.find(q => q.id === t.questionId)?.question })),
+      transcript: transcript.map((t) => ({ question: INTERVIEW_QUESTIONS.find(q => q.id === t.questionId)?.question })),
     });
   } catch {
     return NextResponse.json({ error: 'Erreur' }, { status: 500 });

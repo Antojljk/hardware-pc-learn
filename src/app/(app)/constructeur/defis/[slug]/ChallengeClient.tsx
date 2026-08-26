@@ -109,7 +109,6 @@ export function ChallengeClient({ components, challenge }: { components: Compone
                 <div className="grid sm:grid-cols-2 gap-2">
                   {opts.slice(0, 18).map(o => {
                     const active = selected === o.id;
-                    const over = o.price > challenge.budget;
                     return (
                       <button
                         key={o.id}

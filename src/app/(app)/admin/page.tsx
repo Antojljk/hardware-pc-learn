@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { Settings, BookOpen, Brain, MessageSquareQuote, Wrench, Library, Sparkles } from 'lucide-react';
+import { Settings, BookOpen, Brain, Wrench, Library, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
 export const metadata = { title: 'Admin — HardwarePC' };

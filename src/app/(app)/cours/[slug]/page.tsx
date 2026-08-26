@@ -2,8 +2,7 @@ import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
-import { grantXp, unlockBadges, updateStreak } from '@/lib/gamification';
-import { Clock, CheckCircle2, ArrowLeft, AlertTriangle, Lightbulb, Target, Cpu } from 'lucide-react';
+import { Clock, CheckCircle2, ArrowLeft, AlertTriangle, Lightbulb, Target } from 'lucide-react';
 import { CompleteButton } from './CompleteButton';
 
 export default async function LessonPage({ params }: { params: { slug: string } }) {

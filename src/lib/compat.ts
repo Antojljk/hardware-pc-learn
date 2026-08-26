@@ -1,5 +1,4 @@
-import { COMPONENTS, Component } from '@/content/components';
-import { TERMS } from '@/content/glossary';
+import { COMPONENTS } from '@/content/components';
 
 export type Build = Partial<Record<string, string>>; // type -> component id
 export type Issue = { severity: 'error' | 'warn' | 'info'; message: string };

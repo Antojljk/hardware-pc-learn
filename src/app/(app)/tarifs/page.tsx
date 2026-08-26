@@ -9,7 +9,6 @@ import {
   Brain,
   Wrench,
   List,
-  Clock,
   GraduationCap,
   MessageCircle,
   Zap,
@@ -17,7 +16,7 @@ import {
 } from 'lucide-react';
 
 export default async function TarifsPage() {
-  const user = await getCurrentUser();
+  await getCurrentUser();
 
   return (
     <div className="space-y-16">

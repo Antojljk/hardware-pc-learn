@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState, useCallback } from 'react';
-import { Loader2, ArrowRight, CheckCircle2, XCircle, Sparkles, RefreshCw } from 'lucide-react';
+import { Loader2, ArrowRight, CheckCircle2, XCircle, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 type Q = { id: string; type: string; category: string; difficulty: string; prompt: string; choices: string[]; xpReward: number };

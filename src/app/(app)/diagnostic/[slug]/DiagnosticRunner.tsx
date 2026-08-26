@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { CheckCircle2, XCircle, AlertTriangle, Wrench, Send, ArrowRight, Loader2 } from 'lucide-react';
+import { Wrench, Send, Loader2, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
@@ -16,7 +16,7 @@ export function DiagnosticRunner({
   const router = useRouter();
   const [chosen, setChosen] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<{ score: number; xpAwarded: number; evaluation: { good: string[]; missed: string[]; wrong: string[] } } | null>(null);
 
   async function submit() {
     setSubmitting(true);
@@ -68,6 +68,8 @@ export function DiagnosticRunner({
 
   const usedSteps = steps.filter(s => chosen.includes(s.id));
   const availableSteps = steps.filter(s => !chosen.includes(s.id));
+  // optionalAcceptable is parsed from the scenario for reference
+  void optionalAcceptable;
 
   return (
     <div className="space-y-5 max-w-4xl">

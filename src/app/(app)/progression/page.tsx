@@ -141,7 +141,7 @@ export default async function ProgressionPage() {
               {weak.map(d => (
                 <li key={d.key} className="flex items-center justify-between">
                   <span>{d.label}</span>
-                  <Link href={`/quiz?category=${d.key}`} className="btn-outline text-xs">S'entraîner · {d.value}%</Link>
+                  <Link href={`/quiz?category=${d.key}`} className="btn-outline text-xs">S&apos;entraîner · {d.value}%</Link>
                 </li>
               ))}
             </ul>
@@ -170,7 +170,7 @@ export default async function ProgressionPage() {
         </Link>
         <Link href="/entretiens" className="card card-hover p-4 flex items-center gap-3">
           <MessageSquareQuote className="w-5 h-5 text-brand-violet" />
-          <div><div className="font-medium">Entretiens</div><div className="text-xs text-text-soft">S'entraîner à l'oral</div></div>
+          <div><div className="font-medium">Entretiens</div><div className="text-xs text-text-soft">S&apos;entraîner à l&apos;oral</div></div>
         </Link>
         <Link href="/diagnostic" className="card card-hover p-4 flex items-center gap-3">
           <Wrench className="w-5 h-5 text-warning" />

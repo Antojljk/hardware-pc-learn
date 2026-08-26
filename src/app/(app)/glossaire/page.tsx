@@ -1,8 +1,7 @@
-import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
 import { redirect } from 'next/navigation';
-import { Library, Search } from 'lucide-react';
+import { Library } from 'lucide-react';
 import { GlossarySearch } from './GlossarySearch';
 
 export const dynamic = 'force-dynamic';

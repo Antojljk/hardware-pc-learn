@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
-import { grantXp, unlockBadges } from '@/lib/gamification';
+import { grantXp } from '@/lib/gamification';
 import { QUESTIONS } from '@/content/quizzes';
 
 export async function GET(req: Request) {
@@ -36,7 +36,7 @@ export async function POST(req: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: 'Non connecté' }, { status: 401 });
   try {
-    const { questionId, answer, mode, category } = await req.json();
+    const { questionId, answer } = await req.json();
     const q = QUESTIONS.find(x => x.id === questionId);
     if (!q) return NextResponse.json({ error: 'Question introuvable' }, { status: 404 });
 

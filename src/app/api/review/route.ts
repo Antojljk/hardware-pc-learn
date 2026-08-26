@@ -11,7 +11,7 @@ const schema = z.object({
 });
 
 function sm2(ease: number, interval: number, reps: number, quality: number) {
-  let newEase = Math.max(1.3, ease + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)));
+  const newEase = Math.max(1.3, ease + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)));
   let newReps = reps;
   let newInterval = interval;
   if (quality < 3) {

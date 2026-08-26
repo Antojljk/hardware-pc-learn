@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { INTERVIEW_QUESTIONS, pickInterviewQuestions, evaluateAnswer } from '@/lib/interview';
+import { pickInterviewQuestions, evaluateAnswer } from '@/lib/interview';
 import { ArrowRight, Loader2, Send, CheckCircle2, MessageSquareQuote } from 'lucide-react';
 import Link from 'next/link';
 
@@ -11,10 +11,10 @@ export function InterviewRunner({ role, level }: { role: string; level: string }
   const [questions] = useState(() => pickInterviewQuestions(role, level, 5));
   const [index, setIndex] = useState(0);
   const [answer, setAnswer] = useState('');
-  const [evaluations, setEvaluations] = useState<any[]>([]);
-  const [currentEval, setCurrentEval] = useState<any>(null);
+  const [evaluations, setEvaluations] = useState<{ score: number; matched: string[]; missing: string[]; feedback: string; questionId: string; question: string; idealAnswer: string }[]>([]);
+  const [currentEval, setCurrentEval] = useState<{ score: number; matched: string[]; missing: string[]; feedback: string; questionId: string; question: string; idealAnswer: string } | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [finalResult, setFinalResult] = useState<any>(null);
+  const [finalResult, setFinalResult] = useState<{ score: number; xpAwarded: number; feedback?: { strengths: string[]; improvements: string[] }; transcript?: { question?: string }[] } | null>(null);
 
   async function submitAnswer() {
     if (!answer.trim()) return;
@@ -24,6 +24,7 @@ export function InterviewRunner({ role, level }: { role: string; level: string }
   }
 
   async function nextQuestion() {
+    if (!currentEval) return;
     const newEvals = [...evaluations, currentEval];
     setEvaluations(newEvals);
 
@@ -71,7 +72,7 @@ export function InterviewRunner({ role, level }: { role: string; level: string }
         <section className="card p-5">
           <h3 className="font-semibold mb-3">Réponses idéales</h3>
           <ul className="space-y-4">
-            {finalResult.transcript?.map((t: any, i: number) => (
+            {finalResult.transcript?.map((t: { question?: string }, i: number) => (
               <li key={i} className="p-3 rounded-lg bg-bg-elev border border-border">
                 <div className="text-xs text-text-mute mb-1">Question {i + 1}</div>
                 <div className="font-medium mb-2">{t.question || questions[i].question}</div>

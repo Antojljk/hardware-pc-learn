@@ -11,7 +11,7 @@ export function ExamRunner({ exam, questions }: { exam: { slug: string; duration
   const [index, setIndex] = useState(0);
   const [timeLeft, setTimeLeft] = useState(exam.durationSec);
   const [submitting, setSubmitting] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<{ score: number; total: number; timeSpent: number; xpAwarded: number; passPercent: number; domainStats?: boolean; strongDomains?: { category: string; percent: number }[]; weakDomains?: { category: string; percent: number }[] } | null>(null);
   const startRef = useRef<number>(0);
 
   useEffect(() => {
@@ -70,11 +70,11 @@ export function ExamRunner({ exam, questions }: { exam: { slug: string; duration
             <div className="grid sm:grid-cols-2 gap-3">
               <div>
                 <h3 className="text-sm font-semibold text-success mb-2">🟢 Domaines forts</h3>
-                <ul className="space-y-1 text-sm">{result.strongDomains.map((d: any) => <li key={d.category} className="flex justify-between"><span>{d.category}</span><span className="tabular-nums">{d.percent}%</span></li>)}</ul>
+                <ul className="space-y-1 text-sm">{(result.strongDomains ?? []).map((d: { category: string; percent: number }) => <li key={d.category} className="flex justify-between"><span>{d.category}</span><span className="tabular-nums">{d.percent}%</span></li>)}</ul>
               </div>
               <div>
                 <h3 className="text-sm font-semibold text-warning mb-2">🔴 À travailler</h3>
-                <ul className="space-y-1 text-sm">{result.weakDomains.map((d: any) => <li key={d.category} className="flex justify-between"><span>{d.category}</span><span className="tabular-nums">{d.percent}%</span></li>)}</ul>
+                <ul className="space-y-1 text-sm">{(result.weakDomains ?? []).map((d: { category: string; percent: number }) => <li key={d.category} className="flex justify-between"><span>{d.category}</span><span className="tabular-nums">{d.percent}%</span></li>)}</ul>
               </div>
             </div>
           </section>
