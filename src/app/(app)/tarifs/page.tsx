@@ -208,11 +208,11 @@ export default function TarifsPage() {
             </li>
             <li className="flex items-start gap-3">
               <ShieldCheck className="w-4 h-4 mt-0.5 text-muted" />
-              <span>Révisions avancées</span
-</li>
-<li className="flex items-start gap-3">
-  <TrendingUp className="w-4 h-4 mt-0.5 text-muted" />
-  <span>Monitoring étendu</span>
+              <span>Révisions avancées</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <TrendingUp className="w-4 h-4 mt-0.5 text-muted" />
+              <span>Monitoring étendu</span>
 </li>
 <li className="flex items-start gap-3">
   <Users className="w-4 h-4 mt-0.5 text-muted" />
@@ -256,8 +256,8 @@ export default function TarifsPage() {
             </li>
             <li className="flex items-start gap-3">
               <List className="w-4 h-4 mt-0.5 text-muted" />
-              <span>Tous les parcours</span
-</li>
+              <span>Tous les parcours</span>
+            </li>
 <li className="flex items-start gap-3">
   <Zap className="w-4 h-4 mt-0.5 text-muted" />
   <span>Tous les quiz</span>
@@ -276,36 +276,36 @@ export default function TarifsPage() {
 </li>
 <li className="flex items-start gap-3">
   <Wrench className="w-4 h-4 mt-0.5 text-muted" />
-  <span>Diagnostic avancé</span
-</li>
+  <span>Diagnostic avancé</span>
+            </li>
 <li className="flex items-start gap-3">
   <HeartHandshake className="w-4 h-4 mt-0.5 text-muted" />
-  <span>Base de connaissances complète</span
-</li>
+  <span>Base de connaissances complète</span>
+            </li>
 <li className="flex items-start gap-3">
   <ShieldCheck className="w-4 h-4 mt-0.5 text-muted" />
-  <span>Révisions intelligentes</span
-</li>
+  <span>Révisions intelligentes</span>
+            </li>
 <li className="flex items-start gap-3">
   <TrendingUp className="w-4 h-4 mt-0.5 text-muted" />
-  <span>Monitoring avancé</span
-</li>
+  <span>Monitoring avancé</span>
+            </li>
 <li className="flex items-start gap-3">
   <Users className="w-4 h-4 mt-0.5 text-muted" />
-  <span>Constructeur PC complet</span
-</li>
+  <span>Constructeur PC complet</span>
+            </li>
 <li className="flex items-start gap-3">
   <DollarSign className="w-4 h-4 mt-0.5 text-muted" />
-  <span>Mode technicien disponible</span
-</li>
+  <span>Mode technicien disponible</span>
+            </li>
 <li className="flex items-start gap-3">
   <Users className="w-4 h-4 mt-0.5 text-muted" />
-  <span>Mode client disponible</span
-</li>
+  <span>Mode client disponible</span>
+            </li>
 <li className="flex items-start gap-3">
   <DollarSign className="w-4 h-4 mt-0.5 text-muted" />
-  <span>Progression complète</span
-</li>
+  <span>Progression complète</span>
+            </li>
           </ul>
 
           <div className="mt-6">
@@ -339,60 +339,60 @@ export default function TarifsPage() {
         <ul className="space-y-3 text-[14px] mt-4">
           <li className="flex items-start gap-3">
             <Brain className="w-4 h-4 mt-0.5 text-muted" />
-            <span>Tous les cours</span
-</li>
+            <span>Tous les cours</span>
+            </li>
 <li className="flex items-start gap-3">
   <List className="w-4 h-4 mt-0.5 text-muted" />
-  <span>Tous les parcours</span
-</li>
+  <span>Tous les parcours</span>
+            </li>
 <li className="flex items-start gap-3">
   <Zap className="w-4 h-4 mt-0.5 text-muted" />
-  <span>Tous les quiz</span
-</li>
+  <span>Tous les quiz</span>
+            </li>
 <li className="flex items-start gap-3">
   <GraduationCap className="w-4 h-4 mt-0.5 text-muted" />
-  <span>Examens complets</span
-</li>
+  <span>Examens complets</span>
+            </li>
 <li className="flex items-start gap-3">
   <Users className="w-4 h-4 mt-0.5 text-muted" />
-  <span>Entretiens complets</span
-</li>
+  <span>Entretiens complets</span>
+            </li>
 <li className="flex items-start gap-3">
   <MessageCircle className="w-4 h-4 mt-0.5 text-muted" />
-  <span>500 messages Tuteur IA/mois</span
-</li>
+  <span>500 messages Tuteur IA/mois</span>
+            </li>
 <li className="flex items-start gap-3">
   <Wrench className="w-4 h-4 mt-0.5 text-muted" />
-  <span>Diagnostic complet</span
-</li>
+  <span>Diagnostic complet</span>
+            </li>
 <li className="flex items-start gap-3">
   <HeartHandshake className="w-4 h-4 mt-0.5 text-muted" />
-  <span>Base de connaissances complète</span
-</li>
+  <span>Base de connaissances complète</span>
+            </li>
 <li className="flex items-start gap-3">
   <ShieldCheck className="w-4 h-4 mt-0.5 text-muted" />
-  <span>Révisions intelligentes+</span
-</li>
+  <span>Révisions intelligentes+</span>
+            </li>
 <li className="flex items-start gap-3">
   <TrendingUp className="w-4 h-4 mt-0.5 text-muted" />
-  <span>Monitoring complet</span
-</li>
+  <span>Monitoring complet</span>
+            </li>
 <li className="flex items-start gap-3">
   <Users className="w-4 h-4 mt-0.5 text-muted" />
-  <span>Constructeur PC complet</span
-</li>
+  <span>Constructeur PC complet</span>
+            </li>
 <li className="flex items-start gap-3">
   <Users className="w-4 h-4 mt-0.5 text-muted" />
-  <span>Mode technicien disponible</span
-</li>
+  <span>Mode technicien disponible</span>
+            </li>
 <li className="flex items-start gap-3">
   <Users className="w-4 h-4 mt-0.5 text-muted" />
-  <span>Mode client disponible</span
-</li>
+  <span>Mode client disponible</span>
+            </li>
 <li className="flex items-start gap-3">
   <DollarSign className="w-4 h-4 mt-0.5 text-muted" />
-  <span>Progression complète</span
-</li>
+  <span>Progression complète</span>
+            </li>
         </ul>
 
         <div className="mt-6">
