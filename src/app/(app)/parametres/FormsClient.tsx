@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import Link from 'next/link';
 import {
   Settings,
   Info,
@@ -26,7 +27,7 @@ export default function FormsClient({ user }: { user: any }) {
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [deleteSuccess, setDeleteSuccess] = useState<string | null>(null);
 
-  const handleProfileSubmit = async (e: React.FormEvent) => {
+  const handleProfileSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setProfileLoading(true);
     setProfileError(null);
@@ -58,7 +59,7 @@ export default function FormsClient({ user }: { user: any }) {
     }
   };
 
-  const handlePasswordSubmit = async (e: React.FormEvent) => {
+  const handlePasswordSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setPasswordLoading(true);
     setPasswordError(null);
@@ -90,7 +91,7 @@ export default function FormsClient({ user }: { user: any }) {
     }
   };
 
-  const handleDeleteSubmit = async (e: React.FormEvent) => {
+  const handleDeleteSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setDeleteLoading(true);
     setDeleteError(null);
