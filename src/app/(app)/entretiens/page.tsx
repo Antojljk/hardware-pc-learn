@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
 import { redirect } from 'next/navigation';
-import { MessageSquareQuote, Briefcase, GraduationCap, ChevronRight, Activity, History, Wrench, Settings, Users, BarChart3, Headphones, ShoppingBag, Building2 } from 'lucide-react';
+import { MessageSquareQuote, Briefcase, ChevronRight, Activity, History, Wrench, Settings, Users, BarChart3, Headphones, ShoppingBag, Building2 } from 'lucide-react';
 
 const ROLES = [
   { slug: 'monteur',    title: 'Monteur PC',           desc: 'Capacité à assembler et tester un PC.',            Icon: Wrench },

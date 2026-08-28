@@ -11,7 +11,6 @@ export default async function DiagnosticHome() {
   const scenarios = await prisma.diagnosticScenario.findMany();
   const attempts = await prisma.diagnosticAttempt.findMany({ where: { userId: user.id }, orderBy: { createdAt: 'desc' }, take: 5 });
 
-  const lastScore = attempts[0]?.score ?? null;
   const bestScore = attempts.length ? Math.max(...attempts.map(a => a.score)) : null;
 
   return (
