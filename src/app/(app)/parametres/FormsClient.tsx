@@ -3,17 +3,17 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Link from 'next/link';
+import type { User } from '@prisma/client';
 import {
-  Settings,
   Info,
   User as UserIcon,
   Lock,
   AlertTriangle,
   TrendingUp,
 } from 'lucide-react';
-import { getPlan, planLabel } from '@/lib/plans';
+import { planLabel } from '@/lib/plans';
 
-export default function FormsClient({ user }: { user: any }) {
+export default function FormsClient({ user }: { user: User }) {
   const router = useRouter();
   const [profileLoading, setProfileLoading] = useState(false);
   const [profileError, setProfileError] = useState<string | null>(null);
@@ -240,8 +240,8 @@ export default function FormsClient({ user }: { user: any }) {
           <TrendingUp className="w-4 h-4 text-text" /> Préférences
         </h2>
         <p className="text-sm text-muted">
-          Les préférences d'application (thème, langue, notifications) seront disponibles dans une future mise à jour.
-          Actuellement, l'application utilise le thème sombre par défaut.
+          Les préférences d&apos;application (thème, langue, notifications) seront disponibles dans une future mise à jour.
+          Actuellement, l&apos;application utilise le thème sombre par défaut.
         </p>
       </section>
 
@@ -258,7 +258,7 @@ export default function FormsClient({ user }: { user: any }) {
               <span className="badge-accent">{planLabel(user.plan)}</span>
             </div>
             <p className="text-sm text-muted">
-              Pour changer d'offre, rendez-vous sur la page des <Link href="/tarifs" className="text-text underline">tarifs</Link>.
+              Pour changer d&apos;offre, rendez-vous sur la page des <Link href="/tarifs" className="text-text underline">tarifs</Link>.
             </p>
           </div>
 

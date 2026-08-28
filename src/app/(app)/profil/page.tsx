@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { buildProgressionReport, SKILLS, type SkillKey } from '@/lib/progression';
-import { getPlan, planLabel } from '@/lib/plans';
+import { planLabel } from '@/lib/plans';
 import {
   User, Trophy, Flame, Sparkles, Mail, Calendar, ShieldCheck,
   TrendingUp, ChevronRight, Cpu, Stethoscope, Wrench, Gauge,
@@ -56,7 +56,6 @@ export default async function ProfilePage() {
     buildProgressionReport(user.id, user.xp),
   ]);
 
-  const plan = getPlan(user.plan);
   const initials = user.username
     .slice(0, 2)
     .toUpperCase();
@@ -291,7 +290,7 @@ export default async function ProfilePage() {
             <span className="badge-muted tabular-nums">{report.recent.length}</span>
           </div>
           {report.recent.length === 0 ? (
-            <p className="text-sm text-muted">Pas encore d'activité enregistrée.</p>
+            <p className="text-sm text-muted">Pas encore d&apos;activité enregistrée.</p>
           ) : (
             <ul className="divide-y divide-border">
               {report.recent.slice(0, 6).map(item => (

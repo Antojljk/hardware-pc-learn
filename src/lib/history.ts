@@ -59,7 +59,7 @@ export async function getUserActivities(userId: string) {
     // Exam attempts
     prisma.examAttempt.findMany({
       where: { userId },
-      select: { id: true, score: true, total: true, createdAt: true, exam: { select: { title: true, slug: true } } },
+      select: { id: true, score: true, total: true, createdAt: true },
       orderBy: { createdAt: 'desc' },
     }),
     // Interview attempts
@@ -71,7 +71,7 @@ export async function getUserActivities(userId: string) {
     // Diagnostic attempts
     prisma.diagnosticAttempt.findMany({
       where: { userId },
-      select: { id: true, score: true, createdAt: true, scenario: { select: { title: true, slug: true } } },
+      select: { id: true, score: true, createdAt: true },
       orderBy: { createdAt: 'desc' },
     }),
     // Config builds
@@ -83,7 +83,7 @@ export async function getUserActivities(userId: string) {
     // Badges débloqués
     prisma.badgesOnUsers.findMany({
       where: { userId },
-      select: { id: true, unlockedAt: true, badge: { select: { name: true, icon: true } } },
+      select: { userId: true, badgeId: true, unlockedAt: true, badge: { select: { name: true, icon: true } } },
       orderBy: { unlockedAt: 'desc' },
     }),
   ])
@@ -121,10 +121,10 @@ export async function getUserActivities(userId: string) {
     activities.push({
       id: e.id,
       type: 'exam',
-      label: e.exam.title,
+      label: `Examen`,
       score: e.score,
       createdAt: e.createdAt,
-      url: `/exam/${e.exam.slug}`,
+      url: `/exam/${e.id}`,
     })
   }
 
@@ -144,10 +144,10 @@ export async function getUserActivities(userId: string) {
     activities.push({
       id: d.id,
       type: 'diagnostic',
-      label: d.scenario.title,
+      label: `Diagnostic`,
       score: d.score,
       createdAt: d.createdAt,
-      url: `/diagnostic/${d.scenario.slug}`,
+      url: `/diagnostic/${d.id}`,
     })
   }
 
@@ -165,7 +165,7 @@ export async function getUserActivities(userId: string) {
   // Badges
   for (const bg of badges) {
     activities.push({
-      id: bg.id,
+      id: `${bg.userId}-${bg.badgeId}`,
       type: 'badge',
       label: bg.badge.name,
       score: null, // Les badges n'ont pas de score
