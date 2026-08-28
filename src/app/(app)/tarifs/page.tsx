@@ -1,6 +1,10 @@
+"use client";
+
 /* eslint-disable react/no-unescaped-entities */
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { getCurrentUser } from '@/lib/auth';
+import { getPlan, planLabel, PLAN_ORDER, type PlanKey } from '@/lib/plans';
 import {
   HeartHandshake,
   DollarSign,
@@ -14,9 +18,70 @@ import {
   Zap,
   TrendingUp,
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
-export default async function TarifsPage() {
-  await getCurrentUser();
+export default function TarifsPage() {
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [loadingPlans, setLoadingPlans] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userData = await getCurrentUser();
+        if (!userData) {
+          router.push('/auth');
+          return;
+        }
+        setUser(userData);
+      } catch (err) {
+        console.error('Failed to fetch user:', err);
+        router.push('/auth');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [router]);
+
+  if (loading) {
+    return <p>Chargement...</p>;
+  }
+
+  if (!user) {
+    // This should not happen because of the redirect in useEffect, but just in case
+    return <p>Chargement...</p>;
+  }
+
+  const currentPlan = getPlan(user.plan) as PlanKey;
+
+  const handlePlanSelect = async (plan: PlanKey) => {
+    setLoadingPlans(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const res = await fetch('/api/plan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan }),
+      });
+      const data = await res.json();
+      setLoadingPlans(false);
+      if (res.ok && data.ok) {
+        setSuccess(`Offre mise à jour vers ${planLabel(plan)}`);
+      } else {
+        setError(data.error?.message || 'Erreur inconnue');
+      }
+    } catch (err) {
+      setLoadingPlans(false);
+      setError('Erreur serveur');
+    }
+  };
 
   return (
     <div className="space-y-16">
@@ -24,7 +89,7 @@ export default async function TarifsPage() {
       <section className="text-center">
         <span className="badge-accent">Nouveau</span>
         <h1 className="font-display font-semibold text-[clamp(2.5rem,6vw,5rem)] leading-[1.02] tracking-[-0.02em] text-text">
-          Choisis votre plan HardwarePC
+          Choisissez votre plan HardwarePC
         </h1>
         <p className="text-muted mt-4 text-[18px] max-w-[36ch] mx-auto">
           Accédez à toutes les fonctionnalités selon vos besoins. Du découverte gratuite
@@ -43,7 +108,7 @@ export default async function TarifsPage() {
       {/* Pricing Cards */}
       <section className="grid sm:grid-cols-1 lg:grid-cols-3 gap-6">
         {/* FREE */}
-        <div className="card p-6 space-y-5">
+        <div className={`card p-6 space-y-5 ${currentPlan === 'FREE' ? 'border-border/50' : ''}`}>
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-display text-xl font-semibold text-text">Gratuit</h2>
             <span className="badge">FREE</span>
@@ -78,24 +143,28 @@ export default async function TarifsPage() {
               <span>Diagnostic basique</span>
             </li>
             <li className="flex items-start gap-3">
-              <Users className="w-4 h-4 mt-0.5 text-muted" />
-              <span>Profil et paramètres</span>
-            </li>
-            <li className="flex items-start gap-3">
               <HeartHandshake className="w-4 h-4 mt-0.5 text-muted" />
               <span>Base de connaissances limitée (2 catégories)</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <Users className="w-4 h-4 mt-0.5 text-muted" />
+              <span>Profil et paramètres</span>
             </li>
           </ul>
 
           <div className="mt-6">
-            <Link href="/auth" className="w-full btn-primary">
-              Commencer gratuitement
-            </Link>
+            <button
+              onClick={() => handlePlanSelect('FREE')}
+              disabled={loadingPlans}
+              className={`w-full btn-${currentPlan === 'FREE' ? 'outline' : 'primary'}`}
+            >
+              {loadingPlans ? 'Mise à jour...' : currentPlan === 'FREE' ? 'Actuel' : 'Sélectionner'}
+            </button>
           </div>
         </div>
 
         {/* ESSENTIEL - Most Popular */}
-        <div className="card p-6 space-y-5">
+        <div className={`card p-6 space-y-5 ${currentPlan === 'ESSENTIEL' ? 'border-border/50' : ''}`}>
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-display text-xl font-semibold text-text">Essentiel</h2>
             <span className="badge badge-accent">POPULAIRE</span>
@@ -139,31 +208,35 @@ export default async function TarifsPage() {
             </li>
             <li className="flex items-start gap-3">
               <ShieldCheck className="w-4 h-4 mt-0.5 text-muted" />
-              <span>Révisions avancées</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <TrendingUp className="w-4 h-4 mt-0.5 text-muted" />
-              <span>Monitoring étendu</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <Users className="w-4 h-4 mt-0.5 text-muted" />
-              <span>Constructeur PC complet</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <DollarSign className="w-4 h-4 mt-0.5 text-muted" />
-              <span>Progression complète</span>
-            </li>
+              <span>Révisions avancées</span
+</li>
+<li className="flex items-start gap-3">
+  <TrendingUp className="w-4 h-4 mt-0.5 text-muted" />
+  <span>Monitoring étendu</span>
+</li>
+<li className="flex items-start gap-3">
+  <Users className="w-4 h-4 mt-0.5 text-muted" />
+  <span>Constructeur PC complet</span>
+</li>
+<li className="flex items-start gap-3">
+  <DollarSign className="w-4 h-4 mt-0.5 text-muted" />
+  <span>Progression complète</span>
+</li>
           </ul>
 
           <div className="mt-6">
-            <Link href="/auth" className="w-full btn-primary">
-              Commencer l'essai
-            </Link>
+            <button
+              onClick={() => handlePlanSelect('ESSENTIEL')}
+              disabled={loadingPlans}
+              className={`w-full btn-${currentPlan === 'ESSENTIEL' ? 'outline' : 'primary'}`}
+            >
+              {loadingPlans ? 'Mise à jour...' : currentPlan === 'ESSENTIEL' ? 'Actuel' : 'Sélectionner'}
+            </button>
           </div>
         </div>
 
         {/* PRO */}
-        <div className="card p-6 space-y-5">
+        <div className={`card p-6 space-y-5 ${currentPlan === 'PRO' ? 'border-border/50' : ''}`}>
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-display text-xl font-semibold text-text">Pro</h2>
             <span className="badge badge-warning">LE PLUS POPULAIRE</span>
@@ -183,62 +256,66 @@ export default async function TarifsPage() {
             </li>
             <li className="flex items-start gap-3">
               <List className="w-4 h-4 mt-0.5 text-muted" />
-              <span>Tous les parcours</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <Zap className="w-4 h-4 mt-0.5 text-muted" />
-              <span>Tous les quiz</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <GraduationCap className="w-4 h-4 mt-0.5 text-muted" />
-              <span>Examens complets</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <Users className="w-4 h-4 mt-0.5 text-muted" />
-              <span>Entretiens complets</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <MessageCircle className="w-4 h-4 mt-0.5 text-muted" />
-              <span>150 messages Tuteur IA/mois</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <Wrench className="w-4 h-4 mt-0.5 text-muted" />
-              <span>Diagnostic avancé</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <HeartHandshake className="w-4 h-4 mt-0.5 text-muted" />
-              <span>Base de connaissances complète</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <ShieldCheck className="w-4 h-4 mt-0.5 text-muted" />
-              <span>Révisions intelligentes</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <TrendingUp className="w-4 h-4 mt-0.5 text-muted" />
-              <span>Monitoring avancé</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <Users className="w-4 h-4 mt-0.5 text-muted" />
-              <span>Constructeur PC complet</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <DollarSign className="w-4 h-4 mt-0.5 text-muted" />
-              <span>Mode technicien disponible</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <Users className="w-4 h-4 mt-0.5 text-muted" />
-              <span>Mode client disponible</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <DollarSign className="w-4 h-4 mt-0.5 text-muted" />
-              <span>Progression complète</span>
-            </li>
+              <span>Tous les parcours</span
+</li>
+<li className="flex items-start gap-3">
+  <Zap className="w-4 h-4 mt-0.5 text-muted" />
+  <span>Tous les quiz</span>
+</li>
+<li className="flex items-start gap-3">
+  <GraduationCap className="w-4 h-4 mt-0.5 text-muted" />
+  <span>Examens complets</span>
+</li>
+<li className="flex items-start gap-3">
+  <Users className="w-4 h-4 mt-0.5 text-muted" />
+  <span>Entretiens complets</span>
+</li>
+<li className="flex items-start gap-3">
+  <MessageCircle className="w-4 h-4 mt-0.5 text-muted" />
+  <span>150 messages Tuteur IA/mois</span>
+</li>
+<li className="flex items-start gap-3">
+  <Wrench className="w-4 h-4 mt-0.5 text-muted" />
+  <span>Diagnostic avancé</span
+</li>
+<li className="flex items-start gap-3">
+  <HeartHandshake className="w-4 h-4 mt-0.5 text-muted" />
+  <span>Base de connaissances complète</span
+</li>
+<li className="flex items-start gap-3">
+  <ShieldCheck className="w-4 h-4 mt-0.5 text-muted" />
+  <span>Révisions intelligentes</span
+</li>
+<li className="flex items-start gap-3">
+  <TrendingUp className="w-4 h-4 mt-0.5 text-muted" />
+  <span>Monitoring avancé</span
+</li>
+<li className="flex items-start gap-3">
+  <Users className="w-4 h-4 mt-0.5 text-muted" />
+  <span>Constructeur PC complet</span
+</li>
+<li className="flex items-start gap-3">
+  <DollarSign className="w-4 h-4 mt-0.5 text-muted" />
+  <span>Mode technicien disponible</span
+</li>
+<li className="flex items-start gap-3">
+  <Users className="w-4 h-4 mt-0.5 text-muted" />
+  <span>Mode client disponible</span
+</li>
+<li className="flex items-start gap-3">
+  <DollarSign className="w-4 h-4 mt-0.5 text-muted" />
+  <span>Progression complète</span
+</li>
           </ul>
 
           <div className="mt-6">
-            <Link href="/auth" className="w-full btn-primary">
-              Choisir Pro
-            </Link>
+            <button
+              onClick={() => handlePlanSelect('PRO')}
+              disabled={loadingPlans}
+              className={`w-full btn-${currentPlan === 'PRO' ? 'outline' : 'primary'}`}
+            >
+              {loadingPlans ? 'Mise à jour...' : currentPlan === 'PRO' ? 'Actuel' : 'Sélectionner'}
+            </button>
           </div>
         </div>
       </section>
@@ -262,66 +339,70 @@ export default async function TarifsPage() {
         <ul className="space-y-3 text-[14px] mt-4">
           <li className="flex items-start gap-3">
             <Brain className="w-4 h-4 mt-0.5 text-muted" />
-            <span>Tous les cours</span>
-          </li>
-          <li className="flex items-start gap-3">
-            <List className="w-4 h-4 mt-0.5 text-muted" />
-            <span>Tous les parcours</span>
-          </li>
-          <li className="flex items-start gap-3">
-            <Zap className="w-4 h-4 mt-0.5 text-muted" />
-            <span>Tous les quiz</span>
-          </li>
-          <li className="flex items-start gap-3">
-            <GraduationCap className="w-4 h-4 mt-0.5 text-muted" />
-            <span>Examens complets</span>
-          </li>
-          <li className="flex items-start gap-3">
-            <Users className="w-4 h-4 mt-0.5 text-muted" />
-            <span>Entretiens complets</span>
-          </li>
-          <li className="flex items-start gap-3">
-            <MessageCircle className="w-4 h-4 mt-0.5 text-muted" />
-            <span>500 messages Tuteur IA/mois</span>
-          </li>
-          <li className="flex items-start gap-3">
-            <Wrench className="w-4 h-4 mt-0.5 text-muted" />
-            <span>Diagnostic complet</span>
-          </li>
-          <li className="flex items-start gap-3">
-            <HeartHandshake className="w-4 h-4 mt-0.5 text-muted" />
-            <span>Base de connaissances complète</span>
-          </li>
-          <li className="flex items-start gap-3">
-            <ShieldCheck className="w-4 h-4 mt-0.5 text-muted" />
-            <span>Révisions intelligentes+</span>
-          </li>
-          <li className="flex items-start gap-3">
-            <TrendingUp className="w-4 h-4 mt-0.5 text-muted" />
-            <span>Monitoring complet</span>
-          </li>
-          <li className="flex items-start gap-3">
-            <Users className="w-4 h-4 mt-0.5 text-muted" />
-            <span>Constructeur PC complet</span>
-          </li>
-          <li className="flex items-start gap-3">
-            <Users className="w-4 h-4 mt-0.5 text-muted" />
-            <span>Mode technicien disponible</span>
-          </li>
-          <li className="flex items-start gap-3">
-            <Users className="w-4 h-4 mt-0.5 text-muted" />
-            <span>Mode client disponible</span>
-          </li>
-          <li className="flex items-start gap-3">
-            <DollarSign className="w-4 h-4 mt-0.5 text-muted" />
-            <span>Progression complète</span>
-          </li>
+            <span>Tous les cours</span
+</li>
+<li className="flex items-start gap-3">
+  <List className="w-4 h-4 mt-0.5 text-muted" />
+  <span>Tous les parcours</span
+</li>
+<li className="flex items-start gap-3">
+  <Zap className="w-4 h-4 mt-0.5 text-muted" />
+  <span>Tous les quiz</span
+</li>
+<li className="flex items-start gap-3">
+  <GraduationCap className="w-4 h-4 mt-0.5 text-muted" />
+  <span>Examens complets</span
+</li>
+<li className="flex items-start gap-3">
+  <Users className="w-4 h-4 mt-0.5 text-muted" />
+  <span>Entretiens complets</span
+</li>
+<li className="flex items-start gap-3">
+  <MessageCircle className="w-4 h-4 mt-0.5 text-muted" />
+  <span>500 messages Tuteur IA/mois</span
+</li>
+<li className="flex items-start gap-3">
+  <Wrench className="w-4 h-4 mt-0.5 text-muted" />
+  <span>Diagnostic complet</span
+</li>
+<li className="flex items-start gap-3">
+  <HeartHandshake className="w-4 h-4 mt-0.5 text-muted" />
+  <span>Base de connaissances complète</span
+</li>
+<li className="flex items-start gap-3">
+  <ShieldCheck className="w-4 h-4 mt-0.5 text-muted" />
+  <span>Révisions intelligentes+</span
+</li>
+<li className="flex items-start gap-3">
+  <TrendingUp className="w-4 h-4 mt-0.5 text-muted" />
+  <span>Monitoring complet</span
+</li>
+<li className="flex items-start gap-3">
+  <Users className="w-4 h-4 mt-0.5 text-muted" />
+  <span>Constructeur PC complet</span
+</li>
+<li className="flex items-start gap-3">
+  <Users className="w-4 h-4 mt-0.5 text-muted" />
+  <span>Mode technicien disponible</span
+</li>
+<li className="flex items-start gap-3">
+  <Users className="w-4 h-4 mt-0.5 text-muted" />
+  <span>Mode client disponible</span
+</li>
+<li className="flex items-start gap-3">
+  <DollarSign className="w-4 h-4 mt-0.5 text-muted" />
+  <span>Progression complète</span
+</li>
         </ul>
 
         <div className="mt-6">
-          <Link href="/auth" className="w-full btn-primary">
-            Choisir Ultimate Lifetime
-          </Link>
+          <button
+            onClick={() => handlePlanSelect('ULTIMATE')}
+            disabled={loadingPlans}
+            className={`w-full btn-${currentPlan === 'ULTIMATE' ? 'outline' : 'primary'}`}
+          >
+            {loadingPlans ? 'Mise à jour...' : currentPlan === 'ULTIMATE' ? 'Actuel' : 'Sélectionner'}
+          </button>
         </div>
       </section>
 
@@ -365,17 +446,6 @@ export default async function TarifsPage() {
                 L'offre Ultimate Lifetime est un paiement unique de 399€ qui vous donne accès à vie à toutes les fonctionnalités
                 du plan Ultimate (24,99€/mois). Cela représente une économie de plus de 65% comparé à un abonnement mensuel
                 standard sur 2 ans. Aucun paiement récurrent n'est requis après cet achat unique.
-              </p>
-            </div>
-
-            <div className="border border-border rounded-xl p-5">
-              <h3 className="font-medium text-text mb-2">
-                Comment fonctionne le Tuteur IA et quelles sont les limites ?
-              </h3>
-              <p className="text-muted text-[14px] leading-relaxed">
-                Le Tuteur IA est votre assistant personnel disponible 24/7 pour répondre à vos questions sur le hardware PC.
-                Selon votre forfait, vous disposez d'un certain nombre de messages par mois : 3 essais (Gratuit), 20 (Essentiel),
-                150 (Pro) ou 500 (Ultimate). Les messages non utilisés ne sont pas reportés au mois suivant.
               </p>
             </div>
 

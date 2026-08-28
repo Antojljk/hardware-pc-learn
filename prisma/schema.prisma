@@ -9,6 +9,20 @@ datasource db {
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
+
+// ============================================================
+// OFFRES / PLANS
+// ============================================================
+// Quatre offres normalisées : FREE / ESSENTIEL / PRO / ULTIMATE.
+// La logique d'accès est centralisée dans src/lib/plans.ts — ne pas
+// disperser de conditions "if (user.plan === ...)" dans le code.
+enum Plan {
+  FREE
+  ESSENTIEL
+  PRO
+  ULTIMATE
+}
+
 // ============================================================
 // UTILISATEURS & SESSIONS
 // ============================================================
@@ -22,6 +36,12 @@ model User {
   streak       Int      @default(0)
   lastActiveAt DateTime?
   createdAt    DateTime @default(now())
+
+  // Offre associée au compte. Défaut : FREE.
+  // Étape 8 ajoutera les champs de facturation (date de début,
+  // renouvellement, identifiant de paiement externe). À l'étape 6,
+  // seul ce champ est nécessaire pour préparer l'architecture.
+  plan         Plan     @default(FREE)
 
   progress            LessonProgress[]
   quizAttempts        QuizAttempt[]
