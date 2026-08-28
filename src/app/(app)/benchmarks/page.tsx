@@ -1,4 +1,4 @@
-import { BarChart3, Activity, Gauge, Cpu, MonitorPlay } from 'lucide-react';
+import { BarChart3, Activity, Gauge, Cpu, MonitorPlay, Wrench, ListChecks } from 'lucide-react';
 
 export const metadata = { title: 'Benchmarks — HardwarePC' };
 
@@ -47,40 +47,103 @@ const sections = [
 
 export default function BenchmarksPage() {
   return (
-    <div className="space-y-6 max-w-3xl">
+    <div className="space-y-6">
       <section className="module-hero">
-        <div className="module-eyebrow">Référence</div>
-        <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight flex items-center gap-2 mt-2">
-          <BarChart3 className="w-6 h-6 text-text" /> Comprendre les benchmarks
-        </h1>
-        <p className="text-muted text-[15px] mt-2 max-w-xl">Apprends à interpréter les chiffres pour comparer CPU, GPU et configurations.</p>
+        <div className="relative flex flex-wrap items-end justify-between gap-6">
+          <div className="space-y-3 max-w-2xl">
+            <div className="module-eyebrow flex items-center gap-2">
+              <BarChart3 className="w-3.5 h-3.5" /> Référence
+            </div>
+            <h1 className="font-display text-4xl sm:text-5xl font-semibold tracking-tight">
+              Comprendre les benchmarks
+            </h1>
+            <p className="text-muted text-[15px] max-w-xl leading-relaxed">
+              Apprends à interpréter les chiffres pour comparer CPU, GPU et configurations.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-3 gap-2 sm:gap-3 w-full sm:w-auto sm:min-w-[360px]">
+            <div className="rounded-2xl border border-border bg-bg-elev/70 backdrop-blur p-3">
+              <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted">
+                <ListChecks className="w-3.5 h-3.5" /> Métriques
+              </div>
+              <div className="mt-1.5 font-display text-2xl font-semibold tabular-nums text-text">
+                {sections.length}
+              </div>
+            </div>
+            <div className="rounded-2xl border border-border bg-bg-elev/70 backdrop-blur p-3">
+              <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted">
+                <Activity className="w-3.5 h-3.5" /> Domaines
+              </div>
+              <div className="mt-1.5 font-display text-2xl font-semibold tabular-nums text-text">
+                3
+              </div>
+            </div>
+            <div className="rounded-2xl border border-text/30 bg-text/8 backdrop-blur p-3">
+              <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted">
+                <Wrench className="w-3.5 h-3.5" /> Outils
+              </div>
+              <div className="mt-1.5 font-display text-2xl font-semibold tabular-nums text-text">
+                5
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
-      <div className="grid sm:grid-cols-2 gap-3">
-        {sections.map((s, i) => {
-          const Icon = s.icon;
-          return (
-            <article key={s.title} className={`module-frame anim-rise anim-rise-${(i % 4) + 1}`}>
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-9 h-9 rounded-xl grid place-items-center bg-bg-elev border border-border">
-                  <Icon className="w-4 h-4 text-text" />
+      <section>
+        <div className="flex items-end justify-between gap-3 mb-4">
+          <h2 className="section-title">Métriques clés</h2>
+          <span className="text-[10px] uppercase tracking-[0.14em] text-faint">01 · Lecture</span>
+        </div>
+        <div className="grid sm:grid-cols-2 gap-3">
+          {sections.map((s, i) => {
+            const Icon = s.icon;
+            return (
+              <article
+                key={s.title}
+                className={`card-depth relative overflow-hidden lift-3d p-5 sm:p-6 anim-rise anim-rise-${(i % 4) + 1}`}
+              >
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute -top-16 -right-16 w-48 h-48 rounded-full opacity-40 blur-3xl"
+                  style={{ background: 'radial-gradient(closest-side, rgba(255,255,255,0.10), transparent 70%)' }}
+                />
+                <div className="relative">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 rounded-xl grid place-items-center bg-bg-elev border border-border text-text shrink-0">
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <h3 className="font-display text-base font-semibold text-text">{s.title}</h3>
+                  </div>
+                  <p className="text-sm text-muted leading-relaxed">{s.body}</p>
                 </div>
-                <h2 className="font-semibold">{s.title}</h2>
-              </div>
-              <p className="text-sm text-muted leading-relaxed">{s.body}</p>
-            </article>
-          );
-        })}
-      </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
 
-      <section className="module-frame anim-rise anim-rise-4">
-        <h2 className="section-title mb-3">Outils recommandés</h2>
-        <ul className="text-sm space-y-2 text-muted">
-          <li><strong className="text-text">HWiNFO64</strong> : monitoring complet (CPU, GPU, RAM, températures, voltages, fréquences).</li>
-          <li><strong className="text-text">MSI Afterburner</strong> : overlay en jeu (FPS, frametime, GPU load) + overclocking GPU.</li>
-          <li><strong className="text-text">Cinebench R23</strong> : benchmark CPU single/multi thread.</li>
-          <li><strong className="text-text">3DMark</strong> : benchmark GPU (Time Spy, Fire Strike, Port Royal pour le ray tracing).</li>
-          <li><strong className="text-text">CapFrameX</strong> : analyse fine du frametime et des 1% lows.</li>
+      <section className="module-frame anim-rise anim-rise-3">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="section-title flex items-center gap-2">
+            <Wrench className="w-4 h-4" /> Outils recommandés
+          </h2>
+          <span className="badge-muted tabular-nums">5</span>
+        </div>
+        <ul className="divide-y divide-border">
+          {[
+            { name: 'HWiNFO64', desc: 'monitoring complet (CPU, GPU, RAM, températures, voltages, fréquences).' },
+            { name: 'MSI Afterburner', desc: 'overlay en jeu (FPS, frametime, GPU load) + overclocking GPU.' },
+            { name: 'Cinebench R23', desc: 'benchmark CPU single/multi thread.' },
+            { name: '3DMark', desc: 'benchmark GPU (Time Spy, Fire Strike, Port Royal pour le ray tracing).' },
+            { name: 'CapFrameX', desc: 'analyse fine du frametime et des 1% lows.' },
+          ].map(t => (
+            <li key={t.name} className="py-3 flex flex-wrap items-center gap-3 text-sm">
+              <span className="font-medium text-text">{t.name}</span>
+              <span className="text-muted flex-1 min-w-0">— {t.desc}</span>
+            </li>
+          ))}
         </ul>
       </section>
     </div>

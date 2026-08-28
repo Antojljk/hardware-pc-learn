@@ -1,6 +1,6 @@
 'use client';
-import { useState } from 'react';
-import { Send, Sparkles, ShieldCheck, Loader2 } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Send, ShieldCheck, Loader2, User, Sparkles, MessageCircle, ListChecks } from 'lucide-react';
 
 type Msg = { role: 'client' | 'tech' | 'eval'; text: string };
 type Case = { id: string; title: string; message: string; hints: string[]; solution: string };
@@ -48,6 +48,13 @@ export function ClientSimulator() {
   const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages, busy]);
 
   function reset(i: number) {
     setIdx(i);
@@ -77,42 +84,91 @@ export function ClientSimulator() {
 
   return (
     <div className="space-y-4">
-      <div className="segment flex-wrap">
-        {CASES.map((cs, i) => (
-          <button
-            key={cs.id}
-            onClick={() => reset(i)}
-            data-active={idx === i ? 'true' : 'false'}
-            type="button"
-          >
-            {cs.title}
-          </button>
-        ))}
+      {/* SELECTEUR DE SCÉNARIOS */}
+      <div className="anim-rise anim-rise-1">
+        <div className="flex items-center gap-2 mb-3">
+          <ListChecks className="w-3.5 h-3.5 text-muted" />
+          <h3 className="module-eyebrow">Choisir un scénario client</h3>
+        </div>
+        <div className="segment flex-wrap">
+          {CASES.map((cs, i) => (
+            <button
+              key={cs.id}
+              onClick={() => reset(i)}
+              data-active={idx === i ? 'true' : 'false'}
+              type="button"
+            >
+              {cs.title}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="module-frame space-y-3 max-h-[60vh] overflow-y-auto">
+      {/* CONVERSATION */}
+      <div
+        ref={scrollRef}
+        className="module-frame p-5 sm:p-6 space-y-3 max-h-[60vh] overflow-y-auto anim-rise anim-rise-2"
+      >
         {messages.map((m, i) => {
           const isClient = m.role === 'client';
           const isEval = m.role === 'eval';
+          const isTech = m.role === 'tech';
           return (
             <div key={i} className={`flex ${isClient || isEval ? 'justify-start' : 'justify-end'}`}>
-              <div className={`rounded-2xl p-3 text-sm max-w-[85%] whitespace-pre-line border ${
-                isClient ? 'bg-bg-elev text-text border-border' :
-                isEval ? 'bg-text/8 border-text/30 text-text' :
-                'bg-text/10 border-text/30 text-text'
-              }`}>
-                {isClient && <div className="text-xs text-muted mb-1 flex items-center gap-1"><ShieldCheck className="w-3 h-3" /> Client</div>}
-                {isEval && <div className="text-xs text-muted mb-1">Évaluation</div>}
-                {!isClient && !isEval && <div className="text-xs text-muted mb-1 text-right">Technicien (toi)</div>}
-                {m.text}
+              <div className="flex items-start gap-3 max-w-[90%]">
+                {isClient && (
+                  <div className="w-8 h-8 rounded-lg grid place-items-center bg-bg-elev border border-border shrink-0">
+                    <ShieldCheck className="w-4 h-4 text-text" />
+                  </div>
+                )}
+                <div className={`rounded-2xl p-3.5 text-sm whitespace-pre-line leading-relaxed border ${
+                  isClient ? 'bg-bg-elev text-text border-border' :
+                  isEval ? 'bg-text/8 border-text/30 text-text' :
+                  'bg-text/10 border-text/30 text-text'
+                }`}>
+                  {isClient && (
+                    <div className="text-[10px] uppercase tracking-wider text-muted mb-1.5 flex items-center gap-1.5 font-semibold">
+                      <MessageCircle className="w-3 h-3" /> Client
+                    </div>
+                  )}
+                  {isEval && (
+                    <div className="text-[10px] uppercase tracking-wider text-muted mb-1.5 flex items-center gap-1.5 font-semibold">
+                      <Sparkles className="w-3 h-3" /> Évaluation
+                    </div>
+                  )}
+                  {isTech && (
+                    <div className="text-[10px] uppercase tracking-wider text-muted mb-1.5 flex items-center gap-1.5 font-semibold">
+                      <User className="w-3 h-3" /> Technicien (toi)
+                    </div>
+                  )}
+                  {m.text}
+                </div>
               </div>
             </div>
           );
         })}
-        {busy && <div className="text-xs text-muted">Le client réfléchit…</div>}
+        {busy && (
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg grid place-items-center bg-bg-elev border border-border shrink-0">
+              <ShieldCheck className="w-4 h-4 text-text" />
+            </div>
+            <div className="rounded-2xl p-3 text-sm bg-bg-elev border border-border">
+              <div className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-text-mute animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-text-mute animate-pulse" style={{ animationDelay: '120ms' }} />
+                <span className="w-1.5 h-1.5 rounded-full bg-text-mute animate-pulse" style={{ animationDelay: '240ms' }} />
+                <span className="text-xs text-muted ml-1.5">Le client réfléchit…</span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
-      <form onSubmit={(e) => { e.preventDefault(); send(); }} className="flex gap-2">
+      {/* ZONE DE SAISIE */}
+      <form
+        onSubmit={(e) => { e.preventDefault(); send(); }}
+        className="anim-rise anim-rise-3 flex gap-2"
+      >
         <input
           value={input}
           onChange={e => setInput(e.target.value)}
@@ -147,5 +203,3 @@ function analyzeAnswer(text: string, hints: string[]): number {
   });
   return Math.min(100, score);
 }
-
-void Sparkles;

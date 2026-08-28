@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Search } from 'lucide-react';
+import { Search, BookOpen } from 'lucide-react';
 
 type Term = {
   slug: string;
@@ -42,43 +42,69 @@ export function GlossarySearch({ terms, initial }: { terms: Term[]; initial: str
 
   return (
     <>
-      <div className="card p-3 flex flex-wrap gap-2 items-center">
-        <div className="relative flex-1 min-w-[220px]">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-mute" />
-          <input
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder="Rechercher un terme (ex : VRM, DDR5, NVMe)"
-            className="input pl-9"
-          />
+      <div className="module-frame anim-rise anim-rise-1">
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="relative flex-1 min-w-[220px]">
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-mute" />
+            <input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Rechercher un terme (ex : VRM, DDR5, NVMe)"
+              className="input pl-9"
+            />
+          </div>
+          <select value={level} onChange={(e) => setLevel(e.target.value)} className="input max-w-[180px]">
+            <option value="all">Tous niveaux</option>
+            <option value="debutant">Débutant</option>
+            <option value="intermediaire">Intermédiaire</option>
+            <option value="avance">Avancé</option>
+            <option value="expert">Expert</option>
+          </select>
+          <span className="badge-muted tabular-nums">
+            {filtered.length} terme{filtered.length > 1 ? 's' : ''}
+          </span>
         </div>
-        <select value={level} onChange={(e) => setLevel(e.target.value)} className="input max-w-[180px]">
-          <option value="all">Tous niveaux</option>
-          <option value="debutant">Débutant</option>
-          <option value="intermediaire">Intermédiaire</option>
-          <option value="avance">Avancé</option>
-          <option value="expert">Expert</option>
-        </select>
-        <span className="text-xs text-text-mute ml-auto">{filtered.length} terme{filtered.length > 1 ? 's' : ''}</span>
       </div>
 
       {groups.length === 0 ? (
-        <div className="card p-6 text-center text-text-soft">Aucun terme ne correspond.</div>
+        <div className="module-frame text-center text-muted anim-rise">
+          Aucun terme ne correspond à ta recherche.
+        </div>
       ) : (
         groups.map(([cat, list]) => (
-          <section key={cat} className="space-y-2">
-            <h2 className="section-title">{cat}</h2>
-            <div className="grid sm:grid-cols-2 gap-2">
+          <section key={cat} className="space-y-3 anim-rise anim-rise-2">
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="section-title flex items-center gap-2">
+                <BookOpen className="w-4 h-4 text-muted" /> {cat}
+              </h2>
+              <span className="badge-muted tabular-nums">{list.length}</span>
+            </div>
+            <div className="grid sm:grid-cols-2 gap-3">
               {list.map(t => (
-                <details key={t.slug} className="card p-4 group">
-                  <summary className="cursor-pointer flex items-center justify-between gap-2">
-                    <span className="font-semibold">{t.term}</span>
-                    <span className="badge bg-bg-elev border-border text-text-soft">{t.level}</span>
+                <details key={t.slug} className="card-depth relative overflow-hidden lift-3d group p-5">
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute -top-16 -right-16 w-40 h-40 rounded-full opacity-30 blur-3xl"
+                    style={{ background: 'radial-gradient(closest-side, rgba(255,255,255,0.10), transparent 70%)' }}
+                  />
+                  <summary className="relative cursor-pointer flex items-center justify-between gap-2">
+                    <span className="font-display text-base font-semibold text-text">{t.term}</span>
+                    <span className="badge-muted capitalize shrink-0">{t.level}</span>
                   </summary>
-                  <div className="mt-3 space-y-2 text-sm">
-                    <p><span className="text-brand-cyan">Simple :</span> {t.simple}</p>
-                    <p className="text-text-soft"><span className="text-brand-blue">Technique :</span> {t.technical}</p>
-                    {t.example && <p className="text-text-mute italic">« {t.example} »</p>}
+                  <div className="relative mt-3 space-y-2.5 text-sm">
+                    <div className="rounded-xl border border-border bg-bg-elev/60 p-3">
+                      <div className="text-[10px] uppercase tracking-wider text-muted mb-1">Simple</div>
+                      <p className="text-text">{t.simple}</p>
+                    </div>
+                    <div className="rounded-xl border border-border bg-bg-elev/60 p-3">
+                      <div className="text-[10px] uppercase tracking-wider text-muted mb-1">Technique</div>
+                      <p className="text-text-soft">{t.technical}</p>
+                    </div>
+                    {t.example && (
+                      <div className="rounded-xl border border-border bg-bg-elev/40 p-3 italic text-muted">
+                        « {t.example} »
+                      </div>
+                    )}
                   </div>
                 </details>
               ))}

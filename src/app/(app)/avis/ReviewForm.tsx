@@ -32,12 +32,16 @@ export function ReviewForm() {
   }
 
   const active = hover || rating;
+  const ratingLabel = ['', 'Décevant', 'Moyen', 'Bien', 'Très bien', 'Excellent'][active];
 
   return (
-    <form onSubmit={submit} className="space-y-3">
-      <div>
-        <label className="text-xs text-text-mute">Note</label>
-        <div className="flex gap-1 mt-1">
+    <form onSubmit={submit} className="space-y-5">
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <label className="text-xs uppercase tracking-wider text-muted font-semibold">Note</label>
+          <span className="badge-muted">{ratingLabel}</span>
+        </div>
+        <div className="flex gap-1">
           {[1, 2, 3, 4, 5].map(i => (
             <button
               type="button"
@@ -45,33 +49,42 @@ export function ReviewForm() {
               onMouseEnter={() => setHover(i)}
               onMouseLeave={() => setHover(0)}
               onClick={() => setRating(i)}
-              className="p-1"
+              className="p-1 transition-transform hover:scale-110"
               aria-label={`${i} étoiles`}
             >
               <Star
-                className={`w-6 h-6 ${i <= active ? 'fill-warning text-warning' : 'text-text-mute'}`}
+                className={`w-7 h-7 ${i <= active ? 'fill-text text-text' : 'text-text-mute'}`}
               />
             </button>
           ))}
         </div>
       </div>
-      <div>
-        <label className="text-xs text-text-mute" htmlFor="msg">Ton avis</label>
+
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <label className="text-xs uppercase tracking-wider text-muted font-semibold" htmlFor="msg">Ton avis</label>
+          <span className="text-[10px] text-text-mute tabular-nums">{message.length}/500</span>
+        </div>
         <textarea
           id="msg"
           value={message}
           onChange={e => setMessage(e.target.value)}
           maxLength={500}
-          rows={3}
+          rows={4}
           required
-          className="w-full mt-1 px-3 py-2 rounded-lg bg-bg-elev border border-border focus:border-text outline-none text-sm"
+          className="w-full px-4 py-3 rounded-2xl bg-bg-elev border border-border focus:border-text outline-none text-sm transition-colors resize-none"
           placeholder="Qu&apos;as-tu pensé de la plateforme ?"
         />
-        <div className="text-[10px] text-text-mute text-right">{message.length}/500</div>
       </div>
-      {err && <div className="text-xs text-danger">{err}</div>}
+
+      {err && (
+        <div className="rounded-xl border border-text/30 bg-text/8 p-3 text-xs text-text">
+          {err}
+        </div>
+      )}
+
       <button type="submit" disabled={busy} className="btn-primary">
-        <Send className="w-4 h-4" /> {busy ? 'Envoi…' : 'Publier'}
+        <Send className="w-4 h-4" /> {busy ? 'Envoi en cours…' : 'Publier mon avis'}
       </button>
     </form>
   );
