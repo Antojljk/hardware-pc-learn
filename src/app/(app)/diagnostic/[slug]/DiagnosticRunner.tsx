@@ -97,7 +97,6 @@ export function DiagnosticRunner({
           <ol className="timeline">
             {usedSteps.map((s, i) => {
               const ideal = idealSequence.includes(s.id);
-              const wrong = wrongMoves.includes(s.id);
               return (
                 <li key={s.id} className="timeline-item">
                   <div className={cn(
