@@ -8,7 +8,7 @@ import Link from 'next/link';
 type Step = { id: string; label: string; type: string; category: string };
 
 export function DiagnosticRunner({
-  slug, title, symptoms, steps, idealSequence, optionalAcceptable, wrongMoves, rootCause, solution,
+  slug, title, symptoms, steps, idealSequence, optionalAcceptable, rootCause, solution,
 }: {
   slug: string; title: string; symptoms: string[]; steps: Step[];
   idealSequence: string[]; optionalAcceptable: string[]; wrongMoves: string[]; rootCause: string; solution: string;
