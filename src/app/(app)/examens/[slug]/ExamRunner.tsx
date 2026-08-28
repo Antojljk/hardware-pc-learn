@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState, useRef } from 'react';
 import { cn, formatDuration } from '@/lib/utils';
-import { Loader2, ArrowRight, Clock, AlertTriangle } from 'lucide-react';
+import { Loader2, ArrowRight, Clock, AlertTriangle, CircleCheck, CircleAlert } from 'lucide-react';
 
 type Q = { id: string; type: string; category: string; difficulty: string; prompt: string; choices: string[]; explanation: string; answer: string | string[] };
 
@@ -40,9 +40,10 @@ export function ExamRunner({ exam, questions }: { exam: { slug: string; duration
 
   if (!started) {
     return (
-      <div className="card p-6">
-        <h2 className="font-semibold mb-2">Consignes</h2>
-        <ul className="text-sm text-text-soft space-y-1 mb-4 list-disc list-inside">
+      <div className="module-frame anim-rise">
+        <div className="module-eyebrow mb-2">Consignes</div>
+        <h2 className="font-display text-lg font-semibold mb-3">Prépare-toi</h2>
+        <ul className="text-sm text-muted space-y-2 mb-6 list-disc list-inside marker:text-muted">
           <li>Chronomètre de {Math.round(exam.durationSec/60)} minutes, non pausible.</li>
           <li>Pas de retour en arrière après validation de chaque question (mode examen).</li>
           <li>Score &ge; 70% = réussi.</li>
@@ -59,22 +60,23 @@ export function ExamRunner({ exam, questions }: { exam: { slug: string; duration
     const pass = pct >= result.passPercent;
     return (
       <div className="space-y-4">
-        <div className={`card p-6 text-center ${pass ? 'bg-gradient-to-br from-success/10 to-bg-elev' : 'bg-gradient-to-br from-danger/10 to-bg-elev'}`}>
-          <div className="text-5xl font-bold mb-1">{pct}%</div>
-          <div className={`font-semibold mb-2 ${pass ? 'text-success' : 'text-danger'}`}>{pass ? 'Réussi !' : 'Échoué'}</div>
-          <div className="text-sm text-text-soft">{result.score}/{result.total} bonnes réponses · {formatDuration(result.timeSpent)} · +{result.xpAwarded} XP</div>
-        </div>
+        <section className={`result-hero anim-rise ${pass ? 'border-text/40' : ''}`}>
+          <div className="module-eyebrow mb-2">Résultat</div>
+          <div className="font-display text-6xl font-semibold tabular-nums">{pct}<span className="text-2xl text-muted">%</span></div>
+          <div className={`font-semibold mt-1 ${pass ? 'text-text' : 'text-muted'}`}>{pass ? 'Réussi' : 'Échoué'}</div>
+          <div className="text-sm text-muted mt-2">{result.score}/{result.total} bonnes réponses · {formatDuration(result.timeSpent)} · +{result.xpAwarded} XP</div>
+        </section>
         {result.domainStats && (
-          <section className="card p-5">
-            <h2 className="section-title mb-3">Domaines</h2>
-            <div className="grid sm:grid-cols-2 gap-3">
+          <section className="module-frame anim-rise anim-rise-1">
+            <h2 className="section-title mb-4">Domaines</h2>
+            <div className="grid sm:grid-cols-2 gap-4">
               <div>
-                <h3 className="text-sm font-semibold text-success mb-2">🟢 Domaines forts</h3>
-                <ul className="space-y-1 text-sm">{(result.strongDomains ?? []).map((d: { category: string; percent: number }) => <li key={d.category} className="flex justify-between"><span>{d.category}</span><span className="tabular-nums">{d.percent}%</span></li>)}</ul>
+                <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><CircleCheck className="w-4 h-4" /> Domaines forts</h3>
+                <ul className="space-y-1 text-sm">{(result.strongDomains ?? []).map((d: { category: string; percent: number }) => <li key={d.category} className="flex justify-between py-1.5 border-b border-border last:border-0"><span className="text-muted">{d.category}</span><span className="tabular-nums font-semibold">{d.percent}%</span></li>)}</ul>
               </div>
               <div>
-                <h3 className="text-sm font-semibold text-warning mb-2">🔴 À travailler</h3>
-                <ul className="space-y-1 text-sm">{(result.weakDomains ?? []).map((d: { category: string; percent: number }) => <li key={d.category} className="flex justify-between"><span>{d.category}</span><span className="tabular-nums">{d.percent}%</span></li>)}</ul>
+                <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><CircleAlert className="w-4 h-4" /> À travailler</h3>
+                <ul className="space-y-1 text-sm">{(result.weakDomains ?? []).map((d: { category: string; percent: number }) => <li key={d.category} className="flex justify-between py-1.5 border-b border-border last:border-0"><span className="text-muted">{d.category}</span><span className="tabular-nums font-semibold">{d.percent}%</span></li>)}</ul>
               </div>
             </div>
           </section>
@@ -87,37 +89,51 @@ export function ExamRunner({ exam, questions }: { exam: { slug: string; duration
   const progress = ((index) / questions.length) * 100;
   const mins = Math.floor(timeLeft / 60);
   const secs = timeLeft % 60;
+  const critical = timeLeft < 60;
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between text-sm sticky top-16 z-10 bg-bg/80 backdrop-blur py-2">
-        <span>Question {index + 1}/{questions.length}</span>
-        <span className={cn('badge font-mono tabular-nums', timeLeft < 60 ? 'bg-danger/15 text-danger border-danger/30 animate-pulse' : 'bg-bg-elev border-border')}>
+      <div className="sticky-stage -mx-6 sm:-mx-10 px-6 sm:px-10 flex items-center justify-between text-sm">
+        <span className="text-muted tabular-nums">Question {index + 1}<span className="text-faint"> / {questions.length}</span></span>
+        <span className={cn(
+          'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border font-mono tabular-nums',
+          critical
+            ? 'bg-text/10 border-text/50 animate-pulse text-text'
+            : 'bg-bg-elev border-border text-muted'
+        )}>
           <Clock className="w-3 h-3" />{mins}:{String(secs).padStart(2, '0')}
         </span>
       </div>
-      <div className="h-1.5 rounded-full bg-bg-elev overflow-hidden">
-        <div className="h-full bg-gradient-to-r from-brand-blue to-brand-violet" style={{ width: `${progress}%` }} />
+      <div className="h-1 rounded-full bg-bg-elev overflow-hidden">
+        <div className="h-full bg-text transition-all duration-500 ease-smooth" style={{ width: `${progress}%` }} />
       </div>
 
-      <div className="card p-6">
-        <div className="text-xs text-text-mute mb-2">{q.category}</div>
-        <h2 className="text-lg font-medium mb-5">{q.prompt}</h2>
-        <div className="space-y-2">
-          {q.choices.map((c, i) => (
-            <button
-              key={i}
-              onClick={() => setAnswers(a => ({ ...a, [q.id]: c }))}
-              className={cn(
-                'w-full text-left p-4 rounded-lg border transition',
-                answers[q.id] === c ? 'border-brand-blue bg-brand-blue/10' : 'border-border bg-bg-elev hover:border-brand-blue/40',
-              )}
-            >
-              <span className="font-mono mr-2 text-text-mute">{String.fromCharCode(65 + i)}.</span>{c}
-            </button>
-          ))}
+      <div key={index} className="question-card anim-rise">
+        <div className="flex items-center justify-between mb-3">
+          <div className="text-xs text-muted uppercase tracking-wider">{q.category}</div>
+          <span className="text-[10px] text-faint tabular-nums">{index + 1}/{questions.length}</span>
         </div>
-        <div className="flex justify-between mt-4">
+        <h2 className="font-display text-lg sm:text-xl font-semibold mb-5 leading-snug">{q.prompt}</h2>
+        <div className="space-y-2">
+          {q.choices.map((c, i) => {
+            const selected = answers[q.id] === c;
+            return (
+              <button
+                key={i}
+                onClick={() => setAnswers(a => ({ ...a, [q.id]: c }))}
+                className="option-card"
+                data-state={selected ? 'selected' : undefined}
+              >
+                <span className={cn(
+                  'w-7 h-7 rounded-lg grid place-items-center font-mono text-xs shrink-0 border transition-colors',
+                  selected ? 'border-text/50 bg-text/10 text-text' : 'border-border bg-bg-soft text-muted'
+                )}>{String.fromCharCode(65 + i)}</span>
+                <span className="flex-1">{c}</span>
+              </button>
+            );
+          })}
+        </div>
+        <div className="flex justify-between mt-5 gap-2">
           <button
             disabled={index === 0}
             onClick={() => setIndex(i => Math.max(0, i - 1))}

@@ -67,44 +67,44 @@ export function ChallengeClient({ components, challenge }: { components: Compone
 
   if (done) {
     return (
-      <div className="card p-10 max-w-2xl mx-auto text-center space-y-4">
-        <CheckCircle2 className="w-12 h-12 text-success mx-auto" />
+      <div className="result-hero max-w-2xl mx-auto space-y-4 anim-rise">
+        <CheckCircle2 className="w-12 h-12 text-text mx-auto" />
         <h1 className="font-display text-3xl font-semibold tracking-tight">Défi validé.</h1>
-        <p className="text-text-soft">Tu as terminé le défi <b>{challenge.title}</b>.</p>
-        <div className="font-display text-6xl font-semibold tabular-nums tracking-tight text-accent">{done.score}<span className="text-2xl text-text-mute">/100</span></div>
+        <p className="text-muted">Tu as terminé le défi <strong className="text-text">{challenge.title}</strong>.</p>
+        <div className="font-display text-6xl font-semibold tabular-nums tracking-tight">{done.score}<span className="text-2xl text-muted">/100</span></div>
         <a href="/constructeur/defis" className="btn-primary inline-flex"><Target className="w-4 h-4" /> Revenir aux défis</a>
       </div>
     );
   }
 
   return (
-    <div className="space-y-10">
-      <header className="flex flex-wrap items-end justify-between gap-4">
+    <div className="space-y-6">
+      <section className="module-hero flex flex-wrap items-end justify-between gap-4">
         <div>
-          <div className="text-[11px] tracking-widest uppercase text-accent mb-2">Défi en cours</div>
-          <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight">{challenge.title}</h1>
-          <p className="text-sm text-text-soft flex items-center gap-1.5 mt-2">
+          <div className="module-eyebrow mb-2">Défi en cours</div>
+          <h1 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight">{challenge.title}</h1>
+          <p className="text-sm text-muted flex items-center gap-1.5 mt-3">
             <Wallet className="w-3.5 h-3.5" /> Budget {challenge.budget} € · {Object.keys(challenge.constraints).length} contraintes
           </p>
         </div>
         <div className="text-right">
-          <div className="text-[11px] text-text-mute uppercase tracking-wider">Total actuel</div>
-          <div className={`font-display text-3xl font-semibold tabular-nums ${overBudget ? 'text-danger' : 'text-text'}`}>{check.totalPrice}<span className="text-base text-text-mute ml-1">€</span></div>
+          <div className="module-eyebrow mb-1">Total actuel</div>
+          <div className={`font-display text-3xl font-semibold tabular-nums ${overBudget ? 'text-muted' : 'text-text'}`}>{check.totalPrice}<span className="text-base text-muted ml-1">€</span></div>
         </div>
-      </header>
+      </section>
 
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
-          {TYPES.map(t => {
+          {TYPES.map((t, i) => {
             const Icon = t.icon;
             const opts = byType[t.key] || [];
             const selected = build[t.key];
             return (
-              <section key={t.key} className="space-y-3">
+              <section key={t.key} className={`space-y-3 anim-rise anim-rise-${(i % 4) + 1}`}>
                 <div className="flex items-center gap-2 px-1">
-                  <Icon className="w-4 h-4 text-text-soft" />
+                  <Icon className="w-4 h-4 text-muted" />
                   <h3 className="font-display text-base font-semibold tracking-tight">{t.label}</h3>
-                  <span className="text-xs text-text-mute ml-auto">{opts.length} références</span>
+                  <span className="text-xs text-muted ml-auto">{opts.length} références</span>
                 </div>
                 <div className="grid sm:grid-cols-2 gap-2">
                   {opts.slice(0, 18).map(o => {
@@ -114,10 +114,10 @@ export function ChallengeClient({ components, challenge }: { components: Compone
                         key={o.id}
                         onClick={() => setBuild(b => ({ ...b, [t.key]: active ? undefined : o.id }))}
                         className={cn(
-                          'text-left p-2.5 rounded-xl border transition-colors text-sm',
+                          'text-left p-3 rounded-xl border transition-all duration-200 lift-3d',
                           active
-                            ? 'border-accent bg-accent/5'
-                            : 'border-border bg-bg-elev hover:border-text-mute'
+                            ? 'border-text/60 bg-text/8'
+                            : 'border-border bg-bg-elev hover:border-text/40'
                         )}
                       >
                         <div className="font-medium truncate">{o.brand} {o.model}</div>
@@ -133,17 +133,17 @@ export function ChallengeClient({ components, challenge }: { components: Compone
           })}
         </div>
 
-        <aside className="space-y-3 lg:sticky lg:top-4 self-start">
-          <section className="card p-4">
-            <h3 className="section-title mb-2">Contraintes</h3>
-            <ul className="text-sm space-y-1">
-              <li className="flex items-center gap-2">
+        <aside className="space-y-4 lg:sticky lg:top-4 self-start">
+          <section className="module-frame">
+            <h3 className="section-title mb-3">Contraintes</h3>
+            <ul className="text-sm space-y-1.5">
+              <li className="flex items-center gap-2 py-1.5 border-b border-border last:border-0">
                 <Wallet className="w-3.5 h-3.5" />
                 <span>Budget {challenge.budget} €</span>
-                {overBudget ? <AlertTriangle className="w-3.5 h-3.5 text-danger ml-auto" /> : <CheckCircle2 className="w-3.5 h-3.5 text-success ml-auto" />}
+                {overBudget ? <AlertTriangle className="w-3.5 h-3.5 text-muted ml-auto" /> : <CheckCircle2 className="w-3.5 h-3.5 text-text ml-auto" />}
               </li>
               {Object.entries(challenge.constraints).map(([k, v]) => (
-                <li key={k} className="flex items-center gap-2 text-text-soft">
+                <li key={k} className="flex items-center gap-2 text-muted py-1.5 border-b border-border last:border-0">
                   <Info className="w-3.5 h-3.5" />
                   <span>{k} : {String(v)}</span>
                 </li>
@@ -151,23 +151,23 @@ export function ChallengeClient({ components, challenge }: { components: Compone
             </ul>
           </section>
 
-          <section className="card p-4">
-            <h3 className="section-title mb-2">Compatibilité</h3>
+          <section className="module-frame">
+            <h3 className="section-title mb-3">Compatibilité</h3>
             {check.issues.length === 0 ? (
-              <p className="text-sm text-success">Tout est OK</p>
+              <p className="text-sm text-text inline-flex items-center gap-2"><CheckCircle2 className="w-4 h-4" /> Tout est OK</p>
             ) : (
-              <ul className="text-xs space-y-1">
+              <ul className="text-xs space-y-1.5 text-muted">
                 {check.issues.map((i, idx) => (
-                  <li key={idx} className={i.severity === 'error' ? 'text-danger' : i.severity === 'warn' ? 'text-warning' : 'text-text-soft'}>{i.message}</li>
+                  <li key={idx} className={i.severity === 'error' ? 'text-text' : i.severity === 'warn' ? 'text-text-soft' : 'text-muted'}>{i.message}</li>
                 ))}
               </ul>
             )}
           </section>
 
           {check.ok && !overBudget && (
-            <section className="card p-4">
-              <h3 className="section-title mb-2">Score prévu</h3>
-              <div className="text-3xl font-bold">{score.total}<span className="text-sm text-text-mute">/100</span></div>
+            <section className="module-frame">
+              <h3 className="section-title mb-3">Score prévu</h3>
+              <div className="font-display text-3xl font-semibold tabular-nums">{score.total}<span className="text-sm text-muted">/100</span></div>
               <button onClick={submit} disabled={saving} className="btn-primary w-full mt-3">
                 <Save className="w-4 h-4" /> {saving ? 'Validation…' : 'Valider le défi'}
               </button>

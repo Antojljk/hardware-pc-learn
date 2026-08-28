@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Wrench, Send, Loader2, AlertTriangle } from 'lucide-react';
+import { Wrench, Send, Loader2, AlertTriangle, CircleCheck, CircleAlert, CircleX, Settings, Lightbulb, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
@@ -34,31 +34,34 @@ export function DiagnosticRunner({
   if (result) {
     return (
       <div className="space-y-4 max-w-3xl">
-        <div className="card p-6 text-center bg-gradient-to-br from-bg-card to-bg-elev">
-          <div className="text-5xl font-bold bg-gradient-to-r from-brand-blue to-brand-violet bg-clip-text text-transparent">{result.score}/100</div>
-          <div className="text-text-soft mt-1">Score de diagnostic</div>
-          <div className="text-sm text-brand-blue mt-2">+{result.xpAwarded} XP</div>
-        </div>
-        <div className="grid sm:grid-cols-2 gap-4">
-          <div className="card p-5">
-            <h3 className="font-semibold text-success mb-3">🟢 Bonne approche</h3>
-            <ul className="text-sm space-y-1">{result.evaluation.good.map((s: string, i: number) => <li key={i}>• {s}</li>)}</ul>
+        <section className="result-hero anim-rise">
+          <div className="module-eyebrow mb-2">Résultat</div>
+          <div className="font-display text-6xl font-semibold tabular-nums">{result.score}<span className="text-2xl text-muted">/100</span></div>
+          <div className="text-muted mt-1">Score de diagnostic</div>
+          <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-bg-elev border border-border text-sm">
+            <span className="font-semibold">+{result.xpAwarded}</span><span className="text-muted">XP gagnés</span>
           </div>
-          <div className="card p-5">
-            <h3 className="font-semibold text-warning mb-3">🟡 À améliorer</h3>
-            <ul className="text-sm space-y-1">{result.evaluation.missed.map((s: string, i: number) => <li key={i}>• {s}</li>)}</ul>
+        </section>
+        <div className="grid sm:grid-cols-2 gap-3">
+          <div className="module-frame anim-rise anim-rise-1">
+            <h3 className="font-semibold mb-3 flex items-center gap-2"><CircleCheck className="w-4 h-4" /> Bonne approche</h3>
+            <ul className="text-sm space-y-1.5 text-muted">{result.evaluation.good.map((s: string, i: number) => <li key={i} className="flex items-start gap-2"><span className="text-muted">•</span>{s}</li>)}</ul>
+          </div>
+          <div className="module-frame anim-rise anim-rise-2">
+            <h3 className="font-semibold mb-3 flex items-center gap-2"><CircleAlert className="w-4 h-4" /> À améliorer</h3>
+            <ul className="text-sm space-y-1.5 text-muted">{result.evaluation.missed.map((s: string, i: number) => <li key={i} className="flex items-start gap-2"><span className="text-muted">•</span>{s}</li>)}</ul>
           </div>
         </div>
         {result.evaluation.wrong.length > 0 && (
-          <div className="card p-5 border-danger/30 bg-danger/5">
-            <h3 className="font-semibold text-danger mb-3">❌ Étapes inappropriées</h3>
-            <ul className="text-sm space-y-1">{result.evaluation.wrong.map((s: string, i: number) => <li key={i}>• {s}</li>)}</ul>
+          <div className="module-frame anim-rise anim-rise-3">
+            <h3 className="font-semibold mb-3 flex items-center gap-2"><CircleX className="w-4 h-4" /> Étapes inappropriées</h3>
+            <ul className="text-sm space-y-1.5 text-muted">{result.evaluation.wrong.map((s: string, i: number) => <li key={i} className="flex items-start gap-2"><span className="text-muted">•</span>{s}</li>)}</ul>
           </div>
         )}
-        <section className="card p-5 bg-gradient-to-br from-bg-card to-bg-elev">
-          <h3 className="font-semibold mb-2">🔧 Cause racine</h3>
-          <p className="text-sm text-text-soft mb-3">{rootCause}</p>
-          <h3 className="font-semibold mb-2">💡 Solution détaillée</h3>
+        <section className="card-highlight anim-rise anim-rise-4">
+          <h3 className="font-display text-lg font-semibold mb-2 flex items-center gap-2"><Settings className="w-4 h-4" /> Cause racine</h3>
+          <p className="text-sm text-text-soft mb-5">{rootCause}</p>
+          <h3 className="font-display text-lg font-semibold mb-2 flex items-center gap-2"><Lightbulb className="w-4 h-4" /> Solution détaillée</h3>
           <p className="text-sm text-text-soft whitespace-pre-line">{solution}</p>
         </section>
         <Link href="/diagnostic" className="btn-primary w-full justify-center">Autre scénario</Link>
@@ -73,31 +76,37 @@ export function DiagnosticRunner({
 
   return (
     <div className="space-y-5 max-w-4xl">
-      <Link href="/diagnostic" className="text-sm text-text-soft hover:text-text inline-flex items-center gap-1">← Tous les scénarios</Link>
+      <Link href="/diagnostic" className="text-sm text-muted hover:text-text inline-flex items-center gap-1 anim-rise">
+        <ArrowLeft className="w-3.5 h-3.5" /> Tous les scénarios
+      </Link>
 
-      <header className="card p-5 bg-gradient-to-br from-bg-card to-bg-elev">
-        <h1 className="text-xl font-bold mb-2 flex items-center gap-2"><Wrench className="w-5 h-5 text-brand-blue" /> {title}</h1>
-        <div className="text-xs text-text-mute mb-2 uppercase tracking-wider">Symptômes</div>
-        <ul className="text-sm space-y-1">
-          {symptoms.map((s, i) => <li key={i} className="flex items-start gap-2"><AlertTriangle className="w-3.5 h-3.5 text-warning mt-0.5" />{s}</li>)}
-        </ul>
-      </header>
+      <section className="module-hero">
+        <div className="module-eyebrow mb-2 flex items-center gap-2"><Wrench className="w-3.5 h-3.5" /> Scénario de diagnostic</div>
+        <h1 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight">{title}</h1>
+        <div className="mt-5 pt-5 border-t border-border">
+          <div className="text-xs text-muted mb-3 uppercase tracking-wider">Symptômes</div>
+          <ul className="text-sm space-y-2.5">
+            {symptoms.map((s, i) => <li key={i} className="flex items-start gap-2.5"><AlertTriangle className="w-3.5 h-3.5 mt-0.5 shrink-0 text-text" />{s}</li>)}
+          </ul>
+        </div>
+      </section>
 
       {usedSteps.length > 0 && (
-        <section className="card p-5">
+        <section className="module-frame anim-rise anim-rise-1">
           <h2 className="section-title mb-3">Tes étapes ({usedSteps.length})</h2>
-          <ol className="space-y-2">
+          <ol className="timeline">
             {usedSteps.map((s, i) => {
               const ideal = idealSequence.includes(s.id);
               const wrong = wrongMoves.includes(s.id);
               return (
-                <li key={s.id} className={cn('p-3 rounded-lg border flex items-start gap-3',
-                  ideal ? 'bg-success/5 border-success/30' : wrong ? 'bg-danger/5 border-danger/30' : 'bg-bg-elev border-border',
-                )}>
-                  <span className="font-mono text-sm text-text-mute w-6">{i + 1}.</span>
-                  <span className="flex-1 text-sm">{s.label}</span>
-                  <div className="flex gap-1">
-                    <button onClick={() => setChosen(c => c.filter(x => x !== s.id))} className="text-xs text-text-mute hover:text-danger">retirer</button>
+                <li key={s.id} className="timeline-item">
+                  <div className={cn(
+                    'p-3 rounded-xl border flex items-start gap-3',
+                    ideal ? 'bg-text/8 border-text/30' : 'bg-bg-elev border-border',
+                  )}>
+                    <span className="font-mono text-sm text-muted w-6">{i + 1}.</span>
+                    <span className="flex-1 text-sm">{s.label}</span>
+                    <button onClick={() => setChosen(c => c.filter(x => x !== s.id))} className="text-xs text-muted hover:text-text transition-colors">retirer</button>
                   </div>
                 </li>
               );
@@ -106,16 +115,17 @@ export function DiagnosticRunner({
         </section>
       )}
 
-      <section className="card p-5">
+      <section className="module-frame anim-rise anim-rise-2">
         <h2 className="section-title mb-3">Étapes disponibles</h2>
-        <div className="grid sm:grid-cols-2 gap-2">
+        <div className="choice-grid sm:gap-2" data-cols={availableSteps.length > 3 ? "2" : undefined}>
           {availableSteps.map(s => (
             <button
               key={s.id}
               onClick={() => setChosen(c => [...c, s.id])}
-              className="text-left p-3 rounded-lg bg-bg-elev border border-border hover:border-brand-blue/40 transition text-sm"
+              className="option-card"
             >
-              {s.label}
+              <span className="flex-1">{s.label}</span>
+              <span className="text-faint text-xs">ajouter →</span>
             </button>
           ))}
         </div>

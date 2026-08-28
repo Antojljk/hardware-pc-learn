@@ -11,10 +11,13 @@ export default async function ClientModePage() {
 
   return (
     <div className="space-y-6 max-w-3xl mx-auto">
-      <header>
-        <h1 className="text-2xl font-bold flex items-center gap-2"><ShieldCheck className="w-5 h-5 text-brand-blue" /> Mode client</h1>
-        <p className="text-text-soft text-sm">Dialogue avec un client mécontent ou inquiet. Qualité de la communication + technique évaluées.</p>
-      </header>
+      <section className="module-hero">
+        <div className="module-eyebrow">Simulation</div>
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight flex items-center gap-2 mt-2">
+          <ShieldCheck className="w-6 h-6 text-text" /> Mode client
+        </h1>
+        <p className="text-muted text-[15px] mt-2 max-w-xl">Dialogue avec un client mécontent ou inquiet. Qualité de la communication + technique évaluées.</p>
+      </section>
 
       <ClientSimulator />
     </div>

@@ -27,10 +27,10 @@ interface OfferRow {
 
 const OFFERS: OfferRow[] = [
   { name: 'FREE',              price: '0 €/mois',         hint: 'Pour commencer' },
-  { name: 'ESSENTIEL',         price: '7,99 €/mois',     hint: 'Apprenant régulier' },
-  { name: 'PRO',               price: '14,99 €/mois',    hint: 'Montée en compétences', highlight: true },
-  { name: 'ULTIMATE',          price: '24,99 €/mois',    hint: 'Niveau technicien' },
-  { name: 'ULTIMATE LIFETIME', price: '399 €',           hint: 'Paiement unique' },
+  { name: 'ESSENTIEL',         price: '7,99 €/mois',      hint: 'Apprenant régulier' },
+  { name: 'PRO',               price: '14,99 €/mois',     hint: 'Montée en compétences', highlight: true },
+  { name: 'ULTIMATE',          price: '24,99 €/mois',     hint: 'Niveau technicien' },
+  { name: 'ULTIMATE LIFETIME', price: '399 €',            hint: 'Paiement unique' },
 ];
 
 export function PricingCTA() {
@@ -44,7 +44,10 @@ export function PricingCTA() {
       <div className="l-container">
         <div className="l-pricing-cta-inner">
           <header className="l-pricing-cta-header">
-            <span className="l-m-badge">Offres & tarifs</span>
+            <span className="l-m-badge l-pricing-cta-badge">
+              <span className="l-pricing-cta-badge-dot" aria-hidden="true" />
+              Offres & tarifs
+            </span>
             <h2 id="l-pricing-cta-title" className="l-pricing-cta-title">
               Deviens un véritable technicien PC.
             </h2>
@@ -63,6 +66,9 @@ export function PricingCTA() {
                   'l-pricing-cta-card' + (offer.highlight ? ' l-pricing-cta-card--highlight' : '')
                 }
               >
+                {offer.highlight ? (
+                  <span className="l-pricing-cta-card-shine" aria-hidden="true" />
+                ) : null}
                 <div className="l-pricing-cta-card-top">
                   <span className="l-pricing-cta-card-name">{offer.name}</span>
                   {offer.highlight ? (
@@ -81,6 +87,19 @@ export function PricingCTA() {
           <div className="l-pricing-cta-actions">
             <Link href="/vente" className="l-m-btn l-pricing-cta-primary">
               Découvrir les offres
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                width="16"
+                height="16"
+                aria-hidden="true"
+              >
+                <path d="M5 12h14M13 5l7 7-7 7" />
+              </svg>
             </Link>
             <Link href="/tarifs" className="l-m-btn-outline l-pricing-cta-secondary">
               Comparer les tarifs

@@ -68,7 +68,7 @@ export function ClientSimulator() {
       setMessages(m => [
         ...m,
         { role: 'eval', text: `Score de communication + technique : ${score}/100` },
-        ...(score >= 60 ? [{ role: 'eval' as const, text: `✓ Bonne approche. Solution complète : ${c.solution}` }] : []),
+        ...(score >= 60 ? [{ role: 'eval' as const, text: `Bonne approche. Solution complète : ${c.solution}` }] : []),
       ]);
       if (score >= 60) setDone(true);
       setBusy(false);
@@ -77,32 +77,39 @@ export function ClientSimulator() {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap gap-2">
+      <div className="segment flex-wrap">
         {CASES.map((cs, i) => (
-          <button key={cs.id} onClick={() => reset(i)} className={`btn-outline text-xs ${idx === i ? 'border-brand-blue/50' : ''}`}>{cs.title}</button>
+          <button
+            key={cs.id}
+            onClick={() => reset(i)}
+            data-active={idx === i ? 'true' : 'false'}
+            type="button"
+          >
+            {cs.title}
+          </button>
         ))}
       </div>
 
-      <div className="card p-4 space-y-3 max-h-[60vh] overflow-y-auto">
+      <div className="module-frame space-y-3 max-h-[60vh] overflow-y-auto">
         {messages.map((m, i) => {
           const isClient = m.role === 'client';
           const isEval = m.role === 'eval';
           return (
             <div key={i} className={`flex ${isClient || isEval ? 'justify-start' : 'justify-end'}`}>
-              <div className={`rounded-lg p-3 text-sm max-w-[85%] whitespace-pre-line ${
-                isClient ? 'bg-bg-elev text-text' :
-                isEval ? 'bg-warning/10 border border-warning/30 text-warning' :
-                'bg-brand-blue/15 text-text'
+              <div className={`rounded-2xl p-3 text-sm max-w-[85%] whitespace-pre-line border ${
+                isClient ? 'bg-bg-elev text-text border-border' :
+                isEval ? 'bg-text/8 border-text/30 text-text' :
+                'bg-text/10 border-text/30 text-text'
               }`}>
-                {isClient && <div className="text-xs text-text-mute mb-1 flex items-center gap-1"><ShieldCheck className="w-3 h-3" /> Client</div>}
-                {isEval && <div className="text-xs text-text-mute mb-1">Évaluation</div>}
-                {!isClient && !isEval && <div className="text-xs text-text-mute mb-1 text-right">Technicien (toi)</div>}
+                {isClient && <div className="text-xs text-muted mb-1 flex items-center gap-1"><ShieldCheck className="w-3 h-3" /> Client</div>}
+                {isEval && <div className="text-xs text-muted mb-1">Évaluation</div>}
+                {!isClient && !isEval && <div className="text-xs text-muted mb-1 text-right">Technicien (toi)</div>}
                 {m.text}
               </div>
             </div>
           );
         })}
-        {busy && <div className="text-xs text-text-mute">Le client réfléchit…</div>}
+        {busy && <div className="text-xs text-muted">Le client réfléchit…</div>}
       </div>
 
       <form onSubmit={(e) => { e.preventDefault(); send(); }} className="flex gap-2">

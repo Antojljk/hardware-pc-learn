@@ -14,15 +14,15 @@ export default async function ConstructeurPage() {
   const components = await prisma.component.findMany();
 
   return (
-    <div className="space-y-10">
-      <header className="flex flex-wrap items-end justify-between gap-4">
+    <div className="space-y-8">
+      <section className="module-hero flex flex-wrap items-end justify-between gap-4">
         <div>
-          <div className="text-[11px] tracking-widest uppercase text-accent mb-2">Constructeur</div>
-          <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight flex items-center gap-3">
-            <PcCase className="w-7 h-7 text-accent" />
+          <div className="module-eyebrow">Constructeur</div>
+          <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight flex items-center gap-3 mt-2">
+            <PcCase className="w-6 h-6 text-text" />
             Construis ta machine
           </h1>
-          <p className="text-text-soft text-sm mt-2 max-w-xl">
+          <p className="text-muted text-[15px] mt-2 max-w-xl">
             Sélectionne tes composants. La compatibilité est vérifiée en temps réel.
             Les prix sont synchronisés depuis LDLC, TopAchat et Coolpc.
           </p>
@@ -30,7 +30,7 @@ export default async function ConstructeurPage() {
         <Link href="/constructeur/defis" className="btn-primary">
           <Sparkles className="w-4 h-4" /> Mode défis
         </Link>
-      </header>
+      </section>
 
       <BuildClient components={components.map(c => ({
         id: c.id, type: c.type, brand: c.brand, model: c.model, price: c.price,
@@ -38,15 +38,15 @@ export default async function ConstructeurPage() {
         category: c.category || undefined,
       }))} />
 
-      <section className="card p-6">
-        <h2 className="section-title mb-3 flex items-center gap-2">
-          <Wrench className="w-4 h-4 text-text-soft" /> Comment ça marche
+      <section className="module-frame anim-rise anim-rise-3">
+        <h2 className="section-title mb-4 flex items-center gap-2">
+          <Wrench className="w-4 h-4 text-muted" /> Comment ça marche
         </h2>
-        <ul className="text-sm text-text-soft space-y-2 list-disc pl-5">
+        <ul className="text-sm text-muted space-y-2 list-disc pl-5 marker:text-muted">
           <li>Choisis CPU, GPU, RAM, carte mère, SSD, alimentation, boîtier, refroidissement.</li>
           <li>La vérification tourne en direct : socket, format, dimensions, puissance, connecteurs, M.2.</li>
           <li>Une fois compatible, sauvegarde ta build et reçois un score (perf / valeur / évolutivité).</li>
-          <li>Tu peux aussi relever les <Link href="/constructeur/defis" className="text-accent hover:underline">défis</Link> avec un budget imposé.</li>
+          <li>Tu peux aussi relever les <Link href="/constructeur/defis" className="text-text hover:underline">défis</Link> avec un budget imposé.</li>
         </ul>
       </section>
     </div>

@@ -6,40 +6,40 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Palette HardwarePC — dark + accent teal (alignée sur l'AccueilHardwarePC de référence)
+        // Palette HardwarePC — monochrome premium noir/blanc/gris
         bg: {
           DEFAULT: '#000000',
-          soft: '#0f1414',
-          card: '#0f1414',
-          elev: '#162020',
+          soft: '#0a0a0a',
+          card: '#0f0f10',
+          elev: '#161617',
         },
         surface: {
-          DEFAULT: '#0f1414',
-          soft: '#162020',
+          DEFAULT: '#0f0f10',
+          soft: '#161617',
         },
         border: {
-          DEFAULT: '#1f2a2a',
-          soft: '#162222',
+          DEFAULT: '#262626',
+          soft: '#1a1a1a',
         },
-        // Accent teal
+        // Accent neutre (gris clair) — pas de couleur vive
         accent: {
-          DEFAULT: '#2dd4d4',
-          soft: '#26b6b6',
-          mute: '#1a8a8a',
+          DEFAULT: '#e5e5e5',
+          soft: '#cfcfcf',
+          mute: '#8a8a8a',
         },
         text: {
           DEFAULT: '#ffffff',
-          soft: '#cbd5d5',
+          soft: '#d4d4d4',
           mute: '#9ca3af',
         },
         muted: '#9ca3af',
         faint: '#6b7575',
-        // États conservés
-        success: '#3ecf8e',
-        warning: '#f5a524',
-        danger: '#ef4444',
+        // États conservés (succès/avertissement/erreur) en gris léger pour cohérence monochrome
+        success: '#cfcfcf',
+        warning: '#a3a3a3',
+        danger: '#737373',
         brand: {
-          blue: '#2dd4d4',
+          blue: '#e5e5e5',
         },
       },
       fontFamily: {

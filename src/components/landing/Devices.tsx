@@ -2,7 +2,11 @@
  * Section 03 — Composition "responsive devices".
  * Trois images Unsplash positionnées en absolu (web / phone / tablet)
  * sur une scène au fond gris bleuté avec un radial teal derrière.
+ *
  * Server Component, purement statique.
+ *
+ * Le stage reçoit un grain très subtil (radial noise) pour le côté
+ * premium, et les images flottent doucement (animation gérée en CSS).
  */
 export function Devices() {
   return (
@@ -13,7 +17,21 @@ export function Devices() {
       className="l-section"
     >
       <div className="l-container">
+        <header className="l-s03-header">
+          <span className="l-m-label">Multi-plateforme</span>
+          <h2 className="l-s03-title">Une expérience fluide, partout.</h2>
+          <p className="l-s03-sub">
+            Apprends sur ton PC, ta tablette ou ton mobile — le contenu
+            s&apos;adapte et ta progression te suit.
+          </p>
+        </header>
+
         <figure className="l-s03-stage">
+          {/* Grain très subtil pour ambiance premium */}
+          <div className="l-s03-grain" aria-hidden="true" />
+          {/* Anneau lumineux pour donner du relief */}
+          <div className="l-s03-ring" aria-hidden="true" />
+
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             className="l-s03-web"
@@ -39,7 +57,7 @@ export function Devices() {
             height={1186}
           />
           <figcaption className="l-s03-caption l-m-caption">
-            Disponible sur Web, Tablette et Mobile fluide.
+            Disponible sur Web, Tablette et Mobile — synchronisé en continu.
           </figcaption>
         </figure>
       </div>

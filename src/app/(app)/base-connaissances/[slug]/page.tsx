@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { redirect, notFound } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, BookOpen } from 'lucide-react';
 
 const KNOWLEDGE: Record<string, { title: string; sections: { heading: string; body: string }[] }> = {
   cpu: {
@@ -41,7 +41,7 @@ const KNOWLEDGE: Record<string, { title: string; sections: { heading: string; bo
     title: 'Alimentation — Tout savoir',
     sections: [
       { heading: 'Dimensionnement', body: 'Somme TDP CPU + TBP GPU + 100W (autres). Prévoir 30% de marge. Ex : 600W réels → PSU 800W minimum.' },
-      { heading: '12VHPWR', body: 'Nouveau connecteur PCIe 5.0. Jusqu\'à 600W sur un seul câble. Attention aux adaptateurs 8-pin → 12VHPWR : source de熔融 fréquente.' },
+      { heading: '12VHPWR', body: 'Nouveau connecteur PCIe 5.0. Jusqu\'à 600W sur un seul câble. Attention aux adaptateurs 8-pin → 12VHPWR : source fréquente de fusion.' },
       { heading: 'Certifications', body: '80 Plus Bronze (84%), Silver (85%), Gold (87%), Platinum (90%), Titanium (92%). Plus haut = meilleur rendement.' },
     ],
   },
@@ -86,14 +86,19 @@ export default async function CategoryPage({ params }: { params: { slug: string 
 
   return (
     <article className="space-y-5 max-w-3xl">
-      <Link href="/base-connaissances" className="text-sm text-text-soft hover:text-text inline-flex items-center gap-1">
+      <Link href="/base-connaissances" className="text-sm text-muted hover:text-text inline-flex items-center gap-1 anim-rise">
         <ArrowLeft className="w-3.5 h-3.5" /> Toutes les catégories
       </Link>
-      <h1 className="text-2xl font-bold">{data.title}</h1>
-      {data.sections.map(s => (
-        <section key={s.heading} className="card p-5">
-          <h2 className="font-semibold mb-2">{s.heading}</h2>
-          <p className="text-sm text-text-soft whitespace-pre-line">{s.body}</p>
+
+      <section className="module-hero">
+        <div className="module-eyebrow mb-2 flex items-center gap-2"><BookOpen className="w-3.5 h-3.5" /> Référence</div>
+        <h1 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight">{data.title}</h1>
+      </section>
+
+      {data.sections.map((s, i) => (
+        <section key={s.heading} className={`module-frame anim-rise anim-rise-${(i % 4) + 1}`}>
+          <h2 className="section-title mb-3">{s.heading}</h2>
+          <p className="text-sm text-muted whitespace-pre-line leading-relaxed">{s.body}</p>
         </section>
       ))}
     </article>

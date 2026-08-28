@@ -1,8 +1,11 @@
 // Barrel export pour la landing.
 export { LandingRoot } from './LandingRoot';
 export { NavBar } from './NavBar';
+export { NavScroll } from './NavScroll';
 export { MobileNav } from './MobileNav';
 export { Hero } from './Hero';
+export { HeroVisual } from './HeroVisual';
+export { ParallaxHero } from './ParallaxHero';
 export { Features } from './Features';
 export { Devices } from './Devices';
 export { Stats } from './Stats';

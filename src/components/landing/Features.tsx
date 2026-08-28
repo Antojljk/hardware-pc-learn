@@ -88,19 +88,36 @@ export function Features() {
                 'l-s02-card' + (i === active ? ' l-s02-card--active' : '')
               }
               hidden={i !== active}
+              aria-hidden={i !== active}
             >
               <div className="l-s02-card-inner">
                 <div className="l-s02-text">
+                  <span className="l-s02-kicker">0{i + 1} · {f.dotLabel}</span>
                   <h2 className="l-m-heading l-s02-title">{f.title}</h2>
                   <h3 className="l-s02-sub">{f.sub}</h3>
                   <p className="l-s02-body">{f.body}</p>
                   <Link href={f.ctaHref} className="l-s02-cta">
                     {f.ctaLabel}
+                    <svg
+                      className="l-s02-cta-arrow"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      width="14"
+                      height="14"
+                      aria-hidden="true"
+                    >
+                      <path d="M5 12h14M13 5l7 7-7 7" />
+                    </svg>
                   </Link>
                 </div>
                 <figure className="l-s02-media">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={f.image} alt={f.alt} width={1200} height={1200} />
+                  <div className="l-s02-media-overlay" aria-hidden="true" />
                 </figure>
               </div>
             </li>

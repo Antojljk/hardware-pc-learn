@@ -15,14 +15,17 @@ export default async function ExamRunnerPage({ params }: { params: { slug: strin
 
   return (
     <div className="space-y-5 max-w-3xl">
-      <header className="card p-5 bg-gradient-to-br from-bg-card to-bg-elev">
-        <h1 className="text-xl font-bold mb-1 flex items-center gap-2"><FileCheck2 className="w-5 h-5 text-brand-blue" /> {exam.title}</h1>
-        <div className="flex items-center gap-4 text-sm text-text-soft">
-          <span className="inline-flex items-center gap-1"><FileCheck2 className="w-3.5 h-3.5" />{questions.length} questions</span>
-          <span className="inline-flex items-center gap-1"><Clock className="w-3.5 h-3.5" />{Math.round(exam.durationSec/60)} min</span>
-          <span className="badge bg-bg-elev border-border">{exam.level}</span>
+      <section className="module-hero">
+        <div className="module-eyebrow">Examen blanc</div>
+        <h1 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight mt-2 flex items-center gap-2">
+          <FileCheck2 className="w-6 h-6 text-text" /> {exam.title}
+        </h1>
+        <div className="flex flex-wrap items-center gap-3 text-sm text-muted mt-3">
+          <span className="inline-flex items-center gap-1.5"><FileCheck2 className="w-3.5 h-3.5" />{questions.length} questions</span>
+          <span className="inline-flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" />{Math.round(exam.durationSec/60)} min</span>
+          <span className="badge-muted capitalize">{exam.level}</span>
         </div>
-      </header>
+      </section>
       <ExamRunner exam={exam} questions={questions} />
     </div>
   );

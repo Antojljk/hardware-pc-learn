@@ -64,7 +64,7 @@ export function ReviewForm() {
           maxLength={500}
           rows={3}
           required
-          className="w-full mt-1 px-3 py-2 rounded-lg bg-bg-elev border border-border focus:border-brand-blue outline-none text-sm"
+          className="w-full mt-1 px-3 py-2 rounded-lg bg-bg-elev border border-border focus:border-text outline-none text-sm"
           placeholder="Qu&apos;as-tu pensé de la plateforme ?"
         />
         <div className="text-[10px] text-text-mute text-right">{message.length}/500</div>

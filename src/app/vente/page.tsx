@@ -20,6 +20,10 @@ import {
   Award,
   Target,
   TrendingUp,
+  GraduationCap as GraduationCapIcon,
+  Wrench as WrenchIcon,
+  Briefcase as BriefcaseIcon,
+  User as UserIcon,
 } from 'lucide-react';
 
 // ---------------------------------------------------------------------------
@@ -185,22 +189,22 @@ const PRACTICE = [
 
 const PROFILES = [
   {
-    emoji: '🧑‍🎓',
+    icon: UserIcon,
     title: 'Débutant',
     body: 'Tu pars de zéro et veux comprendre comment fonctionne un PC.',
   },
   {
-    emoji: '🔧',
+    icon: WrenchIcon,
     title: 'Passionné',
     body: 'Tu veux améliorer tes connaissances et construire tes propres configurations.',
   },
   {
-    emoji: '🧑‍🔧',
+    icon: GraduationCapIcon,
     title: 'Futur technicien',
     body: 'Tu veux apprendre à diagnostiquer, dépanner et travailler comme un professionnel.',
   },
   {
-    emoji: '💼',
+    icon: BriefcaseIcon,
     title: 'Futur professionnel',
     body: 'Tu veux te préparer aux entretiens et développer des compétences concrètes.',
   },
@@ -576,8 +580,8 @@ export default function VentePage() {
           <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {PROFILES.map((p) => (
               <div key={p.title} className="card p-5 space-y-2">
-                <div className="text-3xl" aria-hidden="true">
-                  {p.emoji}
+                <div className="w-10 h-10 rounded-xl grid place-items-center bg-bg-elev border border-border text-accent">
+                  <p.icon className="w-5 h-5" />
                 </div>
                 <h3 className="font-display text-lg font-semibold text-text">
                   {p.title}

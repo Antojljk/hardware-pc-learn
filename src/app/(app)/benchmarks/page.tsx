@@ -48,34 +48,39 @@ const sections = [
 export default function BenchmarksPage() {
   return (
     <div className="space-y-6 max-w-3xl">
-      <header>
-        <h1 className="text-2xl font-bold flex items-center gap-2"><BarChart3 className="w-5 h-5 text-brand-blue" /> Comprendre les benchmarks</h1>
-        <p className="text-text-soft text-sm">Apprends à interpréter les chiffres pour comparer CPU, GPU et configurations.</p>
-      </header>
+      <section className="module-hero">
+        <div className="module-eyebrow">Référence</div>
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight flex items-center gap-2 mt-2">
+          <BarChart3 className="w-6 h-6 text-text" /> Comprendre les benchmarks
+        </h1>
+        <p className="text-muted text-[15px] mt-2 max-w-xl">Apprends à interpréter les chiffres pour comparer CPU, GPU et configurations.</p>
+      </section>
 
       <div className="grid sm:grid-cols-2 gap-3">
-        {sections.map(s => {
+        {sections.map((s, i) => {
           const Icon = s.icon;
           return (
-            <article key={s.title} className="card p-5">
+            <article key={s.title} className={`module-frame anim-rise anim-rise-${(i % 4) + 1}`}>
               <div className="flex items-center gap-2 mb-2">
-                <Icon className="w-4 h-4 text-brand-blue" />
+                <div className="w-9 h-9 rounded-xl grid place-items-center bg-bg-elev border border-border">
+                  <Icon className="w-4 h-4 text-text" />
+                </div>
                 <h2 className="font-semibold">{s.title}</h2>
               </div>
-              <p className="text-sm text-text-soft">{s.body}</p>
+              <p className="text-sm text-muted leading-relaxed">{s.body}</p>
             </article>
           );
         })}
       </div>
 
-      <section className="card p-5">
+      <section className="module-frame anim-rise anim-rise-4">
         <h2 className="section-title mb-3">Outils recommandés</h2>
-        <ul className="text-sm space-y-2">
-          <li><b>HWiNFO64</b> : monitoring complet (CPU, GPU, RAM, températures, voltages, fréquences).</li>
-          <li><b>MSI Afterburner</b> : overlay en jeu (FPS, frametime, GPU load) + overclocking GPU.</li>
-          <li><b>Cinebench R23</b> : benchmark CPU single/multi thread.</li>
-          <li><b>3DMark</b> : benchmark GPU (Time Spy, Fire Strike, Port Royal pour le ray tracing).</li>
-          <li><b>CapFrameX</b> : analyse fine du frametime et des 1% lows.</li>
+        <ul className="text-sm space-y-2 text-muted">
+          <li><strong className="text-text">HWiNFO64</strong> : monitoring complet (CPU, GPU, RAM, températures, voltages, fréquences).</li>
+          <li><strong className="text-text">MSI Afterburner</strong> : overlay en jeu (FPS, frametime, GPU load) + overclocking GPU.</li>
+          <li><strong className="text-text">Cinebench R23</strong> : benchmark CPU single/multi thread.</li>
+          <li><strong className="text-text">3DMark</strong> : benchmark GPU (Time Spy, Fire Strike, Port Royal pour le ray tracing).</li>
+          <li><strong className="text-text">CapFrameX</strong> : analyse fine du frametime et des 1% lows.</li>
         </ul>
       </section>
     </div>

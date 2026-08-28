@@ -32,34 +32,39 @@ export default async function AdminPage() {
 
   return (
     <div className="space-y-6">
-      <header>
-        <h1 className="text-2xl font-bold flex items-center gap-2"><Settings className="w-5 h-5 text-brand-blue" /> Administration</h1>
-        <p className="text-text-soft text-sm">Pilotage du contenu pédagogique (lecture seule — édition via fichiers <code className="text-xs">src/content/*</code>).</p>
-      </header>
+      <section className="module-hero">
+        <div className="module-eyebrow">Pilotage</div>
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight flex items-center gap-2 mt-2">
+          <Settings className="w-6 h-6 text-text" /> Administration
+        </h1>
+        <p className="text-muted text-[15px] mt-2 max-w-xl">Pilotage du contenu pédagogique (lecture seule — édition via fichiers <code className="text-xs">src/content/*</code>).</p>
+      </section>
 
       <section className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {items.map(i => (
-          <Link key={i.href} href={i.href} className="card card-hover p-5">
-            <div className="flex items-center gap-2 mb-1">
-              <i.icon className="w-4 h-4 text-brand-blue" />
+        {items.map((i, idx) => (
+          <Link key={i.href} href={i.href} className={`module-frame lift-3d group anim-rise anim-rise-${(idx % 4) + 1}`}>
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-9 h-9 rounded-xl grid place-items-center bg-bg-elev border border-border">
+                <i.icon className="w-4 h-4 text-text" />
+              </div>
               <h2 className="font-semibold">{i.label}</h2>
             </div>
-            <div className="text-2xl font-bold mb-1">{i.count}</div>
-            <p className="text-xs text-text-soft">{i.desc}</p>
+            <div className="font-display text-2xl font-semibold tabular-nums mb-1">{i.count}</div>
+            <p className="text-xs text-muted">{i.desc}</p>
           </Link>
         ))}
       </section>
 
-      <section className="card p-5">
+      <section className="module-frame anim-rise anim-rise-4">
         <h2 className="section-title mb-3">Statistiques globales</h2>
-        <ul className="text-sm space-y-1 text-text-soft">
-          <li>Parcours : <strong>{tracks}</strong></li>
-          <li>Cours : <strong>{lessons}</strong></li>
-          <li>Questions : <strong>{questions}</strong></li>
-          <li>Examens : <strong>{exams}</strong></li>
-          <li>Termes : <strong>{glossary}</strong></li>
-          <li>Scénarios : <strong>{scenarios}</strong></li>
-          <li>Composants : <strong>{components}</strong></li>
+        <ul className="text-sm space-y-1.5 text-muted">
+          <li>Parcours : <strong className="text-text">{tracks}</strong></li>
+          <li>Cours : <strong className="text-text">{lessons}</strong></li>
+          <li>Questions : <strong className="text-text">{questions}</strong></li>
+          <li>Examens : <strong className="text-text">{exams}</strong></li>
+          <li>Termes : <strong className="text-text">{glossary}</strong></li>
+          <li>Scénarios : <strong className="text-text">{scenarios}</strong></li>
+          <li>Composants : <strong className="text-text">{components}</strong></li>
         </ul>
       </section>
     </div>

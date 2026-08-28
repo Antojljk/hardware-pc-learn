@@ -34,25 +34,9 @@ export default async function TarifsPage() {
 
       {/* Toggle: Monthly / Annually */}
       <section className="flex justify-center mb-10">
-        <div className="inline-flex items-center rounded-xl bg-bg-evol px-3">
-          <label
-            htmlFor="toggle-billing"
-            className="cursor-pointer text-sm font-medium text-muted px-3 py-2 rounded-l-xl hover:text-text"
-          >
-            Mensuel
-          </label>
-          <input
-            id="toggle-billing"
-            type="checkbox"
-            className="hidden peer"
-            checked
-          />
-          <label
-            htmlFor="toggle-billing"
-            className="cursor-pointer text-sm font-medium text-muted px-3 py-2 rounded-r-xl hover:text-text peer-checked:bg-accent/10 peer-checked:text-accent transition-colors"
-          >
-            Annuel (-17%)
-          </label>
+        <div className="segment">
+          <button data-active="true" type="button">Mensuel</button>
+          <button data-active="false" type="button">Annuel (-17%)</button>
         </div>
       </section>
 

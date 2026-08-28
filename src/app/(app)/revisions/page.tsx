@@ -49,17 +49,27 @@ export default async function RevisionsPage() {
   }).filter(Boolean) as Array<{ slug: string; term: string; simple: string; technical: string; ease: number; interval: number; reps: number }>;
 
   return (
-    <div className="space-y-6">
-      <header>
-        <h1 className="text-2xl font-bold flex items-center gap-2"><Wrench className="w-5 h-5 text-brand-blue" /> Révisions du jour</h1>
-        <p className="text-text-soft text-sm">Révision espacée : les cartes reviennent au bon moment pour ancrer durablement.</p>
-      </header>
+    <div className="space-y-6 max-w-2xl mx-auto">
+      <section className="module-hero">
+        <div className="module-eyebrow">Mémorisation</div>
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight flex items-center gap-2 mt-2">
+          <Wrench className="w-6 h-6 text-text" /> Révisions du jour
+        </h1>
+        <p className="text-muted text-[15px] mt-2 max-w-xl">Révision espacée : les cartes reviennent au bon moment pour ancrer durablement.</p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <span className="badge-muted">{cards.length} carte{cards.length > 1 ? 's' : ''} à réviser</span>
+        </div>
+      </section>
 
       {cards.length === 0 ? (
-        <div className="card p-6 text-center space-y-2">
-          <Sparkles className="w-8 h-8 text-success mx-auto" />
-          <p className="font-semibold">Aucune carte à réviser aujourd&apos;hui !</p>
-          <p className="text-sm text-text-soft">Reviens demain, ou entraîne-toi sur des quiz pour générer de nouvelles cartes.</p>
+        <div className="module-frame text-center space-y-3 py-10 anim-rise">
+          <div className="w-12 h-12 mx-auto rounded-2xl grid place-items-center bg-bg-elev border border-border">
+            <Sparkles className="w-5 h-5" />
+          </div>
+          <div>
+            <p className="font-display text-lg font-semibold">Aucune carte à réviser aujourd&apos;hui !</p>
+            <p className="text-sm text-muted mt-1">Reviens demain, ou entraîne-toi sur des quiz pour générer de nouvelles cartes.</p>
+          </div>
           <a href="/quiz" className="btn-primary inline-flex"><ArrowRight className="w-4 h-4" /> Lancer un quiz</a>
         </div>
       ) : (

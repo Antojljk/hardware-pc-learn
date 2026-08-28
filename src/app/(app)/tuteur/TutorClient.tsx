@@ -42,28 +42,28 @@ export function TutorClient() {
 
   return (
     <div className="space-y-4">
-      <div className="card p-3 text-xs text-text-soft flex items-center gap-2">
-        <Info className="w-3.5 h-3.5 text-brand-blue" />
-        Mode local par défaut (réponses pédagogiques de la base). Une clé OpenAI peut être ajoutée via la variable <code>OPENAI_API_KEY</code> pour activer le mode conversationnel avancé.
+      <div className="info-banner text-xs anim-rise">
+        <Info className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+        <span>Mode local par défaut (réponses pédagogiques de la base). Une clé OpenAI peut être ajoutée via la variable <code className="font-mono text-text">OPENAI_API_KEY</code> pour activer le mode conversationnel avancé.</span>
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 anim-rise anim-rise-1">
         {SEED_PROMPTS.map(p => (
           <button key={p} onClick={() => send(p)} className="btn-outline text-xs">{p}</button>
         ))}
       </div>
 
-      <div className="card p-4 space-y-3 max-h-[60vh] overflow-y-auto">
+      <div className="module-frame p-4 space-y-3 max-h-[60vh] overflow-y-auto anim-rise anim-rise-2">
         {messages.map((m, i) => (
           <div key={i} className={`flex items-start gap-2 ${m.role === 'user' ? 'justify-end' : ''}`}>
-            {m.role === 'assistant' && <Bot className="w-5 h-5 text-brand-blue mt-1" />}
-            <div className={`rounded-lg p-3 text-sm max-w-[85%] whitespace-pre-line ${m.role === 'user' ? 'bg-brand-blue/15 text-text' : 'bg-bg-elev text-text-soft'}`}>
+            {m.role === 'assistant' && <Bot className="w-5 h-5 text-text mt-1" />}
+            <div className={`rounded-2xl p-3 text-sm max-w-[85%] whitespace-pre-line border ${m.role === 'user' ? 'bg-text/10 border-text/40 text-text' : 'bg-bg-elev text-text-soft border-border'}`}>
               {m.text}
             </div>
             {m.role === 'user' && <User className="w-5 h-5 text-text-soft mt-1" />}
           </div>
         ))}
-        {busy && <div className="text-xs text-text-mute">Réflexion…</div>}
+        {busy && <div className="text-xs text-muted">Réflexion…</div>}
       </div>
 
       <form onSubmit={(e) => { e.preventDefault(); send(); }} className="flex gap-2">

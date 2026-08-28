@@ -27,7 +27,7 @@ export function checkCompatibility(build: Build): { ok: boolean; issues: Issue[]
     const cpuSocket = String(cpu.specs.socket);
     const mbSocket = String(mb.specs.socket);
     if (cpuSocket !== mbSocket) {
-      issues.push({ severity: 'error', message: `Cette carte mère utilise le socket ${mbSocket}. Le processeur sélectionné est ${cpuSocket}. ❌` });
+      issues.push({ severity: 'error', message: `Cette carte mère utilise le socket ${mbSocket}. Le processeur sélectionné est ${cpuSocket}.` });
     }
   }
 
@@ -36,7 +36,7 @@ export function checkCompatibility(build: Build): { ok: boolean; issues: Issue[]
     const ramType = String(ram.specs.type);
     const mbRamType = String(mb.specs.ram_type);
     if (ramType !== mbRamType) {
-      issues.push({ severity: 'error', message: `La carte mère supporte ${mbRamType}. La RAM sélectionnée est ${ramType}. ❌` });
+      issues.push({ severity: 'error', message: `La carte mère supporte ${mbRamType}. La RAM sélectionnée est ${ramType}.` });
     }
   }
 
@@ -46,7 +46,7 @@ export function checkCompatibility(build: Build): { ok: boolean; issues: Issue[]
     const caseForm = String(caseC.specs.form);
     const order = { ITX: 0, mATX: 1, ATX: 2 };
     if (order[mbForm as keyof typeof order] > order[caseForm as keyof typeof order]) {
-      issues.push({ severity: 'error', message: `Carte mère ${mbForm} trop grande pour boîtier ${caseForm}. ❌` });
+      issues.push({ severity: 'error', message: `Carte mère ${mbForm} trop grande pour boîtier ${caseForm}.` });
     }
   }
 
@@ -59,11 +59,11 @@ export function checkCompatibility(build: Build): { ok: boolean; issues: Issue[]
     totalPower = cpuTdp + gpuPower + 100; // +100W pour le reste
     const recommended = totalPower / headroom;
     if (psuW < totalPower) {
-      issues.push({ severity: 'error', message: `PSU ${psuW}W insuffisante. Le PC consomme ~${totalPower}W. ❌` });
+      issues.push({ severity: 'error', message: `PSU ${psuW}W insuffisante. Le PC consomme ~${totalPower}W.` });
     } else if (psuW < recommended) {
-      issues.push({ severity: 'warn', message: `PSU ${psuW}W trop juste. Recommandé : ${Math.ceil(recommended)}W (30% de marge). ⚠️` });
+      issues.push({ severity: 'warn', message: `PSU ${psuW}W trop juste. Recommandé : ${Math.ceil(recommended)}W (30% de marge).` });
     } else {
-      issues.push({ severity: 'info', message: `PSU ${psuW}W OK (charge estimée ~${Math.round(totalPower/psuW*100)}%). ✓` });
+      issues.push({ severity: 'info', message: `PSU ${psuW}W OK (charge estimée ~${Math.round(totalPower/psuW*100)}%).` });
     }
   }
 
@@ -72,7 +72,7 @@ export function checkCompatibility(build: Build): { ok: boolean; issues: Issue[]
     const gpuLen = Number(gpu.specs.length);
     const caseLen = Number(caseC.specs.gpu_length);
     if (gpuLen > caseLen) {
-      issues.push({ severity: 'error', message: `GPU ${gpuLen}mm trop long pour boîtier ${caseLen}mm. ❌` });
+      issues.push({ severity: 'error', message: `GPU ${gpuLen}mm trop long pour boîtier ${caseLen}mm.` });
     }
   }
 
@@ -81,7 +81,7 @@ export function checkCompatibility(build: Build): { ok: boolean; issues: Issue[]
     const ch = Number(cooler.specs.height);
     const caseh = Number(caseC.specs.cooler_height);
     if (ch > caseh) {
-      issues.push({ severity: 'error', message: `Ventirad ${ch}mm trop haut pour boîtier ${caseh}mm. ❌` });
+      issues.push({ severity: 'error', message: `Ventirad ${ch}mm trop haut pour boîtier ${caseh}mm.` });
     }
   }
 
@@ -90,11 +90,11 @@ export function checkCompatibility(build: Build): { ok: boolean; issues: Issue[]
     const tdp = Number(cpu.specs.tdp);
     const coolMax = Number(cooler.specs.tdp_max);
     if (coolMax < tdp) {
-      issues.push({ severity: 'warn', message: `Ventirad conçu pour ${coolMax}W, CPU ${tdp}W. Sous-dimensionné. ⚠️` });
+      issues.push({ severity: 'warn', message: `Ventirad conçu pour ${coolMax}W, CPU ${tdp}W. Sous-dimensionné.` });
     } else if (coolMax < tdp * 1.3) {
-      issues.push({ severity: 'warn', message: `Ventirad OK mais juste pour ${tdp}W (capacité ${coolMax}W). ⚠️` });
+      issues.push({ severity: 'warn', message: `Ventirad OK mais juste pour ${tdp}W (capacité ${coolMax}W).` });
     } else {
-      issues.push({ severity: 'info', message: `Refroidissement adapté (${coolMax}W pour ${tdp}W CPU). ✓` });
+      issues.push({ severity: 'info', message: `Refroidissement adapté (${coolMax}W pour ${tdp}W CPU).` });
     }
   }
 
@@ -103,7 +103,7 @@ export function checkCompatibility(build: Build): { ok: boolean; issues: Issue[]
     const ssdIface = String(ssd.specs.interface);
     if (ssdIface.includes('NVMe') || ssdIface.includes('PCIe')) {
       const m2Slots = Number(mb.specs.m2_slots);
-      if (m2Slots < 1) issues.push({ severity: 'warn', message: `Aucun slot M.2 sur cette carte mère pour ce SSD NVMe. ⚠️` });
+      if (m2Slots < 1) issues.push({ severity: 'warn', message: `Aucun slot M.2 sur cette carte mère pour ce SSD NVMe.` });
     }
   }
 
@@ -112,7 +112,7 @@ export function checkCompatibility(build: Build): { ok: boolean; issues: Issue[]
     const gpuPower = Number(gpu.specs.power);
     const psuConnector = String(psu.specs.connector || '');
     if (gpuPower >= 450 && !psuConnector.includes('12VHPWR')) {
-      issues.push({ severity: 'warn', message: `GPU ${gpuPower}W nécessite 12VHPWR. PSU livrée sans : utiliser un adaptateur. ⚠️` });
+      issues.push({ severity: 'warn', message: `GPU ${gpuPower}W nécessite 12VHPWR. PSU livrée sans : utiliser un adaptateur.` });
     }
   }
 
@@ -121,7 +121,7 @@ export function checkCompatibility(build: Build): { ok: boolean; issues: Issue[]
     const sticks = Number(ram.specs.sticks);
     const slots = Number(mb.specs.ram_slots);
     if (sticks > slots) {
-      issues.push({ severity: 'error', message: `RAM ${sticks} sticks > slots CM ${slots}. ❌` });
+      issues.push({ severity: 'error', message: `RAM ${sticks} sticks > slots CM ${slots}.` });
     }
   }
 
@@ -129,7 +129,7 @@ export function checkCompatibility(build: Build): { ok: boolean; issues: Issue[]
   if (ram && cpu && String(cpu.specs.socket) === 'AM5') {
     const speed = Number(ram.specs.speed);
     if (speed > 6000) {
-      issues.push({ severity: 'info', message: `DDR5-${speed} > sweet spot AM5 (DDR5-6000). Ratio FCLK 2:1, latence légèrement supérieure. ℹ️` });
+      issues.push({ severity: 'info', message: `DDR5-${speed} > sweet spot AM5 (DDR5-6000). Ratio FCLK 2:1, latence légèrement supérieure.` });
     }
   }
 

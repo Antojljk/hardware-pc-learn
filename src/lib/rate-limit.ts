@@ -2,7 +2,7 @@
 //
 // Rate limiter en mémoire — première couche de protection.
 //
-// ⚠️ AVERTISSEMENT ⚠️
+// AVERTISSEMENT
 // Cette implémentation repose sur une `Map` en mémoire du processus Node.js.
 // Elle ne partage donc aucun état entre :
 //   - plusieurs instances / pods du serveur,

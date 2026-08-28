@@ -76,25 +76,33 @@ export default async function ProgressionPage() {
 
   return (
     <div className="space-y-6">
-      <header>
-        <h1 className="text-2xl font-bold flex items-center gap-2"><TrendingUp className="w-5 h-5 text-brand-blue" /> Progression</h1>
-        <p className="text-text-soft text-sm">Tes statistiques, domaines maîtrisés et activité récente.</p>
-      </header>
+      <section className="module-hero">
+        <div className="module-eyebrow">Tableau de bord</div>
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight flex items-center gap-2 mt-2">
+          <TrendingUp className="w-6 h-6 text-text" /> Progression
+        </h1>
+        <p className="text-muted text-[15px] mt-2 max-w-xl">Tes statistiques, domaines maîtrisés et activité récente.</p>
+      </section>
 
       {/* Niveau + série */}
-      <section className="card p-5 grid sm:grid-cols-3 gap-4 bg-gradient-to-br from-bg-card to-bg-elev">
+      <section className="module-frame grid sm:grid-cols-3 gap-5">
         <div>
-          <div className="text-xs text-text-mute">Niveau</div>
-          <div className="text-2xl font-bold">{lvl.current.title}</div>
-          <div className="text-sm text-text-soft mt-1">{user.xp} XP · {Math.round(lvl.progress)}% vers {lvl.next.title}</div>
+          <div className="text-xs text-muted uppercase tracking-wider mb-1">Niveau</div>
+          <div className="font-display text-2xl font-semibold">{lvl.current.title}</div>
+          <div className="mt-3">
+            <div className="h-1.5 rounded-full bg-bg-elev overflow-hidden">
+              <div className="h-full bg-text transition-all duration-500 ease-smooth" style={{ width: `${lvl.progress}%` }} />
+            </div>
+            <div className="text-xs text-muted mt-1.5 tabular-nums">{user.xp} XP · {Math.round(lvl.progress)}% vers {lvl.next.title}</div>
+          </div>
         </div>
         <div>
-          <div className="text-xs text-text-mute">Série</div>
-          <div className="text-2xl font-bold">🔥 {user.streak} jours</div>
+          <div className="text-xs text-muted uppercase tracking-wider mb-1">Série</div>
+          <div className="font-display text-2xl font-semibold tabular-nums">{user.streak} jours</div>
         </div>
         <div>
-          <div className="text-xs text-text-mute">Badges</div>
-          <div className="text-2xl font-bold">{badges.length}</div>
+          <div className="text-xs text-muted uppercase tracking-wider mb-1">Badges</div>
+          <div className="font-display text-2xl font-semibold tabular-nums">{badges.length}</div>
         </div>
       </section>
 
@@ -109,24 +117,24 @@ export default async function ProgressionPage() {
 
       {/* Graphiques */}
       <section className="grid lg:grid-cols-2 gap-4">
-        <div className="card p-5">
-          <h2 className="section-title mb-3">XP gagnés (14 derniers jours)</h2>
+        <div className="module-frame">
+          <h2 className="section-title mb-4">XP gagnés (14 derniers jours)</h2>
           <ActivityChart data={days} />
         </div>
-        <div className="card p-5">
-          <h2 className="section-title mb-3">Maîtrise par domaine</h2>
+        <div className="module-frame">
+          <h2 className="section-title mb-4">Maîtrise par domaine</h2>
           <MasteryChart data={domainStats} />
         </div>
       </section>
 
       {/* Domaines forts/faibles */}
       <section className="grid lg:grid-cols-2 gap-4">
-        <div className="card p-5">
-          <h2 className="section-title mb-3 flex items-center gap-2"><Trophy className="w-4 h-4 text-success" /> Domaines forts</h2>
-          {strong.length === 0 ? <p className="text-sm text-text-soft">Pas encore assez de données.</p> : (
+        <div className="module-frame">
+          <h2 className="section-title mb-4 flex items-center gap-2"><Trophy className="w-4 h-4" /> Domaines forts</h2>
+          {strong.length === 0 ? <p className="text-sm text-muted">Pas encore assez de données.</p> : (
             <ul className="space-y-2">
               {strong.map(d => (
-                <li key={d.key} className="flex items-center justify-between">
+                <li key={d.key} className="flex items-center justify-between py-1.5 border-b border-border last:border-0">
                   <span>{d.label}</span>
                   <span className="font-semibold tabular-nums">{d.value}%</span>
                 </li>
@@ -134,12 +142,12 @@ export default async function ProgressionPage() {
             </ul>
           )}
         </div>
-        <div className="card p-5">
-          <h2 className="section-title mb-3 flex items-center gap-2"><Target className="w-4 h-4 text-warning" /> À renforcer</h2>
-          {weak.length === 0 ? <p className="text-sm text-text-soft">Aucun domaine critique.</p> : (
+        <div className="module-frame">
+          <h2 className="section-title mb-4 flex items-center gap-2"><Target className="w-4 h-4" /> À renforcer</h2>
+          {weak.length === 0 ? <p className="text-sm text-muted">Aucun domaine critique.</p> : (
             <ul className="space-y-2">
               {weak.map(d => (
-                <li key={d.key} className="flex items-center justify-between">
+                <li key={d.key} className="flex items-center justify-between py-1.5 border-b border-border last:border-0">
                   <span>{d.label}</span>
                   <Link href={`/quiz?category=${d.key}`} className="btn-outline text-xs">S&apos;entraîner · {d.value}%</Link>
                 </li>
@@ -151,11 +159,11 @@ export default async function ProgressionPage() {
 
       {/* Badges */}
       {badges.length > 0 && (
-        <section className="card p-5">
-          <h2 className="section-title mb-3 flex items-center gap-2"><Trophy className="w-4 h-4 text-warning" /> Tous tes badges</h2>
+        <section className="module-frame">
+          <h2 className="section-title mb-4 flex items-center gap-2"><Trophy className="w-4 h-4" /> Tous tes badges</h2>
           <div className="flex flex-wrap gap-2">
             {badges.map(b => (
-              <div key={b.badge.id} className="badge bg-bg-elev border-border px-3 py-1.5 text-sm">
+              <div key={b.badge.id} className="inline-flex items-center gap-2 text-sm px-3 py-1.5 rounded-full bg-bg-elev border border-border">
                 <span>{b.badge.icon}</span><span>{b.badge.name}</span>
               </div>
             ))}
@@ -164,17 +172,17 @@ export default async function ProgressionPage() {
       )}
 
       <section className="grid sm:grid-cols-3 gap-3">
-        <Link href="/revisions" className="card card-hover p-4 flex items-center gap-3">
-          <Clock className="w-5 h-5 text-brand-blue" />
-          <div><div className="font-medium">Révisions</div><div className="text-xs text-text-soft">Réviser les termes clés</div></div>
+        <Link href="/revisions" className="module-frame lift-3d flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl grid place-items-center bg-bg-elev border border-border"><Clock className="w-5 h-5" /></div>
+          <div><div className="font-medium">Révisions</div><div className="text-xs text-muted">Réviser les termes clés</div></div>
         </Link>
-        <Link href="/entretiens" className="card card-hover p-4 flex items-center gap-3">
-          <MessageSquareQuote className="w-5 h-5 text-brand-violet" />
-          <div><div className="font-medium">Entretiens</div><div className="text-xs text-text-soft">S&apos;entraîner à l&apos;oral</div></div>
+        <Link href="/entretiens" className="module-frame lift-3d flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl grid place-items-center bg-bg-elev border border-border"><MessageSquareQuote className="w-5 h-5" /></div>
+          <div><div className="font-medium">Entretiens</div><div className="text-xs text-muted">S&apos;entraîner à l&apos;oral</div></div>
         </Link>
-        <Link href="/diagnostic" className="card card-hover p-4 flex items-center gap-3">
-          <Wrench className="w-5 h-5 text-warning" />
-          <div><div className="font-medium">Diagnostics</div><div className="text-xs text-text-soft">Résoudre des pannes</div></div>
+        <Link href="/diagnostic" className="module-frame lift-3d flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl grid place-items-center bg-bg-elev border border-border"><Wrench className="w-5 h-5" /></div>
+          <div><div className="font-medium">Diagnostics</div><div className="text-xs text-muted">Résoudre des pannes</div></div>
         </Link>
       </section>
     </div>
@@ -184,10 +192,10 @@ export default async function ProgressionPage() {
 function Stat({ icon: Icon, label, value, sub }: { icon: React.ComponentType<{ className?: string }>; label: string; value: number | string; sub?: string }) {
   return (
     <div className="stat-card">
-      <Icon className="w-4 h-4 text-brand-blue" />
-      <div className="text-xs text-text-mute">{label}</div>
-      <div className="text-xl font-bold">{value}</div>
-      {sub && <div className="text-xs text-text-soft">{sub}</div>}
+      <Icon className="w-4 h-4 text-muted" />
+      <div className="text-xs text-muted">{label}</div>
+      <div className="font-display text-xl font-semibold tabular-nums">{value}</div>
+      {sub && <div className="text-xs text-muted">{sub}</div>}
     </div>
   );
 }

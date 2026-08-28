@@ -20,7 +20,7 @@ export function CompleteButton({ slug, completed }: { slug: string; completed: b
       if (data.ok) {
         setDone(true);
         if (data.newBadges?.length) {
-          alert(`+${data.xpAwarded} XP 🎉\nNouveau(x) badge(s) : ${data.newBadges.join(', ')}`);
+          alert(`+${data.xpAwarded} XP\nNouveau(x) badge(s) : ${data.newBadges.join(', ')}`);
         }
         router.refresh();
       }
@@ -29,11 +29,13 @@ export function CompleteButton({ slug, completed }: { slug: string; completed: b
 
   if (done) {
     return (
-      <div className="card p-4 flex items-center gap-3 border-success/30 bg-success/5">
-        <CheckCircle2 className="w-5 h-5 text-success" />
+      <div className="module-frame flex items-center gap-3 border-text/30">
+        <div className="w-9 h-9 rounded-xl grid place-items-center bg-text/15 border border-text/30">
+          <CheckCircle2 className="w-4 h-4" />
+        </div>
         <div className="flex-1">
           <div className="font-medium">Cours terminé</div>
-          <div className="text-xs text-text-soft">Tu as déjà validé ce cours.</div>
+          <div className="text-xs text-muted">Tu as déjà validé ce cours.</div>
         </div>
       </div>
     );

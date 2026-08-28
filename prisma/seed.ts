@@ -9,7 +9,7 @@ import { SCENARIOS } from '../src/content/diagnostics';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Seed démarré…');
+  console.log('-- Seed démarré…');
 
   // Tracks
   TRACKS.forEach((t, i) => { (t as any).order = i; });
@@ -20,7 +20,7 @@ async function main() {
       create: { ...t, order: (t as any).order ?? 0 },
     });
   }
-  console.log(`✓ ${TRACKS.length} tracks`);
+  console.log(`[OK] ${TRACKS.length} tracks`);
 
   // Courses
   for (const c of COURSES) {
@@ -45,7 +45,7 @@ async function main() {
       },
     });
   }
-  console.log(`✓ ${COURSES.length} cours`);
+  console.log(`[OK] ${COURSES.length} cours`);
 
   // Quiz questions
   for (const q of QUESTIONS) {
@@ -65,7 +65,7 @@ async function main() {
       },
     });
   }
-  console.log(`✓ ${QUESTIONS.length} questions`);
+  console.log(`[OK] ${QUESTIONS.length} questions`);
 
   // Exams
   for (const e of EXAMS) {
@@ -81,7 +81,7 @@ async function main() {
       },
     });
   }
-  console.log(`✓ ${EXAMS.length} examens`);
+  console.log(`[OK] ${EXAMS.length} examens`);
 
   // Glossary
   for (const term of TERMS) {
@@ -99,7 +99,7 @@ async function main() {
       },
     });
   }
-  console.log(`✓ ${TERMS.length} termes`);
+  console.log(`[OK] ${TERMS.length} termes`);
 
   // Components
   for (const c of COMPONENTS) {
@@ -117,7 +117,7 @@ async function main() {
       },
     });
   }
-  console.log(`✓ ${COMPONENTS.length} composants`);
+  console.log(`[OK] ${COMPONENTS.length} composants`);
 
   // Diagnostic scenarios
   for (const s of SCENARIOS) {
@@ -134,27 +134,27 @@ async function main() {
       },
     });
   }
-  console.log(`✓ ${SCENARIOS.length} scénarios`);
+  console.log(`[OK] ${SCENARIOS.length} scénarios`);
 
   // Badges par défaut
   const badges = [
-    { slug: 'first-course',     name: 'Premier cours',      description: 'Termine ton premier cours',         icon: '🎓' },
-    { slug: 'first-quiz',       name: 'Premier quiz',       description: 'Réussis ton premier quiz',          icon: '✅' },
-    { slug: 'quiz-10',          name: '10 quiz réussis',    description: 'Réussis 10 quiz',                    icon: '🏆' },
-    { slug: 'first-diagnostic', name: 'Diagnostic réussi',  description: 'Résous ton premier diagnostic',     icon: '🛠️' },
-    { slug: 'expert-cpu',       name: 'Expert CPU',         description: 'Maîtrise CPU (90%+)',               icon: '🧠' },
-    { slug: 'expert-gpu',       name: 'Expert GPU',         description: 'Maîtrise GPU (90%+)',               icon: '🎮' },
-    { slug: 'master-troubleshoot', name: 'Maître du dépannage', description: 'Résous 5 diagnostics',         icon: '�' },
-    { slug: 'perfect-build',    name: 'Configuration parfaite', description: 'Configuration compatible 100%',  icon: '💎' },
-    { slug: 'interview-done',   name: 'Entretien réussi',   description: 'Termine un entretien blanc',        icon: '💬' },
-    { slug: 'streak-7',         name: 'Série de 7 jours',   description: '7 jours consécutifs d\'apprentissage', icon: '🔥' },
+    { slug: 'first-course',        name: 'Premier cours',           description: 'Termine ton premier cours',            icon: '1' },
+    { slug: 'first-quiz',          name: 'Premier quiz',            description: 'Réussis ton premier quiz',             icon: '2' },
+    { slug: 'quiz-10',             name: '10 quiz réussis',         description: 'Réussis 10 quiz',                       icon: '3' },
+    { slug: 'first-diagnostic',    name: 'Diagnostic réussi',       description: 'Résous ton premier diagnostic',        icon: '4' },
+    { slug: 'expert-cpu',          name: 'Expert CPU',              description: 'Maîtrise CPU (90%+)',                  icon: '5' },
+    { slug: 'expert-gpu',          name: 'Expert GPU',              description: 'Maîtrise GPU (90%+)',                  icon: '6' },
+    { slug: 'master-troubleshoot', name: 'Maître du dépannage',     description: 'Résous 5 diagnostics',                 icon: '7' },
+    { slug: 'perfect-build',       name: 'Configuration parfaite',  description: 'Configuration compatible 100%',        icon: '8' },
+    { slug: 'interview-done',      name: 'Entretien réussi',        description: 'Termine un entretien blanc',           icon: '9' },
+    { slug: 'streak-7',            name: 'Série de 7 jours',        description: "7 jours consécutifs d'apprentissage",  icon: '10' },
   ];
   for (const b of badges) {
     await prisma.badge.upsert({ where: { slug: b.slug }, update: {}, create: b });
   }
-  console.log(`✓ ${badges.length} badges`);
+  console.log(`[OK] ${badges.length} badges`);
 
-  console.log('🌱 Seed terminé.');
+  console.log('-- Seed terminé.');
 }
 
 main().catch((e) => { console.error(e); process.exit(1); }).finally(() => prisma.$disconnect());

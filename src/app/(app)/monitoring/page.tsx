@@ -17,29 +17,34 @@ const metrics = [
 export default function MonitoringPage() {
   return (
     <div className="space-y-6 max-w-3xl">
-      <header>
-        <h1 className="text-2xl font-bold flex items-center gap-2"><Activity className="w-5 h-5 text-brand-blue" /> Monitoring PC</h1>
-        <p className="text-text-soft text-sm">Comprendre les capteurs et apprendre à repérer un problème.</p>
-      </header>
+      <section className="module-hero">
+        <div className="module-eyebrow">Référence</div>
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight flex items-center gap-2 mt-2">
+          <Activity className="w-6 h-6 text-text" /> Monitoring PC
+        </h1>
+        <p className="text-muted text-[15px] mt-2 max-w-xl">Comprendre les capteurs et apprendre à repérer un problème.</p>
+      </section>
 
       <section className="grid sm:grid-cols-2 gap-3">
-        {metrics.map(m => {
+        {metrics.map((m, i) => {
           const Icon = m.icon;
           return (
-            <article key={m.name} className="card p-4">
-              <div className="flex items-center gap-2 mb-1">
-                <Icon className="w-4 h-4 text-brand-blue" />
+            <article key={m.name} className={`module-frame anim-rise anim-rise-${(i % 4) + 1}`}>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-9 h-9 rounded-xl grid place-items-center bg-bg-elev border border-border">
+                  <Icon className="w-4 h-4 text-text" />
+                </div>
                 <h3 className="font-semibold text-sm">{m.name}</h3>
               </div>
-              <p className="text-xs text-text-soft">{m.tip}</p>
+              <p className="text-xs text-muted leading-relaxed">{m.tip}</p>
             </article>
           );
         })}
       </section>
 
-      <section className="card p-5">
+      <section className="module-frame anim-rise anim-rise-4">
         <h2 className="section-title mb-2">Repérer un problème</h2>
-        <ul className="text-sm text-text-soft space-y-1 list-disc pl-5">
+        <ul className="text-sm text-muted space-y-1.5 list-disc pl-5 marker:text-muted">
           <li>CPU à 100% sur un cœur et 10% sur les autres → jeu mal threadé ou bottleneck CPU.</li>
           <li>GPU à 99% et CPU à 50% → GPU-bound (normal, équilibre OK).</li>
           <li>GPU à 60% et CPU à 50% → autre limite (RAM, stockage, pilote).</li>

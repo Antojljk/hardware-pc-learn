@@ -79,12 +79,12 @@ export function BuildClient({ components }: { components: ComponentLite[] }) {
     <div className="grid lg:grid-cols-3 gap-8">
       {/* Sélecteur */}
       <div className="lg:col-span-2 space-y-6">
-        {TYPES.map(t => {
+        {TYPES.map((t, i) => {
           const Icon = t.icon;
           const opts = byType[t.key] || [];
           const selected = build[t.key];
           return (
-            <section key={t.key} className="space-y-3">
+            <section key={t.key} className={`space-y-3 anim-rise anim-rise-${(i % 4) + 1}`}>
               <div className="flex items-center gap-2 px-1">
                 <Icon className="w-4 h-4 text-text-soft" />
                 <h3 className="font-display text-base font-semibold tracking-tight">{t.label}</h3>
@@ -98,10 +98,10 @@ export function BuildClient({ components }: { components: ComponentLite[] }) {
                       key={o.id}
                       onClick={() => pick(t.key, active ? undefined : o.id)}
                       className={cn(
-                        'text-left p-3 rounded-xl border transition-colors',
+                        'text-left p-3 rounded-xl border transition-all duration-200 lift-3d',
                         active
-                          ? 'border-accent bg-accent/5'
-                          : 'border-border bg-bg-elev hover:border-text-mute'
+                          ? 'border-text/60 bg-text/8'
+                          : 'border-border bg-bg-elev hover:border-text/40'
                       )}
                     >
                       <div className="text-sm font-medium truncate">{o.brand} {o.model}</div>
@@ -122,7 +122,7 @@ export function BuildClient({ components }: { components: ComponentLite[] }) {
 
       {/* Récap + score */}
       <aside className="space-y-6 lg:sticky lg:top-4 self-start">
-        <section>
+        <section className="module-frame">
           <h3 className="font-display text-base font-semibold tracking-tight mb-3">Récapitulatif</h3>
           <ul className="text-sm space-y-2">
             {TYPES.map(t => {
@@ -145,14 +145,14 @@ export function BuildClient({ components }: { components: ComponentLite[] }) {
           <div className="text-[11px] text-text-mute mt-1">Conso. estimée : ~{check.totalPower} W</div>
         </section>
 
-        <section>
+        <section className="module-frame">
           <h3 className="font-display text-base font-semibold tracking-tight mb-3">Vérification</h3>
           {check.issues.length === 0 ? (
-            <div className="text-sm text-success flex items-center gap-2"><CheckCircle2 className="w-4 h-4" /> Configuration compatible</div>
+            <div className="text-sm text-text-soft flex items-center gap-2"><CheckCircle2 className="w-4 h-4" /> Configuration compatible</div>
           ) : (
             <ul className="space-y-2 text-sm">
               {check.issues.map((i, idx) => (
-                <li key={idx} className={`flex items-start gap-2 ${i.severity === 'error' ? 'text-danger' : i.severity === 'warn' ? 'text-warning' : 'text-text-soft'}`}>
+                <li key={idx} className={`flex items-start gap-2 ${i.severity === 'error' ? 'text-text' : i.severity === 'warn' ? 'text-text-soft' : 'text-text-soft'}`}>
                   {i.severity === 'info' ? <Info className="w-3.5 h-3.5 mt-0.5" /> : <AlertTriangle className="w-3.5 h-3.5 mt-0.5" />}
                   <span>{i.message}</span>
                 </li>
@@ -162,9 +162,9 @@ export function BuildClient({ components }: { components: ComponentLite[] }) {
         </section>
 
         {check.ok && (
-          <section>
+          <section className="card-highlight">
             <h3 className="font-display text-base font-semibold tracking-tight mb-3">Score</h3>
-            <div className="font-display text-5xl font-semibold tabular-nums tracking-tight">{score.total}<span className="text-base text-text-mute ml-1">/100</span></div>
+            <div className="font-display text-5xl font-semibold tabular-nums tracking-tight">{score.total}<span className="text-base text-text-soft ml-1">/100</span></div>
             <div className="grid grid-cols-2 gap-2 mt-4 text-xs">
               <ScoreRow label="Performances" value={score.performance} />
               <ScoreRow label="Rapport qualité/prix" value={score.value} />
@@ -185,8 +185,8 @@ export function BuildClient({ components }: { components: ComponentLite[] }) {
             <Save className="w-4 h-4" /> {saving ? 'Sauvegarde…' : 'Sauvegarder'}
           </button>
           <button onClick={reset} className="btn-outline w-full"><Trash2 className="w-4 h-4" /> Réinitialiser</button>
-          {savedId && <p className="text-xs text-success">Sauvegardé ✓</p>}
-          {error && <p className="text-xs text-danger">{error}</p>}
+          {savedId && <p className="text-xs text-text-soft inline-flex items-center gap-1"><CheckCircle2 className="w-3.5 h-3.5" /> Sauvegardé</p>}
+          {error && <p className="text-xs text-text-soft">{error}</p>}
         </section>
       </aside>
     </div>
@@ -195,7 +195,7 @@ export function BuildClient({ components }: { components: ComponentLite[] }) {
 
 function ScoreRow({ label, value }: { label: string; value: number }) {
   return (
-    <div className="p-3 rounded-xl bg-bg-elev">
+    <div className="p-3 rounded-xl bg-bg-elev border border-border">
       <div className="text-text-mute text-[10px] uppercase tracking-wider">{label}</div>
       <div className="font-display font-semibold text-base tabular-nums mt-0.5">{Math.round(value)}<span className="text-text-mute text-xs">/100</span></div>
     </div>
