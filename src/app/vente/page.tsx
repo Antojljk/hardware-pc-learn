@@ -646,12 +646,6 @@ export default function VentePage() {
             Une offre <strong className="text-text">Ultimate Lifetime</strong>{' '}
             à 399 € (paiement unique) est également disponible.
           </p>
-          <div className="mt-6 flex justify-center">
-            <Link href="/tarifs" className="btn-primary">
-              Comparer les offres
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
         </section>
 
         {/* ============================================================

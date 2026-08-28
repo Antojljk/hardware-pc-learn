@@ -242,3 +242,29 @@ export function userCanAccess(
 export function planLabel(plan: PrismaPlan | string | null | undefined): string {
   return getPlan(plan).label;
 }
+
+// =============================================================================
+// Limites mensuelles du Tuteur IA par offre
+// =============================================================================
+// FREE dispose de 3 essais "à vie" (on les consomme quand même via le compteur
+// mensuel, mais une seule fois par mois utilisateur — la consommation reste
+// cantonnée au mois en cours, ce qui suffit pour 3 essais). Pour un quota
+// "vraiment à vie", il faudrait un compteur séparé ; ici on garde le même
+// mécanisme serveur, simple et non contournable.
+export const AI_LIMITS: Record<PlanKey, number> = {
+  FREE: 3,
+  ESSENTIEL: 20,
+  PRO: 150,
+  ULTIMATE: 500,
+};
+
+export function aiMonthlyLimit(plan: PrismaPlan | string | null | undefined): number {
+  return AI_LIMITS[toPlanKey(plan)];
+}
+
+/** Renvoie la clé de mois UTC au format "YYYY-MM". */
+export function currentMonthKey(date: Date = new Date()): string {
+  const y = date.getUTCFullYear();
+  const m = String(date.getUTCMonth() + 1).padStart(2, '0');
+  return `${y}-${m}`;
+}

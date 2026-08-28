@@ -3,12 +3,29 @@ import Link from 'next/link';
 import { getCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { Hammer, ArrowRight, Wrench, AlertTriangle, Activity, Layers, Wrench as Tool } from 'lucide-react';
+import { canAccess } from '@/lib/plans';
+import { LockedState } from '@/components/LockedState';
 
 export const metadata = { title: 'Mode technicien — HardwarePC' };
 
 export default async function TechnicienModePage() {
   const user = await getCurrentUser();
   if (!user) redirect('/auth');
+
+  // Mode technicien = PRO+.
+  if (!canAccess(user.plan, 'mode_technicien')) {
+    return (
+      <div className="max-w-3xl mx-auto space-y-4">
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight">Mode technicien</h1>
+        <LockedState
+          feature="Mode technicien"
+          required="PRO"
+          current={user.plan}
+          description="Le mode technicien est réservé à l'offre Pro et supérieures. Diagnostique sans guidage, puis compare ta procédure à la cause racine."
+        />
+      </div>
+    );
+  }
 
   const scenarios = await prisma.diagnosticScenario.findMany({ orderBy: { difficulty: 'asc' } });
 

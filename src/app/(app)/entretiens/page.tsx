@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { MessageSquareQuote, Briefcase, ChevronRight, Activity, History, Wrench, Settings, Users, BarChart3, Headphones, ShoppingBag, Building2 } from 'lucide-react';
+import { canAccess } from '@/lib/plans';
+import { LockedState } from '@/components/LockedState';
 
 const ROLES = [
   { slug: 'monteur',    title: 'Monteur PC',           desc: 'Capacité à assembler et tester un PC.',            Icon: Wrench },
@@ -21,6 +23,22 @@ const LEVELS = [
 export default async function InterviewsHome() {
   const user = await getCurrentUser();
   if (!user) redirect('/auth');
+
+  // Garde-fou serveur : les entretiens sont ESSENTIEL+.
+  if (!canAccess(user.plan, 'interviews_basic')) {
+    return (
+      <div className="max-w-3xl mx-auto space-y-4">
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight">Entretiens blancs</h1>
+        <LockedState
+          feature="Simulations d'entretiens"
+          required="ESSENTIEL"
+          current={user.plan}
+          description="Les entretiens blancs sont réservés à l'offre Essentiel et supérieures. Débloque 5 métiers et 4 niveaux de difficulté."
+        />
+      </div>
+    );
+  }
+
   const past = await prisma.interviewAttempt.findMany({ where: { userId: user.id }, orderBy: { createdAt: 'desc' }, take: 5 });
 
   const bestScore = past.length ? Math.max(...past.map(p => p.score)) : null;

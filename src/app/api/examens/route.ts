@@ -4,6 +4,8 @@ import { getCurrentUser } from '@/lib/auth';
 import { grantXp, unlockBadges } from '@/lib/gamification';
 import { QUESTIONS, EXAMS } from '@/content/quizzes';
 import { z } from 'zod';
+import { canAccess } from '@/lib/plans';
+import { buildLockedResponse } from '@/lib/plan-guard';
 
 export async function GET() {
   return NextResponse.json({ exams: EXAMS });
@@ -18,6 +20,11 @@ const SubmitSchema = z.object({
 export async function POST(req: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: 'Non connecté' }, { status: 401 });
+
+  // Examens = feature payante (ESSENTIEL+ pour les basiques, PRO+ pour les complets).
+  if (!canAccess(user.plan, 'exams_basic')) {
+    return buildLockedResponse('exams_basic', 'ESSENTIEL');
+  }
   try {
     const { examSlug, answers, timeSpent } = SubmitSchema.parse(await req.json());
     const exam = EXAMS.find(e => e.slug === examSlug);

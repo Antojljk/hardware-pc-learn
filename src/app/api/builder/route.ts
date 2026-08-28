@@ -3,6 +3,8 @@ import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
 import { grantXp, unlockBadges } from '@/lib/gamification';
+import { canAccess } from '@/lib/plans';
+import { buildLockedResponse } from '@/lib/plan-guard';
 
 const schema = z.object({
   name: z.string().min(1).max(80),
@@ -25,6 +27,11 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: 'unauthenticated' }, { status: 401 });
+
+  // Constructeur PC complet = ESSENTIEL+ (cf. plans.ts).
+  if (!canAccess(user.plan, 'builder_full')) {
+    return buildLockedResponse('builder_full', 'ESSENTIEL');
+  }
   const body = await req.json().catch(() => null);
   const parsed = schema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: 'invalid', details: parsed.error.flatten() }, { status: 400 });

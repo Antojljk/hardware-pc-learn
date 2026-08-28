@@ -4,12 +4,29 @@ import { redirect } from 'next/navigation';
 import { PcCase, Sparkles, Wrench, Layers, Cpu, ChevronRight } from 'lucide-react';
 import { BuildClient } from './BuildClient';
 import Link from 'next/link';
+import { canAccess } from '@/lib/plans';
+import { LockedState } from '@/components/LockedState';
 
 export const dynamic = 'force-dynamic';
 
 export default async function ConstructeurPage() {
   const user = await getCurrentUser();
   if (!user) redirect('/auth');
+
+  // Constructeur PC complet = ESSENTIEL+.
+  if (!canAccess(user.plan, 'builder_full')) {
+    return (
+      <div className="max-w-3xl mx-auto space-y-4">
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight">Constructeur PC</h1>
+        <LockedState
+          feature="Constructeur PC"
+          required="ESSENTIEL"
+          current={user.plan}
+          description="L'atelier de montage est réservé à l'offre Essentiel et supérieures : vérifie la compatibilité de tes composants, sauvegarde tes builds et obtiens un score."
+        />
+      </div>
+    );
+  }
 
   const components = await prisma.component.findMany();
   const componentsLite = components.map(c => ({

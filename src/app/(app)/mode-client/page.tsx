@@ -2,12 +2,29 @@ import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
 import { ShieldCheck, MessageCircle, Users, Briefcase, Sparkles } from 'lucide-react';
 import { ClientSimulator } from './ClientSimulator';
+import { canAccess } from '@/lib/plans';
+import { LockedState } from '@/components/LockedState';
 
 export const metadata = { title: 'Mode client — HardwarePC' };
 
 export default async function ClientModePage() {
   const user = await getCurrentUser();
   if (!user) redirect('/auth');
+
+  // Mode client = PRO+.
+  if (!canAccess(user.plan, 'mode_client')) {
+    return (
+      <div className="max-w-3xl mx-auto space-y-4">
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight">Mode client</h1>
+        <LockedState
+          feature="Mode client"
+          required="PRO"
+          current={user.plan}
+          description="Le mode client est réservé à l'offre Pro et supérieures. Dialogue avec un client mécontent et évalue ta communication."
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">

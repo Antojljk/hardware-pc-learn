@@ -2,10 +2,39 @@ import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
 import { Bot, Sparkles, MessageCircle, Zap, Brain, Info } from 'lucide-react';
 import { TutorClient } from './TutorClient';
+import { canAccess, aiMonthlyLimit } from '@/lib/plans';
+import { getAiUsage } from '@/lib/ai-quota';
+import { LockedState } from '@/components/LockedState';
+
+export const dynamic = 'force-dynamic';
 
 export default async function TutorPage() {
   const user = await getCurrentUser();
   if (!user) redirect('/auth');
+
+  // Garde-fou serveur : la fonctionnalité Tuteur IA est payante.
+  if (!canAccess(user.plan, 'tutor_ai')) {
+    return (
+      <div className="max-w-3xl mx-auto space-y-4">
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight">Tuteur IA</h1>
+        <LockedState
+          feature="Tuteur IA"
+          required="ESSENTIEL"
+          current={user.plan}
+          description="Le Tuteur IA est réservé aux utilisateurs avec une offre payante. Pose tes questions et obtiens des réponses claires, exemples et analogies adaptés à ton niveau."
+        />
+      </div>
+    );
+  }
+
+  // Quota mensuel initial — affiché côté client pour ne pas laisser l'utilisateur
+  // envoyer un message « à l'aveugle » qui serait refusé côté serveur.
+  const usage = await getAiUsage(user.id, user.plan);
+  const initialQuota = {
+    used: usage.used,
+    limit: usage.limit,
+    remaining: Math.max(0, usage.limit - usage.used),
+  };
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
@@ -45,10 +74,10 @@ export default async function TutorPage() {
             </div>
             <div className="rounded-2xl border border-text/30 bg-text/8 backdrop-blur p-3">
               <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted">
-                <MessageCircle className="w-3.5 h-3.5" /> Mode
+                <MessageCircle className="w-3.5 h-3.5" /> Quota
               </div>
-              <div className="mt-1.5 font-display text-base sm:text-lg font-semibold text-text">
-                Local
+              <div className="mt-1.5 font-display text-base sm:text-lg font-semibold text-text tabular-nums">
+                {initialQuota.used} / {initialQuota.limit}
               </div>
             </div>
           </div>
@@ -62,11 +91,13 @@ export default async function TutorPage() {
           Mode local par défaut (réponses pédagogiques de la base). Une clé OpenAI peut être
           ajoutée via la variable <code className="font-mono text-text">OPENAI_API_KEY</code>
           pour activer le mode conversationnel avancé.
+          {' '}Tu disposes de <strong className="text-text">{aiMonthlyLimit(user.plan)} messages IA par mois</strong>
+          {' '}sur ton offre actuelle.
         </span>
       </section>
 
       <section className="anim-rise anim-rise-2">
-        <TutorClient />
+        <TutorClient initialQuota={initialQuota} />
       </section>
     </div>
   );

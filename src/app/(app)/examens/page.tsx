@@ -4,10 +4,27 @@ import { getCurrentUser } from '@/lib/auth';
 import { EXAMS } from '@/content/quizzes';
 import { FileCheck2, Clock, Trophy, ChevronRight, Target, ListChecks, Activity } from 'lucide-react';
 import { redirect } from 'next/navigation';
+import { canAccess } from '@/lib/plans';
+import { LockedState } from '@/components/LockedState';
 
 export default async function ExamsPage() {
   const user = await getCurrentUser();
   if (!user) redirect('/auth');
+
+  // Garde-fou serveur : les examens sont ESSENTIEL+.
+  if (!canAccess(user.plan, 'exams_basic')) {
+    return (
+      <div className="max-w-3xl mx-auto space-y-4">
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight">Examens blancs</h1>
+        <LockedState
+          feature="Examens blancs"
+          required="ESSENTIEL"
+          current={user.plan}
+          description="Les examens blancs sont réservés à l'offre Essentiel et supérieures. Ils valident tes acquis en conditions réelles."
+        />
+      </div>
+    );
+  }
 
   const attempts = await prisma.examAttempt.findMany({
     where: { userId: user.id }, orderBy: { createdAt: 'desc' }, take: 10,

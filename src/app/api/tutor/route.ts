@@ -3,6 +3,8 @@ import { z } from 'zod';
 import { getCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { TERMS } from '@/content/glossary';
+import { consumeAiMessage } from '@/lib/ai-quota';
+import { canAccess, planLabel } from '@/lib/plans';
 
 const schema = z.object({ message: z.string().min(1).max(2000) });
 
@@ -50,9 +52,39 @@ function localAnswer(q: string): string {
 export async function POST(req: NextRequest) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: 'unauthenticated' }, { status: 401 });
+
+  // Garde-fou d'offre : la fonctionnalité Tuteur IA est payante.
+  if (!canAccess(user.plan, 'tutor_ai')) {
+    return NextResponse.json(
+      {
+        error: 'Tuteur IA réservé aux utilisateurs connectés avec une offre payante.',
+        code: 'PLAN_REQUIRED',
+        feature: 'tutor_ai',
+        required: 'ESSENTIEL',
+      },
+      { status: 403 },
+    );
+  }
+
   const body = await req.json().catch(() => null);
   const parsed = schema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: 'invalid' }, { status: 400 });
+
+  // Consommation du quota mensuel (source de vérité côté serveur).
+  const quota = await consumeAiMessage(user.id, user.plan);
+  if (!quota.ok) {
+    return NextResponse.json(
+      {
+        error: `Quota mensuel atteint pour l'offre ${planLabel(user.plan)}.`,
+        code: 'QUOTA_EXCEEDED',
+        feature: 'tutor_ai',
+        plan: planLabel(user.plan),
+        used: quota.used,
+        limit: quota.limit,
+      },
+      { status: 403 },
+    );
+  }
 
   // Si une clé OpenAI est présente, on pourrait appeler l'API. Sinon, fallback local.
   const apiKey = process.env.OPENAI_API_KEY;
@@ -73,12 +105,22 @@ export async function POST(req: NextRequest) {
       if (r.ok) {
         const data = await r.json();
         const reply = data.choices?.[0]?.message?.content?.trim();
-        if (reply) return NextResponse.json({ reply, source: 'openai' });
+        if (reply) {
+          return NextResponse.json({
+            reply,
+            source: 'openai',
+            quota: { used: quota.used, limit: quota.limit, remaining: quota.limit - quota.used },
+          });
+        }
       }
     } catch {/* fallback */}
   }
 
-  return NextResponse.json({ reply: localAnswer(parsed.data.message), source: 'local' });
+  return NextResponse.json({
+    reply: localAnswer(parsed.data.message),
+    source: 'local',
+    quota: { used: quota.used, limit: quota.limit, remaining: quota.limit - quota.used },
+  });
 }
 
 void prisma;

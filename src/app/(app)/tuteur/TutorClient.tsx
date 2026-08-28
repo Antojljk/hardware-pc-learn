@@ -4,6 +4,11 @@ import { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Sparkles } from 'lucide-react';
 
 type Msg = { role: 'user' | 'assistant'; text: string };
+type Quota = { used: number; limit: number; remaining: number };
+
+type Props = {
+  initialQuota?: Quota;
+};
 
 const SEED_PROMPTS = [
   'Explique-moi la différence entre TDP et consommation réelle.',
@@ -12,13 +17,17 @@ const SEED_PROMPTS = [
   'Mon PC fait du bruit, par où je commence ?',
 ];
 
-export function TutorClient() {
+export function TutorClient({ initialQuota }: Props) {
   const [messages, setMessages] = useState<Msg[]>([
     { role: 'assistant', text: 'Salut ! Je suis ton tuteur hardware. Pose-moi une question, je m\'adapte à ton niveau.' },
   ]);
   const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);
+  const [quota, setQuota] = useState<Quota | undefined>(initialQuota);
+  const [, setLimitError] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const quotaExhausted = !!quota && quota.used >= quota.limit;
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -29,9 +38,14 @@ export function TutorClient() {
   async function send(text?: string) {
     const message = (text ?? input).trim();
     if (!message) return;
+    if (quotaExhausted) {
+      setLimitError(`Tu as utilisé tes ${quota?.limit ?? 0} messages IA ce mois-ci.`);
+      return;
+    }
     setMessages(m => [...m, { role: 'user', text: message }]);
     setInput('');
     setBusy(true);
+    setLimitError(null);
     try {
       const res = await fetch('/api/tutor', {
         method: 'POST',
@@ -39,7 +53,29 @@ export function TutorClient() {
         body: JSON.stringify({ message }),
       });
       const data = await res.json();
-      setMessages(m => [...m, { role: 'assistant', text: data.reply || '...' }]);
+      if (!res.ok) {
+        if (res.status === 403 && data?.code === 'QUOTA_EXCEEDED') {
+          setLimitError(data.error || 'Quota mensuel atteint.');
+          if (typeof data.used === 'number' && typeof data.limit === 'number') {
+            setQuota({ used: data.used, limit: data.limit, remaining: 0 });
+          }
+          setMessages(m => [
+            ...m,
+            { role: 'assistant', text: `Tu as atteint la limite de ${data.limit ?? '?'} messages IA ce mois-ci pour ton offre. Passe à une offre supérieure pour continuer.` },
+          ]);
+        } else if (res.status === 403 && data?.code === 'PLAN_REQUIRED') {
+          setLimitError(data.error || 'Tuteur IA non disponible sur ton offre.');
+          setMessages(m => [
+            ...m,
+            { role: 'assistant', text: 'Le Tuteur IA est réservé aux utilisateurs avec une offre payante. Passe à une offre supérieure pour y accéder.' },
+          ]);
+        } else {
+          setMessages(m => [...m, { role: 'assistant', text: 'Erreur réseau. Réessaye.' }]);
+        }
+      } else {
+        if (data.quota) setQuota(data.quota);
+        setMessages(m => [...m, { role: 'assistant', text: data.reply || '...' }]);
+      }
     } catch {
       setMessages(m => [...m, { role: 'assistant', text: 'Erreur réseau. Réessaye.' }]);
     } finally {

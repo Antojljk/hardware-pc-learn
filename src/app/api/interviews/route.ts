@@ -4,6 +4,8 @@ import { getCurrentUser } from '@/lib/auth';
 import { grantXp, unlockBadges } from '@/lib/gamification';
 import { INTERVIEW_QUESTIONS } from '@/lib/interview';
 import { z } from 'zod';
+import { canAccess } from '@/lib/plans';
+import { buildLockedResponse } from '@/lib/plan-guard';
 
 const Schema = z.object({
   role: z.string(),
@@ -18,6 +20,11 @@ const Schema = z.object({
 export async function POST(req: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: 'Non connecté' }, { status: 401 });
+
+  // Entretiens = feature payante (ESSENTIEL+ pour les basiques).
+  if (!canAccess(user.plan, 'interviews_basic')) {
+    return buildLockedResponse('interviews_basic', 'ESSENTIEL');
+  }
   try {
     const { role, level, transcript } = Schema.parse(await req.json());
     const avg = Math.round(transcript.reduce((s, t) => s + t.evaluation.score, 0) / transcript.length);

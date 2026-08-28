@@ -53,6 +53,21 @@ model User {
   badgesUnlocked      BadgesOnUsers[]
   reviews             Review[]
   sessions            Session[]
+  aiUsage             AiMessageUsage[]
+}
+
+// Compteur mensuel des messages IA (Tuteur). Une ligne par (user, mois UTC).
+// monthKey = "YYYY-MM" — pas de cron, le compteur se réinitialise
+// automatiquement quand la clé de mois change.
+model AiMessageUsage {
+  id        String   @id @default(cuid())
+  userId    String
+  monthKey  String
+  count     Int      @default(0)
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([userId, monthKey])
+  @@index([userId, monthKey])
 }
 
 model Session {

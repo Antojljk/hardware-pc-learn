@@ -1,15 +1,7 @@
 import { redirect } from 'next/navigation';
-import { getCurrentUser } from '@/lib/auth';
 
-export default async function TarifsPage() {
-  const user = await getCurrentUser();
-  if (!user) {
-    return redirect('/auth');
-  }
-
-  return (
-    <div>
-      <h1>Tarifs Page</h1>
-    </div>
-  );
+export default function TarifsPage() {
+  // La page /tarifs n'a pas de contenu propre : elle est remplacée par
+  // la page de vente `/vente` qui présente les 4 offres en détail.
+  redirect('/vente');
 }
