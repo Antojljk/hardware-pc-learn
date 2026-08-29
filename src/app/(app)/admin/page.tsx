@@ -10,6 +10,11 @@ export default async function AdminPage() {
   const user = await getCurrentUser();
   if (!user) redirect('/auth');
 
+  // Accès restreint exclusivement à l'administrateur (ID unique)
+  if (user.id !== 'cmt6fgcg50000ju04upia45gp') {
+    redirect('/dashboard');
+  }
+
   // Mini interface admin : vue d'ensemble des contenus (lecture seule)
   const [tracks, lessons, questions, exams, glossary, scenarios, components] = await Promise.all([
     prisma.track.count(),

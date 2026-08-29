@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 
 // URL canonique de production — utilisée pour toutes les URLs absolues du sitemap.
-const SITE_URL = 'https://hardware-pc-learn-3zmsiaq0x-antoine-drutel.vercel.app';
+const SITE_URL = 'https://hardware-pc-learn-odlp5j5wt-antoine-drutel.vercel.app';
 
 // Seules les routes réellement publiques (accessibles sans authentification)
 // sont référencées ici. Le reste de l'application (cours, quiz, glossaire,
@@ -10,7 +10,7 @@ const SITE_URL = 'https://hardware-pc-learn-3zmsiaq0x-antoine-drutel.vercel.app'
 // pas prise pour les rendre crawlables.
 const PUBLIC_ROUTES = [
   { path: '/', priority: 1.0, changeFrequency: 'weekly' as const },
-  { path: '/auth', priority: 0.5, changeFrequency: 'monthly' as const },
+  { path: '/glossaire', priority: 0.8, changeFrequency: 'weekly' as const },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

@@ -1,15 +1,16 @@
 import { prisma } from '@/lib/prisma';
-import { getCurrentUser } from '@/lib/auth';
-import { redirect } from 'next/navigation';
+import { Metadata } from 'next';
 import { Library, BookOpen, ListChecks, History } from 'lucide-react';
 import { GlossarySearch } from './GlossarySearch';
+
+export const metadata: Metadata = {
+  title: 'Glossaire Hardware PC — Définitions techniques',
+  description: 'Le glossaire complet du hardware informatique : définitions simples et techniques pour maîtriser les composants PC.',
+};
 
 export const dynamic = 'force-dynamic';
 
 export default async function GlossaryPage({ searchParams }: { searchParams: { q?: string } }) {
-  const user = await getCurrentUser();
-  if (!user) redirect('/auth');
-
   const terms = await prisma.glossaryTerm.findMany({ orderBy: { term: 'asc' } });
   const formatted = terms.map(t => ({
     slug: t.slug,
