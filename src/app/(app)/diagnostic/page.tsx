@@ -8,6 +8,21 @@ export default async function DiagnosticHome() {
   const user = await getCurrentUser();
   if (!user) redirect('/auth');
 
+  // Garde-fou serveur : le diagnostic est réservé au plan PRO et supérieures.
+  if (!canAccess(user.plan, 'diagnostic_full')) {
+    return (
+      <div className="max-w-3xl mx-auto space-y-4">
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight">Laboratoire de diagnostic</h1>
+        <LockedState
+          feature="Laboratoire de diagnostic"
+          required="PRO"
+          current={user.plan}
+          description="L'atelier de diagnostic est réservé à l'offre Pro et supérieures : résous des pannes complexes et valide ton expertise technique."
+        />
+      </div>
+    );
+  }
+
   const scenarios = await prisma.diagnosticScenario.findMany();
   const attempts = await prisma.diagnosticAttempt.findMany({ where: { userId: user.id }, orderBy: { createdAt: 'desc' }, take: 5 });
 

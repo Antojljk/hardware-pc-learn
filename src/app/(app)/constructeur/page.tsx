@@ -13,16 +13,16 @@ export default async function ConstructeurPage() {
   const user = await getCurrentUser();
   if (!user) redirect('/auth');
 
-  // Constructeur PC complet = ESSENTIEL+.
+  // Constructeur PC complet = PRO+.
   if (!canAccess(user.plan, 'builder_full')) {
     return (
       <div className="max-w-3xl mx-auto space-y-4">
         <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight">Constructeur PC</h1>
         <LockedState
           feature="Constructeur PC"
-          required="ESSENTIEL"
+          required="PRO"
           current={user.plan}
-          description="L'atelier de montage est réservé à l'offre Essentiel et supérieures : vérifie la compatibilité de tes composants, sauvegarde tes builds et obtiens un score."
+          description="L'atelier de montage est réservé à l'offre Pro et supérieures : vérifie la compatibilité de tes composants, sauvegarde tes builds et obtiens un score."
         />
       </div>
     );

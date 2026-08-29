@@ -1,6 +1,11 @@
 import { Activity, Thermometer, Cpu, MonitorPlay, MemoryStick, HardDrive, Plug, Wind, AlertTriangle, ListChecks } from 'lucide-react';
+import { getCurrentUser } from '@/lib/auth';
+import { redirect } from 'next/navigation';
+import { canAccess } from '@/lib/plans';
+import { LockedState } from '@/components/LockedState';
 
 export const metadata = { title: 'Monitoring — HardwarePC' };
+export const dynamic = 'force-dynamic';
 
 const metrics = [
   { icon: Cpu, name: 'CPU usage',          tip: 'HWiNFO64 → CPU [0..n] → utilisation. > 80% constant = CPU bottleneck.' },
@@ -23,7 +28,24 @@ const problemClues = [
   'Fréquence CPU qui descend sous la base en charge → throttling thermique (Tjunction).',
 ];
 
-export default function MonitoringPage() {
+export default async function MonitoringPage() {
+  const user = await getCurrentUser();
+  if (!user) redirect('/auth');
+
+  if (!canAccess(user.plan, 'monitoring_extended')) {
+    return (
+      <div className="max-w-3xl mx-auto space-y-4">
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight">Monitoring PC</h1>
+        <LockedState
+          feature="Monitoring avancé"
+          required="PRO"
+          current={user.plan}
+          description="Le monitoring avancé est réservé à l'offre Pro et supérieures : apprends à surveiller tes capteurs et repérer les signes de fatigue de ton matériel."
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <section className="module-hero">

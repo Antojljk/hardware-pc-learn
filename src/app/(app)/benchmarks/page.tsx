@@ -1,6 +1,11 @@
 import { BarChart3, Activity, Gauge, Cpu, MonitorPlay, Wrench, ListChecks } from 'lucide-react';
+import { getCurrentUser } from '@/lib/auth';
+import { redirect } from 'next/navigation';
+import { canAccess } from '@/lib/plans';
+import { LockedState } from '@/components/LockedState';
 
 export const metadata = { title: 'Benchmarks — HardwarePC' };
+export const dynamic = 'force-dynamic';
 
 const sections = [
   {
@@ -45,7 +50,24 @@ const sections = [
   },
 ];
 
-export default function BenchmarksPage() {
+export default async function BenchmarksPage() {
+  const user = await getCurrentUser();
+  if (!user) redirect('/auth');
+
+  if (!canAccess(user.plan, 'monitoring_extended')) {
+    return (
+      <div className="max-w-3xl mx-auto space-y-4">
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight">Benchmarks</h1>
+        <LockedState
+          feature="Benchmarks & Analyse"
+          required="PRO"
+          current={user.plan}
+          description="L'analyse des benchmarks est réservée à l'offre Pro et supérieures : apprends à interpréter les chiffres pour optimiser tes performances."
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <section className="module-hero">
