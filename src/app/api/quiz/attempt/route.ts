@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
 import { grantXp, unlockBadges } from '@/lib/gamification';
 import { QUESTIONS } from '@/content/quizzes';
+import { canAccessQuestion } from '@/lib/content-access';
 
 const Schema = z.object({
   mode: z.string(),
@@ -20,6 +21,17 @@ export async function POST(req: Request) {
   if (!user) return NextResponse.json({ error: 'Non connecté' }, { status: 401 });
   try {
     const data = Schema.parse(await req.json());
+
+    // Garde-fou serveur : on refuse d'enregistrer une tentative qui
+    // contient une question verrouillée pour le plan de l'utilisateur.
+    const forbidden = data.details.find(d => !canAccessQuestion(user.plan, d.questionId));
+    if (forbidden) {
+      return NextResponse.json(
+        { error: 'Accès refusé', code: 'PLAN_REQUIRED', questionId: forbidden.questionId },
+        { status: 403 },
+      );
+    }
+
     const total = data.details.length;
     const score = data.details.filter(d => d.correct).length;
     const xpAwarded = score * 10;

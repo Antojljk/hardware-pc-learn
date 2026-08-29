@@ -7,7 +7,8 @@ import { Check } from 'lucide-react';
  * Présente brièvement :
  *  - le positionnement "Deviens un véritable technicien PC"
  *  - les 5 offres (FREE, ESSENTIEL, PRO, ULTIMATE, ULTIMATE LIFETIME)
- *  - deux CTA : "Découvrir les offres" -> /vente et "Comparer les tarifs" -> /tarifs
+ *  - un CTA "Découvrir les offres" -> /vente (la page de comparaison
+ *    complète, anciennement /tarifs, est désormais /vente).
  *
  * Respecte le design system de la landing :
  *  - préfixe de classes `l-` (CSS scoped via landing.css)
@@ -100,9 +101,6 @@ export function PricingCTA() {
               >
                 <path d="M5 12h14M13 5l7 7-7 7" />
               </svg>
-            </Link>
-            <Link href="/tarifs" className="l-m-btn-outline l-pricing-cta-secondary">
-              Comparer les tarifs
             </Link>
           </div>
 

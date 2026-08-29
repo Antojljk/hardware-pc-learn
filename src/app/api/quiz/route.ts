@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
 import { grantXp } from '@/lib/gamification';
 import { QUESTIONS } from '@/content/quizzes';
+import { canAccessQuestion, filterQuestionsForPlan } from '@/lib/content-access';
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
@@ -10,13 +11,17 @@ export async function GET(req: Request) {
   const count = Number(url.searchParams.get('count') ?? 10);
   const mode = url.searchParams.get('mode') ?? 'free';
 
-  let pool = QUESTIONS;
+  const user = await getCurrentUser();
+
+  // Filtre serveur strict : on ne propose QUE les questions accessibles
+  // selon le plan. Le client ne reçoit jamais un id de question
+  // verrouillée.
+  let pool = filterQuestionsForPlan(user?.plan, QUESTIONS);
   if (category) pool = pool.filter(q => q.category === category);
   const shuffled = [...pool].sort(() => Math.random() - 0.5).slice(0, Math.min(count, pool.length));
 
   // En mode adaptatif, on ajuste difficulté en fonction de l'historique
   if (mode === 'adaptive') {
-    const user = await getCurrentUser();
     if (user) {
       const recent = await prisma.quizAttempt.findMany({ where: { userId: user.id }, orderBy: { createdAt: 'desc' }, take: 5 });
       const avgRecent = recent.length ? recent.reduce((s, a) => s + a.score / Math.max(1, a.total), 0) / recent.length : 0.5;
@@ -37,6 +42,14 @@ export async function POST(req: Request) {
   if (!user) return NextResponse.json({ error: 'Non connecté' }, { status: 401 });
   try {
     const { questionId, answer } = await req.json();
+    // Garde-fou serveur : refuse de valider une réponse pour une
+    // question qui n'est pas accessible au plan de l'utilisateur.
+    if (!canAccessQuestion(user.plan, questionId)) {
+      return NextResponse.json(
+        { error: 'Accès refusé', code: 'PLAN_REQUIRED' },
+        { status: 403 },
+      );
+    }
     const q = QUESTIONS.find(x => x.id === questionId);
     if (!q) return NextResponse.json({ error: 'Question introuvable' }, { status: 404 });
 

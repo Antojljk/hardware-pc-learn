@@ -219,8 +219,8 @@ const PLANS = [
     bullets: [
       'Accès à une sélection de cours',
       'Quiz des catégories gratuites',
-      'Diagnostic basique',
-      'Aperçu du Tuteur IA',
+      '2 parcours d’apprentissage sur 4',
+      'Tuteur IA — 3 messages / mois',
     ],
   },
   {
@@ -230,10 +230,10 @@ const PLANS = [
     badge: 'Pour progresser',
     accent: false,
     bullets: [
-      'Cours et parcours étendus',
-      'Examens basiques',
-      'Tuteur IA — 20 messages / mois',
-      'Suivi de progression',
+      'Environ 50 % des cours',
+      '3 parcours d’apprentissage sur 4',
+      'Examens et entretiens basiques',
+      'Tuteur IA — 10 messages / mois',
     ],
   },
   {
@@ -243,10 +243,9 @@ const PLANS = [
     badge: 'Le plus populaire',
     accent: true,
     bullets: [
-      'Tous les cours, parcours et quiz',
-      'Examens et entretiens complets',
-      'Tuteur IA — 150 messages / mois',
-      'Mode technicien & mode client',
+      '100 % des cours, parcours et quiz',
+      'Diagnostics, constructeur PC, benchmarks, monitoring',
+      'Tuteur IA — 50 messages / mois',
     ],
   },
   {
@@ -256,10 +255,9 @@ const PLANS = [
     badge: 'Pour aller plus loin',
     accent: false,
     bullets: [
-      'Diagnostic et monitoring avancés',
-      'Base de connaissances complète',
-      'Tuteur IA — 500 messages / mois',
-      'Révisions intelligentes',
+      'Mode Client & Mode Technicien',
+      'Modules en avance / accès anticipé',
+      'Tuteur IA — 150 messages / mois',
     ],
   },
 ];
@@ -326,7 +324,7 @@ const FAQS = [
   },
   {
     q: 'Le Tuteur IA est-il inclus ?',
-    a: "Oui, selon ton offre : quelques essais en FREE, 20 messages / mois en ESSENTIEL, 150 en PRO et 500 en ULTIMATE. Il peut t'expliquer une notion, répondre à une question ou t'aider à comprendre une erreur.",
+    a: "Oui, selon ton offre : 3 messages / mois en FREE, 10 en ESSENTIEL, 50 en PRO et 150 en ULTIMATE. Il peut t'expliquer une notion, répondre à une question ou t'aider à comprendre une erreur.",
   },
   {
     q: 'Puis-je arrêter mon abonnement ?',

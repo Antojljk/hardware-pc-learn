@@ -4,7 +4,7 @@ import { getCurrentUser } from '@/lib/auth';
 import { grantXp, unlockBadges } from '@/lib/gamification';
 import { SCENARIOS, SCENARIO_STEPS } from '@/content/diagnostics';
 import { z } from 'zod';
-import { canAccess } from '@/lib/plans';
+import { canAccessDiagnostic } from '@/lib/content-access';
 import { buildLockedResponse } from '@/lib/plan-guard';
 
 const Schema = z.object({ slug: z.string(), stepsChosen: z.array(z.string()) });
@@ -13,11 +13,12 @@ export async function POST(req: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: 'Non connecté' }, { status: 401 });
 
-  // Diagnostic basique = FREE+. La page serveur n'a pas de restriction
-  // (cf. /diagnostic accessible à tous), mais on garde un check minimal
-  // côté API pour éviter qu'un client malveillant ne soumette sans compte.
-  if (!canAccess(user.plan, 'diagnostic_basic')) {
-    return buildLockedResponse('diagnostic_basic', 'FREE');
+  // Le diagnostic complet est désormais réservé à PRO+. La page
+  // serveur applique déjà cette restriction ; on la confirme ici pour
+  // qu'aucun client ne puisse soumettre une tentative en bypassant
+  // l'UI.
+  if (!canAccessDiagnostic(user.plan)) {
+    return buildLockedResponse('diagnostic_full', 'PRO');
   }
   try {
     const { slug, stepsChosen } = Schema.parse(await req.json());
