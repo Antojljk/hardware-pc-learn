@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { Stethoscope, Wrench, ArrowRight, AlertTriangle, Activity, History } from 'lucide-react';
+import { canAccess } from '@/lib/plans';
+import { LockedState } from '@/components/LockedState';
 
 export default async function DiagnosticHome() {
   const user = await getCurrentUser();
