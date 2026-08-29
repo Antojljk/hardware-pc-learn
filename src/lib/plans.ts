@@ -45,6 +45,7 @@ export const FEATURES = [
   'tutor_ai',
   'mode_technicien',
   'mode_client',
+  'early_access',
 ] as const;
 export type FeatureKey = (typeof FEATURES)[number];
 
@@ -82,7 +83,7 @@ export const PLANS: readonly PlanDef[] = [
       exams_full: false,
       interviews_basic: false,
       interviews_full: false,
-      diagnostic_basic: true,
+      diagnostic_basic: false,
       diagnostic_full: false,
       knowledge_base: true,
       revisions_advanced: false,
@@ -91,6 +92,7 @@ export const PLANS: readonly PlanDef[] = [
       tutor_ai: true,
       mode_technicien: false,
       mode_client: false,
+      early_access: false,
     },
   },
   {
@@ -110,15 +112,16 @@ export const PLANS: readonly PlanDef[] = [
       exams_full: false,
       interviews_basic: true,
       interviews_full: false,
-      diagnostic_basic: true,
+      diagnostic_basic: false,
       diagnostic_full: false,
       knowledge_base: true,
       revisions_advanced: true,
-      monitoring_extended: true,
-      builder_full: true,
+      monitoring_extended: false,
+      builder_full: false,
       tutor_ai: true,
       mode_technicien: false,
       mode_client: false,
+      early_access: false,
     },
   },
   {
@@ -146,8 +149,9 @@ export const PLANS: readonly PlanDef[] = [
       monitoring_extended: true,
       builder_full: true,
       tutor_ai: true,
-      mode_technicien: true,
-      mode_client: true,
+      mode_technicien: false,
+      mode_client: false,
+      early_access: false,
     },
   },
   {
@@ -176,6 +180,7 @@ export const PLANS: readonly PlanDef[] = [
       tutor_ai: true,
       mode_technicien: true,
       mode_client: true,
+      early_access: true,
     },
   },
 ];
@@ -246,16 +251,14 @@ export function planLabel(plan: PrismaPlan | string | null | undefined): string 
 // =============================================================================
 // Limites mensuelles du Tuteur IA par offre
 // =============================================================================
-// FREE dispose de 3 essais "à vie" (on les consomme quand même via le compteur
-// mensuel, mais une seule fois par mois utilisateur — la consommation reste
-// cantonnée au mois en cours, ce qui suffit pour 3 essais). Pour un quota
-// "vraiment à vie", il faudrait un compteur séparé ; ici on garde le même
-// mécanisme serveur, simple et non contournable.
+// Quotas mensuels par plan, appliqués strictement côté serveur dans
+// `ai-quota.ts` (incrément transactionnel). Le client ne peut pas les
+// contourner : la limite est lue depuis le plan Prisma de l'utilisateur.
 export const AI_LIMITS: Record<PlanKey, number> = {
   FREE: 3,
-  ESSENTIEL: 20,
-  PRO: 150,
-  ULTIMATE: 500,
+  ESSENTIEL: 10,
+  PRO: 50,
+  ULTIMATE: 150,
 };
 
 export function aiMonthlyLimit(plan: PrismaPlan | string | null | undefined): number {
