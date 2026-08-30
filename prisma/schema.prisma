@@ -54,6 +54,7 @@ model User {
   reviews             Review[]
   sessions            Session[]
   aiUsage             AiMessageUsage[]
+  pageViews           PageView[]
 }
 
 // Compteur mensuel des messages IA (Tuteur). Une ligne par (user, mois UTC).
@@ -299,4 +300,20 @@ model Review {
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@index([createdAt])
+}
+
+// ============================================================
+// ANALYTICS
+// ============================================================
+model PageView {
+  id         String   @id @default(cuid())
+  url        String
+  visitorId  String
+  userId     String?
+  createdAt  DateTime @default(now())
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([url])
+  @@index([visitorId])
 }

@@ -3,8 +3,8 @@ import { requireAdmin } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { 
   Settings, BookOpen, Brain, Wrench, Library, Sparkles, 
-  Users, UserPlus, Activity, Cpu, MessageSquare, Trophy,
-  TrendingUp
+  Users, UserPlus, MessageSquare, Trophy,
+  TrendingUp, BarChart3, MousePointer2, Globe
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -22,6 +22,7 @@ export default async function AdminPage() {
   const last7d = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
   const last30d = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
+  // Content Stats
   const [
     , lessons, questions, exams, glossary, scenarios, components,
     userCount,
@@ -32,13 +33,22 @@ export default async function AdminPage() {
     newUsers7d,
     newUsers30d,
     activeUsers24h,
-    totalConfigs,
+    ,
     totalReviewCards,
     totalBadges,
     totalReviews,
     avgQuizScore,
     recentInterviews,
-    recentDiagnostics
+    recentDiagnostics,
+    // New Traffic Stats
+    pv24h,
+    uv24h,
+    pv7d,
+    uv7d,
+    pv30d,
+    uv30d,
+    topPages,
+    ,
   ] = await Promise.all([
     prisma.track.count(),
     prisma.lesson.count(),
@@ -62,13 +72,31 @@ export default async function AdminPage() {
     prisma.quizAttempt.aggregate({ _avg: { score: true } }),
     prisma.interviewAttempt.count({ where: { createdAt: { gte: last7d } } }),
     prisma.diagnosticAttempt.count({ where: { createdAt: { gte: last7d } } }),
+    // Analytics
+    prisma.pageView.count({ where: { createdAt: { gte: last24h } } }),
+    prisma.pageView.groupBy({ where: { createdAt: { gte: last24h } }, by: ['visitorId'], _count: { visitorId: true } }),
+    prisma.pageView.count({ where: { createdAt: { gte: last7d } } }),
+    prisma.pageView.groupBy({ where: { createdAt: { gte: last7d } }, by: ['visitorId'], _count: { visitorId: true } }),
+    prisma.pageView.count({ where: { createdAt: { gte: last30d } } }),
+    prisma.pageView.groupBy({ where: { createdAt: { gte: last30d } }, by: ['visitorId'], _count: { visitorId: true } }),
+    prisma.pageView.groupBy({
+      by: ['url'],
+      _count: { url: true },
+      orderBy: { _count: { url: 'desc' } },
+      take: 10,
+    }),
+    prisma.pageView.groupBy({
+      by: ['createdAt'],
+      _count: { url: true },
+      where: { createdAt: { gte: last30d } },
+    })
   ]);
 
   const quickStats = [
-    { label: 'Utilisateurs', value: userCount, icon: Users, color: 'text-blue-500' },
-    { label: 'Nouveaux (24h)', value: newUsers24h, icon: UserPlus, color: 'text-green-500' },
-    { label: 'Actifs (24h)', value: activeUsers24h, icon: Activity, color: 'text-orange-500' },
-    { label: 'Configs PC', value: totalConfigs, icon: Cpu, color: 'text-purple-500' },
+    { label: 'Visites (24h)', value: pv24h, icon: MousePointer2, color: 'text-blue-500' },
+    { label: 'Uniques (24h)', value: uv24h.length, icon: Users, color: 'text-green-500' },
+    { label: 'Pages Vues (7j)', value: pv7d, icon: Globe, color: 'text-orange-500' },
+    { label: 'Uniques (7j)', value: uv7d.length, icon: UserPlus, color: 'text-purple-500' },
   ];
 
   const contentItems = [
@@ -83,11 +111,11 @@ export default async function AdminPage() {
   return (
     <div className="space-y-6">
       <section className="module-hero">
-        <div className="module-eyebrow">Analytics</div>
+        <div className="module-eyebrow">Analytics & Fréquentation</div>
         <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight flex items-center gap-2 mt-2">
           <Settings className="w-6 h-6 text-text" /> Dashboard Administration
         </h1>
-        <p className="text-muted text-[15px] mt-2 max-w-xl">Vue d&apos;ensemble en temps réel de l&apos;activité et du contenu du site.</p>
+        <p className="text-muted text-[15px] mt-2 max-w-xl">Vue d&apos;ensemble en temps réel de l&apos;activité, du trafic et du contenu du site.</p>
       </section>
 
       {/* Top Quick Stats */}
@@ -106,9 +134,52 @@ export default async function AdminPage() {
       </section>
 
       <div className="grid lg:grid-cols-3 gap-6">
-        {/* Content Management Links */}
         <section className="lg:col-span-2 space-y-6">
+          {/* Traffic Stats */}
           <div className="module-frame anim-rise anim-rise-1">
+            <h2 className="section-title mb-4 flex items-center gap-2">
+              <BarChart3 className="w-4 h-4" /> Fréquentation
+            </h2>
+            <div className="grid sm:grid-cols-3 gap-4 mb-6">
+              <div className="p-3 rounded-xl bg-bg-elev border border-border text-center">
+                <div className="text-xs text-muted mb-1">Pages vues (30j)</div>
+                <div className="text-xl font-display font-bold text-text">{pv30d}</div>
+              </div>
+              <div className="p-3 rounded-xl bg-bg-elev border border-border text-center">
+                <div className="text-xs text-muted mb-1">Uniques (30j)</div>
+                <div className="text-xl font-display font-bold text-text">{uv30d.length}</div>
+              </div>
+              <div className="p-3 rounded-xl bg-bg-elev border border-border text-center">
+                <div className="text-xs text-muted mb-1">Moyenne / jour</div>
+                <div className="text-xl font-display font-bold text-text">{(pv30d / 30).toFixed(1)}</div>
+              </div>
+            </div>
+            
+            <div className="space-y-3">
+              <h3 className="text-xs font-semibold text-muted uppercase tracking-wider">Top 10 Pages Consultées</h3>
+              <div className="overflow-hidden rounded-xl border border-border">
+                <table className="w-full text-sm text-left">
+                  <thead className="bg-bg-elev text-xs text-muted border-b border-border">
+                    <tr>
+                      <th className="p-2 font-medium">URL</th>
+                      <th className="p-2 font-medium text-right">Vues</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {topPages.map(p => (
+                      <tr key={p.url} className="hover:bg-bg-elev/50">
+                        <td className="p-2 font-mono text-xs">{p.url}</td>
+                        <td className="p-2 text-right font-display font-semibold">{p._count.url}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          {/* Content Management Links */}
+          <div className="module-frame anim-rise anim-rise-2">
             <h2 className="section-title mb-4 flex items-center gap-2">
               <BookOpen className="w-4 h-4" /> Gestion du contenu
             </h2>
@@ -129,34 +200,35 @@ export default async function AdminPage() {
               ))}
             </div>
           </div>
+        </section>
 
-          {/* User Growth & Activity */}
-          <div className="module-frame anim-rise anim-rise-2">
-            <h2 className="section-title mb-4 flex items-center gap-2">
-              <TrendingUp className="w-4 h-4" /> Croissance & Engagement
+        <aside className="space-y-6">
+          {/* User Growth */}
+          <div className="module-frame anim-rise anim-rise-3">
+            <h2 className="section-title mb-3 flex items-center gap-2">
+              <TrendingUp className="w-4 h-4" /> Croissance
             </h2>
-            <div className="grid sm:grid-cols-3 gap-4">
-              <div className="p-3 rounded-xl bg-bg-elev border border-border text-center">
-                <div className="text-xs text-muted mb-1">7 derniers jours</div>
-                <div className="text-xl font-display font-bold text-text">+{newUsers7d}</div>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center p-2 rounded-lg bg-bg-elev border border-border">
+                <span className="text-xs text-muted">Nouveaux (24h)</span>
+                <span className="text-sm font-bold text-text">+{newUsers24h}</span>
               </div>
-              <div className="p-3 rounded-xl bg-bg-elev border border-border text-center">
-                <div className="text-xs text-muted mb-1">30 derniers jours</div>
-                <div className="text-xl font-display font-bold text-text">+{newUsers30d}</div>
+              <div className="flex justify-between items-center p-2 rounded-lg bg-bg-elev border border-border">
+                <span className="text-xs text-muted">Nouveaux (7j)</span>
+                <span className="text-sm font-bold text-text">+{newUsers7d}</span>
               </div>
-              <div className="p-3 rounded-xl bg-bg-elev border border-border text-center">
-                <div className="text-xs text-muted mb-1">Taux d&apos;activité (24h)</div>
-                <div className="text-xl font-display font-bold text-text">
-                  {userCount > 0 ? ((activeUsers24h / userCount) * 100).toFixed(1) : '0'}%
-                </div>
+              <div className="flex justify-between items-center p-2 rounded-lg bg-bg-elev border border-border">
+                <span className="text-xs text-muted">Nouveaux (30j)</span>
+                <span className="text-sm font-bold text-text">+{newUsers30d}</span>
+              </div>
+              <div className="flex justify-between items-center p-2 rounded-lg bg-bg-elev border border-border">
+                <span className="text-xs text-muted">Actifs (24h)</span>
+                <span className="text-sm font-bold text-text">{activeUsers24h}</span>
               </div>
             </div>
           </div>
-        </section>
 
-        {/* Sidebar Stats */}
-        <aside className="space-y-6">
-          <section className="module-frame anim-rise anim-rise-3">
+          <section className="module-frame anim-rise anim-rise-4">
             <h2 className="section-title mb-3 flex items-center gap-2">
               <Trophy className="w-4 h-4" /> Performance
             </h2>
