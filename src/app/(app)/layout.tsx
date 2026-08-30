@@ -7,7 +7,7 @@ import { getCurrentUser } from '@/lib/auth';
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser();
   return (
-    <SessionProvider username={user?.username ?? null}>
+    <SessionProvider username={user?.username ?? null} userId={user?.id ?? null}>
       <div className="min-h-screen flex bg-bg text-text">
         <Sidebar />
         <div className="flex-1 flex flex-col min-w-0 lg:ml-72">

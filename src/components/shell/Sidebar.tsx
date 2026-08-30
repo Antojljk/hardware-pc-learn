@@ -7,6 +7,7 @@ import {
   Stethoscope, PcCase, Library, BarChart3, TrendingUp, User, Settings, Wrench,
   Activity, Sparkles, Hammer, ShieldCheck, Bot, Star, ShoppingBag,
 } from 'lucide-react';
+import { useSession } from './SessionProvider';
 
 const ITEMS = [
   { href: '/vente',       label: 'Vente',            icon: ShoppingBag },
@@ -35,6 +36,7 @@ const ITEMS = [
 
 export function Sidebar() {
   const path = usePathname();
+  const { userId } = useSession();
   return (
     <aside className="hidden lg:flex fixed inset-y-0 left-0 w-72 flex-col border-r border-border bg-bg-soft">
       <Link href="/" className="px-6 h-20 flex items-center gap-3 border-b border-border">
@@ -48,6 +50,9 @@ export function Sidebar() {
       </Link>
       <nav className="flex-1 overflow-y-auto p-3 space-y-0.5">
         {ITEMS.map(item => {
+          if (item.admin && userId !== 'cmt6fgcg50000ju04upia45gp') {
+            return null;
+          }
           const active = item.href === '/dashboard' ? path === '/dashboard' : path.startsWith(item.href);
           return (
             <Link
