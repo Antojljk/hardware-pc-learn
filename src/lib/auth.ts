@@ -68,3 +68,11 @@ export async function requireUser() {
   if (!u) throw new Error('UNAUTHENTICATED');
   return u;
 }
+
+export async function requireAdmin() {
+  const u = await requireUser();
+  if (u.id !== 'cmt6fgcg50000ju04upia45gp') {
+    throw new Error('FORBIDDEN');
+  }
+  return u;
+}
