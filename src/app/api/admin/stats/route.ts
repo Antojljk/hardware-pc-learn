@@ -5,38 +5,14 @@ import { requireAdmin } from '@/lib/auth';
 export async function GET() {
   try {
     await requireAdmin();
+    console.log('Fetching admin stats...');
     
     const now = new Date();
     const last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
     const last7d = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
     const last30d = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-    const [
-      , lessons, questions, exams, glossary, scenarios, components,
-      userCount,
-      planCounts,
-      totalAiMessages,
-      avgExamScore,
-      newUsers24h,
-      newUsers7d,
-      newUsers30d,
-      activeUsers24h,
-      ,
-      totalReviewCards,
-      totalBadges,
-      totalReviews,
-      avgQuizScore,
-      recentInterviews,
-      recentDiagnostics,
-      pv24h,
-      uv24hCount,
-      pv7d,
-      uv7dCount,
-      pv30d,
-      uv30dCount,
-      topPages,
-      ,
-    ] = await Promise.all([
+    const results = await Promise.allSettled([
       prisma.track.count(),
       prisma.lesson.count(),
       prisma.quizQuestion.count(),
@@ -60,23 +36,11 @@ export async function GET() {
       prisma.interviewAttempt.count({ where: { createdAt: { gte: last7d } } }),
       prisma.diagnosticAttempt.count({ where: { createdAt: { gte: last7d } } }),
       prisma.pageView.count({ where: { createdAt: { gte: last24h } } }),
-      prisma.pageView.groupBy({ 
-        where: { createdAt: { gte: last24h } }, 
-        by: ['visitorId'], 
-        _count: { visitorId: true } 
-      }).then(res => res.length),
+      prisma.pageView.groupBy({ where: { createdAt: { gte: last24h } }, by: ['visitorId'], _count: { visitorId: true } }),
       prisma.pageView.count({ where: { createdAt: { gte: last7d } } }),
-      prisma.pageView.groupBy({ 
-        where: { createdAt: { gte: last7d } }, 
-        by: ['visitorId'], 
-        _count: { visitorId: true } 
-      }).then(res => res.length),
+      prisma.pageView.groupBy({ where: { createdAt: { gte: last7d } }, by: ['visitorId'], _count: { visitorId: true } }),
       prisma.pageView.count({ where: { createdAt: { gte: last30d } } }),
-      prisma.pageView.groupBy({ 
-        where: { createdAt: { gte: last30d } }, 
-        by: ['visitorId'], 
-        _count: { visitorId: true } 
-      }).then(res => res.length),
+      prisma.pageView.groupBy({ where: { createdAt: { gte: last30d } }, by: ['visitorId'], _count: { visitorId: true } }),
       prisma.pageView.groupBy({
         by: ['url'],
         _count: { url: true },
@@ -84,21 +48,55 @@ export async function GET() {
         take: 10,
       }),
       prisma.pageView.groupBy({
-        by: ['createdAt'],
-        _count: { url: true },
-        where: { createdAt: { gte: last30d } },
-      })
+          by: ['createdAt'],
+          _count: { url: true },
+          where: { createdAt: { gte: last30d } },
+        })
     ]);
 
+    const getValue = (index: number) => {
+      const res = results[index];
+      if (res?.status === 'fulfilled') return res.value;
+      console.error(`Stat index ${index} failed:`, res?.reason);
+      return null;
+    };
+
+    const uv24h = (getValue(23) as any[])?.length || 0;
+    const uv7d = (getValue(25) as any[])?.length || 0;
+    const uv30d = (getValue(27) as any[])?.length || 0;
+
     return NextResponse.json({
-      lessons, questions, exams, glossary, scenarios, components,
-      userCount, planCounts, totalAiMessages, avgExamScore,
-      newUsers24h, newUsers7d, newUsers30d, activeUsers24h,
-      totalReviewCards, totalBadges, totalReviews, avgQuizScore,
-      recentInterviews, recentDiagnostics,
-      pv24h, uv24h: uv24hCount, pv7d, uv7d: uv7dCount, pv30d, uv30d: uv30dCount, topPages
+      lessons: getValue(1),
+      questions: getValue(2),
+      exams: getValue(3),
+      glossary: getValue(4),
+      scenarios: getValue(5),
+      components: getValue(6),
+      userCount: getValue(7),
+      planCounts: getValue(8),
+      totalAiMessages: getValue(9),
+      avgExamScore: getValue(10),
+      newUsers24h: getValue(11),
+      newUsers7d: getValue(12),
+      newUsers30d: getValue(13),
+      activeUsers24h: getValue(14),
+      totalReviewCards: getValue(15),
+      totalBadges: getValue(16),
+      totalReviews: getValue(17),
+      avgQuizScore: getValue(18),
+      recentInterviews: getValue(19),
+      recentDiagnostics: getValue(20),
+      pv24h: getValue(21),
+      uv24h: uv24h,
+      pv7d: getValue(22),
+      uv7d: uv7d,
+      pv30d: getValue(23),
+      uv30d: uv30d,
+      topPages: getValue(28)
     });
-  } catch {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  } catch (e) {
+    console.error('Stats API Error:', e);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
+}
 }
