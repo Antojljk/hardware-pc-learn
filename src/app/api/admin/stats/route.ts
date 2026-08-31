@@ -61,9 +61,9 @@ export async function GET() {
       return null;
     };
 
-    const uv24h = (getValue(23) as any[])?.length || 0;
-    const uv7d = (getValue(25) as any[])?.length || 0;
-    const uv30d = (getValue(27) as any[])?.length || 0;
+    const uv24h = (getValue(23) as unknown as Array<unknown>)?.length || 0;
+    const uv7d = (getValue(25) as unknown as Array<unknown>)?.length || 0;
+    const uv30d = (getValue(27) as unknown as Array<unknown>)?.length || 0;
 
     return NextResponse.json({
       lessons: getValue(1),
