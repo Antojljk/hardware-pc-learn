@@ -86,11 +86,11 @@ export async function GET() {
       avgQuizScore: getValue(18),
       recentInterviews: getValue(19),
       recentDiagnostics: getValue(20),
-      pv24h: getValue(21),
+      pv24h: getValue(22),
       uv24h: uv24h,
-      pv7d: getValue(22),
+      pv7d: getValue(24),
       uv7d: uv7d,
-      pv30d: getValue(23),
+      pv30d: getValue(26),
       uv30d: uv30d,
       topPages: getValue(28)
     });
