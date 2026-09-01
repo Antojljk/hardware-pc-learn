@@ -43,8 +43,8 @@ export function Devices() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             className="l-s03-phone"
-            src="https://images.unsplash.com/photo-1543965170-4c01a586684e?w=460&h=992&fit=crop&q=80"
-            alt="Tableau de bord de progression utilisateur"
+            src="https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=460&h=992&fit=crop&q=80"
+            alt="Composants PC — carte graphique haute performance"
             width={460}
             height={992}
           />
