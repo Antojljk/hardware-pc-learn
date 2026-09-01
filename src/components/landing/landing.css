@@ -2023,3 +2023,262 @@
     animation: none !important;
   }
 }
+
+/* =====================================================================
+   EFFETS 3D MILIEU & BAS DE PAGE — ajout
+   Sobre, moderne, cohérent avec le système existant.
+   ===================================================================== */
+
+/* ------------------------------------------------------------------
+   section02 — Features : vrai tilt 3D au hover (rotateX + rotateY)
+   ------------------------------------------------------------------ */
+
+/* On retire le translateZ flat et on met un vrai tilt */
+.l-landing [data-l-section="section02"] .l-s02-card:hover {
+  transform: perspective(1200px) rotateX(1.2deg) rotateY(-1.5deg) translateZ(24px);
+  border-color: color-mix(in srgb, var(--l-color-text) 22%, var(--l-color-border));
+}
+
+/* Reflet lumineux glissant sur l'image au hover */
+.l-landing [data-l-section="section02"] .l-s02-media::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    115deg,
+    transparent 20%,
+    rgba(255,255,255,0.07) 45%,
+    rgba(255,255,255,0.13) 50%,
+    rgba(255,255,255,0.07) 55%,
+    transparent 80%
+  );
+  transform: translateX(-100%);
+  transition: transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  pointer-events: none;
+}
+.l-landing [data-l-section="section02"] .l-s02-card:hover .l-s02-media::before {
+  transform: translateX(100%);
+}
+
+/* Texte en avant-plan accentué */
+.l-landing [data-l-section="section02"] .l-s02-text {
+  transform: translateZ(28px);
+  transition: transform 320ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* Ligne décorative animée sous le kicker au hover */
+.l-landing [data-l-section="section02"] .l-s02-kicker {
+  position: relative;
+  overflow: hidden;
+}
+.l-landing [data-l-section="section02"] .l-s02-kicker::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 0;
+  height: 1px;
+  background: var(--l-color-text);
+  transition: width 400ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.l-landing [data-l-section="section02"] .l-s02-card:hover .l-s02-kicker::after {
+  width: 100%;
+}
+
+/* ------------------------------------------------------------------
+   section05 — Stats : fond grille perspective + depth sur le chiffre
+   ------------------------------------------------------------------ */
+
+/* Fond de section avec grille en perspective subtile */
+.l-landing [data-l-section="section05"] {
+  position: relative;
+  overflow: hidden;
+}
+.l-landing [data-l-section="section05"]::before {
+  content: "";
+  position: absolute;
+  inset: -40% -5%;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 80px 80px;
+  transform: perspective(600px) rotateX(55deg) translateY(30%);
+  transform-origin: 50% 100%;
+  pointer-events: none;
+  z-index: 0;
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0,0,0,0.6) 40%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0,0,0,0.6) 40%,
+    transparent 100%
+  );
+}
+.l-landing [data-l-section="section05"] .l-container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Chiffre géant : depth shadow en couches pour l'effet 3D */
+.l-landing [data-l-section="section05"] .l-s05-stat {
+  text-shadow:
+    0 1px 0 rgba(255,255,255,0.08),
+    0 2px 0 rgba(255,255,255,0.06),
+    0 4px 0 rgba(255,255,255,0.04),
+    0 8px 20px rgba(0,0,0,0.4),
+    0 20px 50px rgba(0,0,0,0.3);
+  filter: none; /* on utilise text-shadow à la place de filter */
+}
+
+/* Halo diffus derrière le chiffre */
+.l-landing [data-l-section="section05"] .l-s05-stat span {
+  position: relative;
+  display: inline-block;
+}
+.l-landing [data-l-section="section05"] .l-s05-stat span::before {
+  content: "";
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 120%;
+  aspect-ratio: 3/1;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255,255,255,0.05) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: -1;
+  animation: l-stat-halo 4s ease-in-out infinite;
+}
+@keyframes l-stat-halo {
+  0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+  50%       { opacity: 1;   transform: translate(-50%, -50%) scale(1.08); }
+}
+
+/* ------------------------------------------------------------------
+   pricing-cta : halo 3D derrière la section + cards avec depth réel
+   ------------------------------------------------------------------ */
+
+/* Anneau lumineux en arrière-plan */
+.l-landing [data-l-section="pricing-cta"] {
+  position: relative;
+  overflow: hidden;
+}
+.l-landing [data-l-section="pricing-cta"]::before {
+  content: "";
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 80%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.05);
+  pointer-events: none;
+  z-index: 0;
+  animation: l-pricing-ring 10s ease-in-out infinite;
+}
+.l-landing [data-l-section="pricing-cta"]::after {
+  content: "";
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 55%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.035);
+  pointer-events: none;
+  z-index: 0;
+  animation: l-pricing-ring 14s ease-in-out -5s infinite;
+}
+@keyframes l-pricing-ring {
+  0%, 100% { transform: translate(-50%, -50%) scale(1);    opacity: 0.5; }
+  50%       { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
+}
+.l-landing [data-l-section="pricing-cta"] .l-container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Cards pricing : vrai tilt 3D asymétrique selon la position */
+.l-landing [data-l-section="pricing-cta"] .l-pricing-cta-card:hover {
+  transform: perspective(1000px) rotateX(2deg) rotateY(-1deg) translateZ(18px);
+}
+/* Card highlight : tilt légèrement différent */
+.l-landing [data-l-section="pricing-cta"] .l-pricing-cta-card--highlight:hover {
+  transform: perspective(1000px) rotateX(1.5deg) rotateY(0.5deg) translateZ(22px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.10),
+    0 30px 60px rgba(0,0,0,0.6),
+    0 0 40px rgba(255,255,255,0.04);
+}
+
+/* Grille de points derrière les cards pricing */
+.l-landing [data-l-section="pricing-cta"] .l-pricing-cta-grid {
+  position: relative;
+}
+.l-landing [data-l-section="pricing-cta"] .l-pricing-cta-grid::before {
+  content: "";
+  position: absolute;
+  inset: -20px;
+  background-image: radial-gradient(
+    rgba(255,255,255,0.08) 1px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
+  pointer-events: none;
+  z-index: -1;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+  -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+}
+
+/* ------------------------------------------------------------------
+   Footer : légère élévation 3D sur le bloc tagline
+   ------------------------------------------------------------------ */
+.l-landing [data-l-section="section09"] .l-s09-brand {
+  position: relative;
+}
+.l-landing [data-l-section="section09"] .l-s09-tagline {
+  position: relative;
+  transition: transform 320ms ease, text-shadow 320ms ease;
+}
+.l-landing [data-l-section="section09"] .l-s09-brand:hover .l-s09-tagline {
+  transform: translateZ(12px);
+  text-shadow: 0 8px 24px rgba(255,255,255,0.08);
+}
+
+/* Icônes sociales : élévation 3D + halo au hover */
+.l-landing [data-l-section="section09"] .l-s09-social-link {
+  transition: transform 240ms cubic-bezier(0.2, 0.7, 0.2, 1),
+              color 220ms ease,
+              filter 240ms ease;
+}
+.l-landing [data-l-section="section09"] .l-s09-social-link:hover {
+  transform: translateY(-3px) translateZ(8px);
+  filter: drop-shadow(0 4px 12px rgba(255,255,255,0.15));
+}
+
+/* ------------------------------------------------------------------
+   prefers-reduced-motion : coupe les nouveaux effets
+   ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  .l-landing [data-l-section="section02"] .l-s02-card:hover,
+  .l-landing [data-l-section="section05"] .l-s05-stat span::before,
+  .l-landing [data-l-section="pricing-cta"] .l-pricing-cta-card:hover,
+  .l-landing [data-l-section="pricing-cta"] .l-pricing-cta-card--highlight:hover,
+  .l-landing [data-l-section="section09"] .l-s09-social-link:hover {
+    transform: none !important;
+    filter: none !important;
+    animation: none !important;
+  }
+  .l-landing [data-l-section="pricing-cta"]::before,
+  .l-landing [data-l-section="pricing-cta"]::after,
+  .l-landing [data-l-section="section05"]::before {
+    display: none;
+  }
+}
