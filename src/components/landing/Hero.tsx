@@ -2,18 +2,15 @@ import Link from 'next/link';
 import { ParallaxHero } from './ParallaxHero';
 import { HeroVisual } from './HeroVisual';
 
-const HERO_IMAGE =
-  'https://images.unsplash.com/photo-1587134160474-cd3c9a60a34a?w=1600&h=1100&fit=crop&q=80';
-
 /**
  * Section 01 — Hero plein écran premium.
+ * - Image retirée, remplacée par un fond CSS 3D (grille perspective + halos)
  * - Pill d'eyebrow animée (statut "live")
  * - Titre avec mot accentué
  * - Lede, double CTA avec micro-relief au survol
- * - Effets 3D : perspective + translateZ (contenu en avant, média en arrière)
+ * - Effets 3D : perspective + translateZ (contenu en avant, grille en arrière)
  * - Parallaxe très subtile au scroll (ParallaxHero, client)
  * - Halo lumineux qui suit doucement le curseur (HeroVisual, client)
- * - Vignette sombre cohérente pour fond premium
  * - Lignes de scan très subtiles pour le côté tech
  */
 export function Hero() {
@@ -25,18 +22,26 @@ export function Hero() {
       className="l-section l-section01-hero"
     >
       <div className="l-container l-s01-shell">
-        <div className="l-s01-media">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={HERO_IMAGE} alt="Rendu 3D abstrait de circuits imprimés haute technologie" />
+        {/* Fond 3D CSS — grille perspective + halos rayonnants */}
+        <div className="l-s01-bg3d" aria-hidden="true">
+          <div className="l-s01-grid3d" />
+          <div className="l-s01-orb l-s01-orb--1" />
+          <div className="l-s01-orb l-s01-orb--2" />
+          <div className="l-s01-orb l-s01-orb--3" />
+          <div className="l-s01-particles" aria-hidden="true">
+            {Array.from({ length: 22 }).map((_, i) => (
+              <span key={i} className={`l-s01-particle l-s01-particle--${i + 1}`} />
+            ))}
+          </div>
         </div>
 
         {/* Halo lumineux qui suit le curseur (3D subtil) */}
         <HeroVisual />
 
-        {/* Vignette douce par-dessus le média */}
+        {/* Vignette douce par-dessus le fond */}
         <div className="l-s01-media-vignette" aria-hidden="true" />
 
-        {/* Contenu du hero (devant le média) */}
+        {/* Contenu du hero (devant le fond) */}
         <div className="l-s01-content">
           <div className="l-s01-content-inner">
             <span className="l-s01-eyebrow">

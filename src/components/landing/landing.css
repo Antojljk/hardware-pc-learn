@@ -1823,3 +1823,203 @@
     color: var(--l-color-text);
   }
 }
+
+/* =====================================================================
+   Hero 3D Background — fond CSS pur (sans image)
+   Remplace la photo : grille en perspective + orbes + particules flottantes
+   ===================================================================== */
+
+/* Conteneur du fond 3D — en arrière-plan absolu */
+.l-landing [data-l-section="section01"] .l-s01-bg3d {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: radial-gradient(
+    ellipse 140% 120% at 70% 60%,
+    #0d1117 0%,
+    #000000 60%
+  );
+}
+
+/* Grille en perspective — donne la profondeur 3D */
+.l-landing [data-l-section="section01"] .l-s01-grid3d {
+  position: absolute;
+  inset: -20% -10%;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  transform: perspective(900px) rotateX(48deg) translateZ(-60px) translateY(10%);
+  transform-origin: 50% 100%;
+  animation: l-grid-drift 18s ease-in-out infinite alternate;
+  will-change: transform;
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0,0,0,0.5) 25%,
+    rgba(0,0,0,0.9) 60%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0,0,0,0.5) 25%,
+    rgba(0,0,0,0.9) 60%,
+    transparent 100%
+  );
+}
+@keyframes l-grid-drift {
+  0%   { background-position: 0 0, 0 0; }
+  100% { background-position: 0 60px, 0 0; }
+}
+
+/* Orbes lumineux — halos colorés subtils */
+.l-landing [data-l-section="section01"] .l-s01-orb {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(80px);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+.l-landing [data-l-section="section01"] .l-s01-orb--1 {
+  width: 55%;
+  aspect-ratio: 1;
+  right: -10%;
+  top: -15%;
+  background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+  animation: l-orb-float 14s ease-in-out infinite;
+}
+.l-landing [data-l-section="section01"] .l-s01-orb--2 {
+  width: 40%;
+  aspect-ratio: 1;
+  right: 5%;
+  bottom: 5%;
+  background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
+  animation: l-orb-float 19s ease-in-out -6s infinite;
+}
+.l-landing [data-l-section="section01"] .l-s01-orb--3 {
+  width: 30%;
+  aspect-ratio: 1;
+  right: 30%;
+  top: 20%;
+  background: radial-gradient(circle, rgba(180,200,255,0.035) 0%, transparent 70%);
+  animation: l-orb-float 22s ease-in-out -11s infinite;
+}
+@keyframes l-orb-float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  33%      { transform: translateY(-30px) scale(1.06); }
+  66%      { transform: translateY(15px) scale(0.97); }
+}
+
+/* Particules flottantes — petits points lumineux */
+.l-landing [data-l-section="section01"] .l-s01-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+.l-landing [data-l-section="section01"] .l-s01-particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.5);
+  animation: l-particle-drift linear infinite;
+  will-change: transform, opacity;
+}
+/* Positions et durées variées pour chaque particule */
+.l-landing [data-l-section="section01"] .l-s01-particle--1  { left:8%;  top:20%; animation-duration:9s;  animation-delay:-1s;  opacity:0.5; }
+.l-landing [data-l-section="section01"] .l-s01-particle--2  { left:18%; top:65%; animation-duration:12s; animation-delay:-3s;  opacity:0.3; width:3px; height:3px; }
+.l-landing [data-l-section="section01"] .l-s01-particle--3  { left:32%; top:35%; animation-duration:15s; animation-delay:-7s;  opacity:0.4; }
+.l-landing [data-l-section="section01"] .l-s01-particle--4  { left:45%; top:12%; animation-duration:11s; animation-delay:-2s;  opacity:0.25; width:3px; height:3px; }
+.l-landing [data-l-section="section01"] .l-s01-particle--5  { left:55%; top:55%; animation-duration:18s; animation-delay:-9s;  opacity:0.35; }
+.l-landing [data-l-section="section01"] .l-s01-particle--6  { left:63%; top:28%; animation-duration:13s; animation-delay:-4s;  opacity:0.5; }
+.l-landing [data-l-section="section01"] .l-s01-particle--7  { left:72%; top:75%; animation-duration:10s; animation-delay:-6s;  opacity:0.3; width:3px; height:3px; }
+.l-landing [data-l-section="section01"] .l-s01-particle--8  { left:80%; top:40%; animation-duration:16s; animation-delay:-5s;  opacity:0.45; }
+.l-landing [data-l-section="section01"] .l-s01-particle--9  { left:88%; top:15%; animation-duration:14s; animation-delay:-8s;  opacity:0.3; }
+.l-landing [data-l-section="section01"] .l-s01-particle--10 { left:92%; top:60%; animation-duration:8s;  animation-delay:-2s;  opacity:0.5; }
+.l-landing [data-l-section="section01"] .l-s01-particle--11 { left:12%; top:80%; animation-duration:17s; animation-delay:-11s; opacity:0.25; width:3px; height:3px; }
+.l-landing [data-l-section="section01"] .l-s01-particle--12 { left:25%; top:50%; animation-duration:11s; animation-delay:-5s;  opacity:0.4; }
+.l-landing [data-l-section="section01"] .l-s01-particle--13 { left:38%; top:85%; animation-duration:14s; animation-delay:-3s;  opacity:0.3; }
+.l-landing [data-l-section="section01"] .l-s01-particle--14 { left:50%; top:70%; animation-duration:9s;  animation-delay:-7s;  opacity:0.45; }
+.l-landing [data-l-section="section01"] .l-s01-particle--15 { left:60%; top:8%;  animation-duration:13s; animation-delay:-1s;  opacity:0.3; width:3px; height:3px; }
+.l-landing [data-l-section="section01"] .l-s01-particle--16 { left:70%; top:45%; animation-duration:16s; animation-delay:-9s;  opacity:0.4; }
+.l-landing [data-l-section="section01"] .l-s01-particle--17 { left:78%; top:82%; animation-duration:10s; animation-delay:-4s;  opacity:0.25; }
+.l-landing [data-l-section="section01"] .l-s01-particle--18 { left:85%; top:30%; animation-duration:12s; animation-delay:-6s;  opacity:0.5; }
+.l-landing [data-l-section="section01"] .l-s01-particle--19 { left:4%;  top:45%; animation-duration:19s; animation-delay:-12s; opacity:0.3; width:3px; height:3px; }
+.l-landing [data-l-section="section01"] .l-s01-particle--20 { left:96%; top:50%; animation-duration:11s; animation-delay:-3s;  opacity:0.4; }
+.l-landing [data-l-section="section01"] .l-s01-particle--21 { left:42%; top:22%; animation-duration:7s;  animation-delay:-1s;  opacity:0.55; }
+.l-landing [data-l-section="section01"] .l-s01-particle--22 { left:67%; top:92%; animation-duration:15s; animation-delay:-8s;  opacity:0.3; width:4px; height:4px; }
+
+@keyframes l-particle-drift {
+  0%   { transform: translateY(0) translateX(0); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(-120px) translateX(20px); opacity: 0; }
+}
+
+/* HeroVisual ne cible plus .l-s01-media (supprimée) — on garde juste le halo */
+/* Override : sans media, le tilt JS ne trouve rien, c'est OK */
+
+/* Ajuster la vignette latérale pour le fond CSS */
+.l-landing [data-l-section="section01"] .l-s01-media-vignette {
+  background: radial-gradient(
+    ellipse 85% 80% at 20% 50%,
+    transparent 30%,
+    rgba(0,0,0,0.45) 100%
+  );
+}
+
+/* Renforcement 3D sur les feature cards — vrai tilt JS-like en hover */
+.l-landing [data-l-section="section02"] .l-s02-card:hover {
+  transform: perspective(1200px) rotateX(1.5deg) rotateY(-1deg) translateZ(22px);
+}
+
+/* Stats : chiffre avec reflet lumineux animé */
+.l-landing [data-l-section="section05"] .l-s05-stat span {
+  display: inline-block;
+  position: relative;
+}
+.l-landing [data-l-section="section05"] .l-s05-stat span::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0; top: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.18) 45%,
+    rgba(255,255,255,0.32) 50%,
+    rgba(255,255,255,0.18) 55%,
+    transparent 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: l-stat-shine 4s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes l-stat-shine {
+  0%, 60%  { background-position: -200% center; }
+  85%      { background-position: 200% center; }
+  100%     { background-position: 200% center; }
+}
+
+/* Devices section : ombre portée 3D plus marquée */
+.l-landing [data-l-section="section03"] .l-s03-web,
+.l-landing [data-l-section="section03"] .l-s03-phone,
+.l-landing [data-l-section="section03"] .l-s03-tablet {
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.7),
+    0 2px 8px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+/* prefers-reduced-motion : coupe les nouveaux effets aussi */
+@media (prefers-reduced-motion: reduce) {
+  .l-landing [data-l-section="section01"] .l-s01-grid3d,
+  .l-landing [data-l-section="section01"] .l-s01-orb,
+  .l-landing [data-l-section="section01"] .l-s01-particle {
+    animation: none !important;
+  }
+}
