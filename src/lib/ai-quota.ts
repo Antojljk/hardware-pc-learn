@@ -51,7 +51,7 @@ export async function consumeAiMessage(
   plan: PrismaPlan | string | null | undefined,
 ): Promise<AiQuotaResult> {
   const monthKey = currentMonthKey();
-  const limit = aiMonthlyLimit(plan);
+  const limit = aiMonthlyLimit(plan, userId);
 
   // Lecture + incrément atomique via upsert + transaction. On accepte un
   // dépassement de 1 dans le pire cas multi-instance — acceptable pour un

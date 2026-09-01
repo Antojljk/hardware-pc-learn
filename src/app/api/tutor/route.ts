@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
   if (!user) return NextResponse.json({ error: 'unauthenticated' }, { status: 401 });
 
   // Garde-fou d'offre : la fonctionnalité Tuteur IA est payante.
-  if (!canAccess(user.plan, 'tutor_ai')) {
+  if (!canAccess(user.plan, 'tutor_ai', user.id)) {
     return NextResponse.json(
       {
         error: 'Tuteur IA réservé aux utilisateurs connectés avec une offre payante.',
