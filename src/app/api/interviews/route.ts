@@ -22,7 +22,7 @@ export async function POST(req: Request) {
   if (!user) return NextResponse.json({ error: 'Non connecté' }, { status: 401 });
 
   // Entretiens = feature payante (ESSENTIEL+ pour les basiques).
-  if (!canAccess(user.plan, 'interviews_basic')) {
+  if (!canAccess(user.plan, 'interviews_basic', user.id)) {
     return buildLockedResponse('interviews_basic', 'ESSENTIEL');
   }
   try {

@@ -239,8 +239,9 @@ export class PlanRequiredError extends Error {
 export function userCanAccess(
   plan: PrismaPlan | string | null | undefined,
   feature: FeatureKey,
+  userId?: string,
 ): boolean {
-  return canAccess(plan, feature);
+  return canAccess(plan, feature, userId);
 }
 
 /**

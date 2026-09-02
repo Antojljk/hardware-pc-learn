@@ -22,7 +22,7 @@ export async function POST(req: Request) {
   if (!user) return NextResponse.json({ error: 'Non connecté' }, { status: 401 });
 
   // Examens = feature payante (ESSENTIEL+ pour les basiques, PRO+ pour les complets).
-  if (!canAccess(user.plan, 'exams_basic')) {
+  if (!canAccess(user.plan, 'exams_basic', user.id)) {
     return buildLockedResponse('exams_basic', 'ESSENTIEL');
   }
   try {

@@ -13,7 +13,7 @@ export default async function TechnicienModePage() {
   if (!user) redirect('/auth');
 
   // Mode technicien = PRO+.
-  if (!canAccess(user.plan, 'mode_technicien')) {
+  if (!canAccess(user.plan, 'mode_technicien', user.id)) {
     return (
       <div className="max-w-3xl mx-auto space-y-4">
         <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight">Mode technicien</h1>

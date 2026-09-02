@@ -12,7 +12,7 @@ export default async function ExamsPage() {
   if (!user) redirect('/auth');
 
   // Garde-fou serveur : les examens sont ESSENTIEL+.
-  if (!canAccess(user.plan, 'exams_basic')) {
+  if (!canAccess(user.plan, 'exams_basic', user.id)) {
     return (
       <div className="max-w-3xl mx-auto space-y-4">
         <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight">Examens blancs</h1>

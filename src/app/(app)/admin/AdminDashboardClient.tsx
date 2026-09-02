@@ -221,9 +221,9 @@ export default function AdminDashboardClient({ initialData }: { initialData: any
             </h2>
             <div className="p-3 rounded-xl bg-bg-elev border border-border">
               <div className="text-xs text-muted mb-1">Messages Tuteur total</div>
-              <div className="text-2xl font-display font-bold tabular-nums text-text">
-                {totalAiMessages?._sum.count ?? 0}
-              </div>
+<div className="text-2xl font-display font-bold tabular-nums text-text">
+                  {totalAiMessages?._sum?.count ?? 0}
+                </div>
             </div>
             <div className="grid grid-cols-2 gap-2 mt-3">
               <div className="p-2 rounded-lg border border-border text-center">

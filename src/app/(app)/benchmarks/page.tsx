@@ -54,7 +54,7 @@ export default async function BenchmarksPage() {
   const user = await getCurrentUser();
   if (!user) redirect('/auth');
 
-  if (!canAccess(user.plan, 'monitoring_extended')) {
+  if (!canAccess(user.plan, 'monitoring_extended', user.id)) {
     return (
       <div className="max-w-3xl mx-auto space-y-4">
         <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight">Benchmarks</h1>

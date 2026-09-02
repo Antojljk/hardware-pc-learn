@@ -25,7 +25,7 @@ export default async function InterviewsHome() {
   if (!user) redirect('/auth');
 
   // Garde-fou serveur : les entretiens sont ESSENTIEL+.
-  if (!canAccess(user.plan, 'interviews_basic')) {
+  if (!canAccess(user.plan, 'interviews_basic', user.id)) {
     return (
       <div className="max-w-3xl mx-auto space-y-4">
         <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight">Entretiens blancs</h1>

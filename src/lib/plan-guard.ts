@@ -39,24 +39,24 @@ export class PlanRequiredError extends Error {
 
 /** Jette si l'utilisateur n'a pas accès à la fonctionnalité. */
 export function requireFeature(
-  user: Pick<User, 'plan'> | null | undefined,
+  user: Pick<User, 'plan' | 'id'> | null | undefined,
   feature: FeatureKey,
   required: PlanKey,
-): asserts user is Pick<User, 'plan'> {
+): asserts user is Pick<User, 'plan' | 'id'> {
   if (!user) throw new PlanRequiredError(feature, required);
-  if (!canAccess(user.plan, feature)) {
+  if (!canAccess(user.plan, feature, user.id)) {
     throw new PlanRequiredError(feature, required);
   }
 }
 
 /** Variante sans exception — utile pour les Server Components. */
 export function assertFeature(
-  user: Pick<User, 'plan'> | null | undefined,
+  user: Pick<User, 'plan' | 'id'> | null | undefined,
   feature: FeatureKey,
   required: PlanKey,
 ): { ok: boolean; user: User | null; plan: PrismaPlan | null; required: PlanKey } {
   return {
-    ok: !!user && canAccess(user.plan, feature),
+    ok: !!user && canAccess(user.plan, feature, user.id),
     user: (user ?? null) as User | null,
     plan: user?.plan ?? null,
     required,

@@ -13,7 +13,7 @@ export default async function TutorPage() {
   if (!user) redirect('/auth');
 
   // Garde-fou serveur : la fonctionnalité Tuteur IA est payante.
-  if (!canAccess(user.plan, 'tutor_ai')) {
+  if (!canAccess(user.plan, 'tutor_ai', user.id)) {
     return (
       <div className="max-w-3xl mx-auto space-y-4">
         <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight">Tuteur IA</h1>

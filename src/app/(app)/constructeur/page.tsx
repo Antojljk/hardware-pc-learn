@@ -14,7 +14,7 @@ export default async function ConstructeurPage() {
   if (!user) redirect('/auth');
 
   // Constructeur PC complet = PRO+.
-  if (!canAccess(user.plan, 'builder_full')) {
+  if (!canAccess(user.plan, 'builder_full', user.id)) {
     return (
       <div className="max-w-3xl mx-auto space-y-4">
         <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight">Constructeur PC</h1>
