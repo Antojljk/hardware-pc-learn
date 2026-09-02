@@ -68,12 +68,12 @@ export async function GET() {
     const uv30d = (getValue(27) as unknown as Array<unknown>)?.length || 0;
 
     return NextResponse.json({
-      lessons: getValue(1),
-      questions: getValue(2),
-      exams: getValue(3),
-      glossary: getValue(4),
-      scenarios: getValue(5),
-      components: getValue(6),
+      lessons: getValue(1) ?? 0,
+      questions: getValue(2) ?? 0,
+      exams: getValue(3) ?? 0,
+      glossary: getValue(4) ?? 0,
+      scenarios: getValue(5) ?? 0,
+      components: getValue(6) ?? 0,
       userCount: getValue(7),
       planCounts: getValue(8),
       totalAiMessages: getValue(9),

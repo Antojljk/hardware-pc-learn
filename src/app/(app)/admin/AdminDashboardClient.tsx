@@ -135,9 +135,7 @@ export default function AdminDashboardClient({ initialData }: { initialData: any
                       <div className="text-[11px] text-muted">{i.desc}</div>
                     </div>
                   </div>
-                   <div className="font-display text-lg font-bold tabular-nums">
-                     {typeof i.count === 'object' && i.count !== null ? (i.count as Record<string, unknown>)._count ?? 0 : i.count}
-                   </div>
+                   <div className="font-display text-lg font-bold tabular-nums">{i.count}</div>
                 </Link>
               ))}
             </div>
