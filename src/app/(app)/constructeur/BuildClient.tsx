@@ -165,9 +165,17 @@ export function BuildClient({ components }: { components: ComponentLite[] }) {
                       </div>
                       <div className="mt-1.5 flex items-center justify-between">
                         <LivePrice query={`${o.brand} ${o.model}`} fallback={o.price} />
-                        {active && (
-                          <CheckCircle2 className="w-3.5 h-3.5 text-text shrink-0" />
-                        )}
+                        <div className="flex items-center gap-2">
+                          {active && <CheckCircle2 className="w-3.5 h-3.5 text-text shrink-0" />}
+                          <a
+                            href={`https://www.amazon.fr/s?k=${encodeURIComponent(o.brand + ' ' + o.model)}&tag=${process.env.NEXT_PUBLIC_AMAZON_TAG || ''}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[10px] text-muted hover:text-text underline underline-offset-2 transition-colors"
+                          >
+                            Voir sur Amazon
+                          </a>
+                        </div>
                       </div>
                     </button>
                   );
