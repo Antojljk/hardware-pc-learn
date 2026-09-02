@@ -283,8 +283,9 @@ export type LockedCourse = Course & { locked: true; requiredPlan: PlanKey };
 export function decorateCourse(
   plan: PrismaPlan | string | null | undefined,
   course: Course,
+  userId?: string,
 ): AccessibleCourse | LockedCourse {
-  if (canAccessCourse(plan, course.slug)) {
+  if (canAccessCourse(plan, course.slug, userId)) {
     return { ...course, locked: false };
   }
   return { ...course, locked: true, requiredPlan: 'ESSENTIEL' };

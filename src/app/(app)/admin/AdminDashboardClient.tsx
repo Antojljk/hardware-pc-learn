@@ -174,11 +174,11 @@ export default function AdminDashboardClient({ initialData }: { initialData: any
             <ul className="text-sm space-y-3 text-muted">
               <li className="flex justify-between">
                 <span>Score moyen Examens</span>
-                <strong className="text-text">{avgExamScore?._avg.score?.toFixed(1) ?? '0'}%</strong>
+                <strong className="text-text">{avgExamScore?._avg?.score?.toFixed(1) ?? '0'}%</strong>
               </li>
               <li className="flex justify-between">
                 <span>Score moyen Quiz</span>
-                <strong className="text-text">{avgQuizScore?._avg.score?.toFixed(1) ?? '0'}%</strong>
+                <strong className="text-text">{avgQuizScore?._avg?.score?.toFixed(1) ?? '0'}%</strong>
               </li>
               <li className="flex justify-between">
                 <span>Badges débloqués</span>
