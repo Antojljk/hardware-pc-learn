@@ -11,20 +11,20 @@ import Link from 'next/link';
 export default function AdminDashboardClient({ initialData }: { initialData: any }) {
   const [data, setData] = useState(initialData);
 
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      try {
-        const res = await fetch('/api/admin/stats');
-        if (res.ok) {
-          const newData = await res.json();
-          setData(newData);
+    useEffect(() => {
+      const interval = setInterval(async () => {
+        try {
+          const res = await fetch('/api/admin/stats');
+          if (res.ok) {
+            const newData = await res.json();
+            setData(newData);
+          }
+        } catch (e) {
+          console.error('Failed to refresh stats:', e);
         }
-      } catch (e) {
-        console.error('Failed to refresh stats:', e);
-      }
-    }, 10000);
-    return () => clearInterval(interval);
-  }, []);
+      }, 10000);
+      return () => clearInterval(interval);
+    }, []);
 
   const {
     lessons, questions, exams, glossary, scenarios, components,
@@ -36,10 +36,10 @@ export default function AdminDashboardClient({ initialData }: { initialData: any
   } = data;
 
   const quickStats = [
-    { label: 'Visites (24h)', value: pv24h?._count ?? pv24h, icon: MousePointer2, color: 'text-blue-500' },
-    { label: 'Uniques (24h)', value: uv24h?._count ?? uv24h, icon: Users, color: 'text-green-500' },
-    { label: 'Pages Vues (7j)', value: pv7d?._count ?? pv7d, icon: Globe, color: 'text-orange-500' },
-    { label: 'Uniques (7j)', value: uv7d?._count ?? uv7d, icon: UserPlus, color: 'text-purple-500' },
+    { label: 'Visites (24h)', value: pv24h, icon: MousePointer2, color: 'text-blue-500' },
+    { label: 'Uniques (24h)', value: uv24h, icon: Users, color: 'text-green-500' },
+    { label: 'Pages Vues (7j)', value: pv7d, icon: Globe, color: 'text-orange-500' },
+    { label: 'Uniques (7j)', value: uv7d, icon: UserPlus, color: 'text-purple-500' },
   ];
 
   const contentItems = [
@@ -84,15 +84,15 @@ export default function AdminDashboardClient({ initialData }: { initialData: any
             <div className="grid sm:grid-cols-3 gap-4 mb-6">
                 <div className="p-3 rounded-xl bg-bg-elev border border-border text-center">
                   <div className="text-xs text-muted mb-1">Pages vues (30j)</div>
-                  <div className="text-xl font-display font-bold text-text">{pv30d?._count ?? pv30d}</div>
+                  <div className="text-xl font-display font-bold text-text">{pv30d}</div>
                 </div>
                <div className="p-3 rounded-xl bg-bg-elev border border-border text-center">
                   <div className="text-xs text-muted mb-1">Uniques (30j)</div>
-                  <div className="text-xl font-display font-bold text-text">{uv30d?._count ?? uv30d}</div>
+                  <div className="text-xl font-display font-bold text-text">{uv30d}</div>
                 </div>
                <div className="p-3 rounded-xl bg-bg-elev border border-border text-center">
                  <div className="text-xs text-muted mb-1">Moyenne / jour</div>
-                 <div className="text-xl font-display font-bold text-text">{((pv30d?._count ?? pv30d) / 30).toFixed(1)}</div>
+                 <div className="text-xl font-display font-bold text-text">{(pv30d / 30).toFixed(1)}</div>
                </div>
             </div>
             
@@ -107,12 +107,12 @@ export default function AdminDashboardClient({ initialData }: { initialData: any
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
-                     {topPages.map((p: { url: string; _count: { url: number } }) => (
-                      <tr key={p.url} className="hover:bg-bg-elev/50">
-                        <td className="p-2 font-mono text-xs">{p.url}</td>
-                        <td className="p-2 text-right font-display font-semibold">{p._count.url}</td>
-                      </tr>
-                    ))}
+                      {topPages.map((p: { url: string; count: number }) => (
+                       <tr key={p.url} className="hover:bg-bg-elev/50">
+                         <td className="p-2 font-mono text-xs">{p.url}</td>
+                         <td className="p-2 text-right font-display font-semibold">{p.count}</td>
+                       </tr>
+                     ))}
                   </tbody>
                 </table>
               </div>
@@ -148,22 +148,22 @@ export default function AdminDashboardClient({ initialData }: { initialData: any
               <TrendingUp className="w-4 h-4" /> Croissance
             </h2>
             <div className="space-y-3">
-               <div className="flex justify-between items-center p-2 rounded-lg bg-bg-elev border border-border">
-                 <span className="text-xs text-muted">Nouveaux (24h)</span>
-                 <span className="text-sm font-bold text-text">+{newUsers24h?._count ?? newUsers24h}</span>
-               </div>
-               <div className="flex justify-between items-center p-2 rounded-lg bg-bg-elev border border-border">
-                 <span className="text-xs text-muted">Nouveaux (7j)</span>
-                 <span className="text-sm font-bold text-text">+{newUsers7d?._count ?? newUsers7d}</span>
-               </div>
-               <div className="flex justify-between items-center p-2 rounded-lg bg-bg-elev border border-border">
-                 <span className="text-xs text-muted">Nouveaux (30j)</span>
-                 <span className="text-sm font-bold text-text">+{newUsers30d?._count ?? newUsers30d}</span>
-               </div>
-               <div className="flex justify-between items-center p-2 rounded-lg bg-bg-elev border border-border">
-                 <span className="text-xs text-muted">Actifs (24h)</span>
-                 <span className="text-sm font-bold text-text">{activeUsers24h?._count ?? activeUsers24h}</span>
-               </div>
+                <div className="flex justify-between items-center p-2 rounded-lg bg-bg-elev border border-border">
+                  <span className="text-xs text-muted">Nouveaux (24h)</span>
+                  <span className="text-sm font-bold text-text">+{newUsers24h}</span>
+                </div>
+                <div className="flex justify-between items-center p-2 rounded-lg bg-bg-elev border border-border">
+                  <span className="text-xs text-muted">Nouveaux (7j)</span>
+                  <span className="text-sm font-bold text-text">+{newUsers7d}</span>
+                </div>
+                <div className="flex justify-between items-center p-2 rounded-lg bg-bg-elev border border-border">
+                  <span className="text-xs text-muted">Nouveaux (30j)</span>
+                  <span className="text-sm font-bold text-text">+{newUsers30d}</span>
+                </div>
+                <div className="flex justify-between items-center p-2 rounded-lg bg-bg-elev border border-border">
+                  <span className="text-xs text-muted">Actifs (24h)</span>
+                  <span className="text-sm font-bold text-text">{activeUsers24h}</span>
+                </div>
             </div>
           </div>
 

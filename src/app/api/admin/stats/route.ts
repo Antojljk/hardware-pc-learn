@@ -68,33 +68,39 @@ export async function GET() {
     const uv30d = (getValue(27) as unknown as Array<unknown>)?.length || 0;
 
     return NextResponse.json({
-      lessons: getValue(1) ?? 0,
-      questions: getValue(2) ?? 0,
-      exams: getValue(3) ?? 0,
-      glossary: getValue(4) ?? 0,
-      scenarios: getValue(5) ?? 0,
-      components: getValue(6) ?? 0,
-      userCount: getValue(7),
-      planCounts: getValue(8),
-      totalAiMessages: getValue(9),
-      avgExamScore: getValue(10),
-      newUsers24h: getValue(11),
-      newUsers7d: getValue(12),
-      newUsers30d: getValue(13),
-      activeUsers24h: getValue(14),
-      totalReviewCards: getValue(15),
-      totalBadges: getValue(16),
-      totalReviews: getValue(17),
-      avgQuizScore: getValue(18),
-      recentInterviews: getValue(19),
-      recentDiagnostics: getValue(20),
-      pv24h: getValue(22),
+      lessons: Number(getValue(1)) || 0,
+      questions: Number(getValue(2)) || 0,
+      exams: Number(getValue(3)) || 0,
+      glossary: Number(getValue(4)) || 0,
+      scenarios: Number(getValue(5)) || 0,
+      components: Number(getValue(6)) || 0,
+      userCount: Number(getValue(7)) || 0,
+      planCounts: (getValue(8) as unknown as Array<Record<string, unknown>>)?.map(p => ({ 
+        plan: String(p.plan || 'UNKNOWN'), 
+        count: (p._count as Record<string, unknown>)?.['_all' as string] ?? 0 
+      })) || [],
+      totalAiMessages: (getValue(9) as unknown as Record<string, Record<string, unknown>>)?._sum?.count ?? 0,
+      avgExamScore: (getValue(10) as unknown as Record<string, Record<string, unknown>>)?._avg?.score ?? 0,
+      newUsers24h: Number(getValue(11)) || 0,
+      newUsers7d: Number(getValue(12)) || 0,
+      newUsers30d: Number(getValue(13)) || 0,
+      activeUsers24h: Number(getValue(14)) || 0,
+      totalReviewCards: Number(getValue(15)) || 0,
+      totalBadges: Number(getValue(16)) || 0,
+      totalReviews: Number(getValue(17)) || 0,
+      avgQuizScore: (getValue(18) as unknown as Record<string, Record<string, unknown>>)?._avg?.score ?? 0,
+      recentInterviews: Number(getValue(19)) || 0,
+      recentDiagnostics: Number(getValue(20)) || 0,
+      pv24h: Number(getValue(22)) || 0,
       uv24h: uv24h,
-      pv7d: getValue(24),
+      pv7d: Number(getValue(24)) || 0,
       uv7d: uv7d,
-      pv30d: getValue(26),
+      pv30d: Number(getValue(26)) || 0,
       uv30d: uv30d,
-      topPages: getValue(28)
+      topPages: (getValue(28) as unknown as Array<Record<string, unknown>>)?.map(p => ({ 
+        url: String(p.url || ''), 
+        count: (p._count as Record<string, unknown>)?.url ?? 0 
+      })) || []
     });
   } catch (e) {
     console.error('Stats API Error:', e);
