@@ -172,14 +172,14 @@ export default function AdminDashboardClient({ initialData }: { initialData: any
               <Trophy className="w-4 h-4" /> Performance
             </h2>
             <ul className="text-sm space-y-3 text-muted">
-              <li className="flex justify-between">
-                <span>Score moyen Examens</span>
-                <strong className="text-text">{avgExamScore?._avg?.score?.toFixed(1) ?? '0'}%</strong>
-              </li>
-              <li className="flex justify-between">
-                <span>Score moyen Quiz</span>
-                <strong className="text-text">{avgQuizScore?._avg?.score?.toFixed(1) ?? '0'}%</strong>
-              </li>
+               <li className="flex justify-between">
+                 <span>Score moyen Examens</span>
+                 <strong className="text-text">{Number(avgExamScore)?.toFixed(1) ?? '0'}%</strong>
+               </li>
+               <li className="flex justify-between">
+                 <span>Score moyen Quiz</span>
+                 <strong className="text-text">{Number(avgQuizScore)?.toFixed(1) ?? '0'}%</strong>
+               </li>
               <li className="flex justify-between">
                 <span>Badges débloqués</span>
                 <strong className="text-text">{totalBadges}</strong>
@@ -199,41 +199,41 @@ export default function AdminDashboardClient({ initialData }: { initialData: any
             <h2 className="section-title mb-3 flex items-center gap-2">
               <Users className="w-4 h-4" /> Répartition Plans
             </h2>
-            <div className="space-y-2">
-               {planCounts.map((p: { plan: string; _count: { _all: number } }) => (
-                <div key={p.plan} className="flex items-center gap-3">
-                  <span className="text-xs text-muted w-20">{p.plan}</span>
-                  <div className="flex-1 h-2 bg-bg-elev rounded-full overflow-hidden border border-border">
-                    <div 
-                      className="h-full bg-text" 
-                      style={{ width: `${(p._count._all / userCount) * 100}%` }} 
-                    />
-                  </div>
-                  <span className="text-xs font-semibold tabular-nums w-8 text-right">{p._count._all}</span>
-                </div>
-              ))}
-            </div>
+               <div className="space-y-2">
+                {planCounts.map((p: { plan: string; count: number }) => (
+                 <div key={p.plan} className="flex items-center gap-3">
+                   <span className="text-xs text-muted w-20">{p.plan}</span>
+                   <div className="flex-1 h-2 bg-bg-elev rounded-full overflow-hidden border border-border">
+                     <div 
+                       className="h-full bg-text" 
+                       style={{ width: `${(p.count / userCount) * 100}%` }} 
+                     />
+                   </div>
+                   <span className="text-xs font-semibold tabular-nums w-8 text-right">{p.count}</span>
+                 </div>
+               ))}
+             </div>
           </section>
 
           <section className="module-frame anim-rise anim-rise-1">
             <h2 className="section-title mb-3 flex items-center gap-2">
               <MessageSquare className="w-4 h-4" /> IA & Support
             </h2>
-            <div className="p-3 rounded-xl bg-bg-elev border border-border">
-              <div className="text-xs text-muted mb-1">Messages Tuteur total</div>
-<div className="text-2xl font-display font-bold tabular-nums text-text">
-                  {totalAiMessages?._sum?.count ?? 0}
-                </div>
-            </div>
+             <div className="p-3 rounded-xl bg-bg-elev border border-border">
+               <div className="text-xs text-muted mb-1">Messages Tuteur total</div>
+               <div className="text-2xl font-display font-bold tabular-nums text-text">
+                   {totalAiMessages ?? 0}
+               </div>
+             </div>
             <div className="grid grid-cols-2 gap-2 mt-3">
-               <div className="p-2 rounded-lg border border-border text-center">
-                 <div className="text-[10px] text-muted">Entretiens (7j)</div>
-                 <div className="text-sm font-bold tabular-nums">{recentInterviews?._count ?? recentInterviews}</div>
-               </div>
-               <div className="p-2 rounded-lg border border-border text-center">
-                 <div className="text-[10px] text-muted">Diagnostics (7j)</div>
-                 <div className="text-sm font-bold tabular-nums">{recentDiagnostics?._count ?? recentDiagnostics}</div>
-               </div>
+                <div className="p-2 rounded-lg border border-border text-center">
+                  <div className="text-[10px] text-muted">Entretiens (7j)</div>
+                  <div className="text-sm font-bold tabular-nums">{recentInterviews}</div>
+                </div>
+                <div className="p-2 rounded-lg border border-border text-center">
+                  <div className="text-[10px] text-muted">Diagnostics (7j)</div>
+                  <div className="text-sm font-bold tabular-nums">{recentDiagnostics}</div>
+                </div>
             </div>
           </section>
         </aside>

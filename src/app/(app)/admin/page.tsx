@@ -80,11 +80,11 @@ async function getAdminStats() {
 
   return {
     lessons, questions, exams, glossary, scenarios, components,
-    userCount, planCounts, totalAiMessages, avgExamScore,
+    userCount, planCounts,     totalAiMessages: totalAiMessages._sum.count, avgExamScore,
     newUsers24h, newUsers7d, newUsers30d, activeUsers24h,
     totalReviewCards, totalBadges, totalReviews, avgQuizScore,
     recentInterviews, recentDiagnostics,
-    pv24h, uv24h, pv7d, uv7d, pv30d, uv30d, topPages
+    pv24h, uv24h: uv24h.length, pv7d, uv7d: uv7d.length, pv30d, uv30d: uv30d.length, topPages
   };
 }
 

@@ -63,9 +63,9 @@ export async function GET() {
       return null;
     };
 
-    const uv24h = (getValue(23) as unknown as Array<unknown>)?.length || 0;
-    const uv7d = (getValue(25) as unknown as Array<unknown>)?.length || 0;
-    const uv30d = (getValue(27) as unknown as Array<unknown>)?.length || 0;
+    const uv24h = (getValue(41) as unknown as Array<unknown>)?.length || 0;
+    const uv7d = (getValue(43) as unknown as Array<unknown>)?.length || 0;
+    const uv30d = (getValue(45) as unknown as Array<unknown>)?.length || 0;
 
     return NextResponse.json({
       lessons: Number(getValue(1)) || 0,
@@ -91,13 +91,13 @@ export async function GET() {
       avgQuizScore: (getValue(18) as unknown as Record<string, Record<string, unknown>>)?._avg?.score ?? 0,
       recentInterviews: Number(getValue(19)) || 0,
       recentDiagnostics: Number(getValue(20)) || 0,
-      pv24h: Number(getValue(22)) || 0,
+      pv24h: Number(getValue(40)) || 0,
       uv24h: uv24h,
-      pv7d: Number(getValue(24)) || 0,
+      pv7d: Number(getValue(42)) || 0,
       uv7d: uv7d,
-      pv30d: Number(getValue(26)) || 0,
+      pv30d: Number(getValue(44)) || 0,
       uv30d: uv30d,
-      topPages: (getValue(28) as unknown as Array<Record<string, unknown>>)?.map(p => ({ 
+      topPages: (getValue(46) as unknown as Array<Record<string, unknown>>)?.map(p => ({ 
         url: String(p.url || ''), 
         count: (p._count as Record<string, unknown>)?.url ?? 0 
       })) || []
