@@ -1,17 +1,9 @@
 import * as cheerio from 'cheerio';
 import type { PriceProvider, PriceResult } from './types';
+import { parseFrenchPrice, isGoodMatch } from './utils';
 
 const UA = 'Mozilla/5.0 (compatible; HardwarePC-Learn/1.0)';
 const TIMEOUT_MS = 4000;
-
-function parsePrice(raw: string): number | null {
-  if (!raw) return null;
-  const cleaned = raw.replace(/\s/g, '').replace('€', '').replace(',', '.');
-  const m = cleaned.match(/[0-9]+(?:\.[0-9]+)?/);
-  if (!m) return null;
-  const n = parseFloat(m[0]);
-  return Number.isFinite(n) ? Math.round(n * 100) / 100 : null;
-}
 
 export const coolpc: PriceProvider = {
   source: 'coolpc',
@@ -34,20 +26,26 @@ export const coolpc: PriceProvider = {
     finally { clearTimeout(id); }
 
     const $ = cheerio.load(html);
-    const item = $('.product, .item, article').first();
-    if (!item.length) return null;
-    const name = item.find('.product-name, .name, h2, h3, a').first().text().trim();
-    const priceRaw = item.find('.price, .product-price, [itemprop="price"]').first().text().trim() || item.find('[itemprop="price"]').attr('content') || '';
-    const price = parsePrice(priceRaw);
-    const href = item.find('a').first().attr('href');
-    if (!name || price == null || !href) return null;
-    return {
-      name,
-      price,
-      currency: 'EUR',
-      source: 'coolpc',
-      url: href.startsWith('http') ? href : `https://www.coolpc.fr${href.startsWith('/') ? '' : '/'}${href}`,
-      updatedAt: new Date().toISOString(),
-    };
+    
+    const productElements = $('.product, .item, article').toArray();
+    for (const el of productElements) {
+      const $item = $(el);
+      const name = $item.find('.product-name, .name, h2, h3, a').first().text().trim();
+      const priceRaw = $item.find('.price, .product-price, [itemprop="price"]').first().text().trim() || $item.find('[itemprop="price"]').attr('content') || '';
+      const price = parseFrenchPrice(priceRaw);
+      const href = $item.find('a').first().attr('href');
+
+      if (name && price != null && href && isGoodMatch(query, name)) {
+        return {
+          name,
+          price,
+          currency: 'EUR',
+          source: 'coolpc',
+          url: href.startsWith('http') ? href : `https://www.coolpc.fr${href.startsWith('/') ? '' : '/'}${href}`,
+          updatedAt: new Date().toISOString(),
+        };
+      }
+    }
+    return null;
   },
 };

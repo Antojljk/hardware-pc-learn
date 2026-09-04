@@ -41,7 +41,7 @@ export function LivePrice({ query, fallback, className }: { query: string; fallb
         </a>
       )}
       {!isLive && !isLoading && (
-        <span className="text-[10px] text-faint text-mono uppercase tracking-[0.1em]">prix de référence</span>
+        <span className="text-[10px] text-faint text-mono uppercase tracking-[0.1em]">Prix indisponible</span>
       )}
     </div>
   );
