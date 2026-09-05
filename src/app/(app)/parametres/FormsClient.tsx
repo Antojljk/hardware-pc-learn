@@ -142,23 +142,23 @@ export default function FormsClient({ user }: { user: User }) {
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-[10px] uppercase tracking-wider text-muted mb-1">Pseudo</label>
-              <input
-                type="text"
-                name="username"
-                value={user.username}
-                className="w-full px-3 py-2 rounded-border bg-bg-elev border border-border focus:outline-none focus:ring-2 focus:ring-text"
-                placeholder="Entrez votre nouveau pseudo"
-              />
+                <input
+                  type="text"
+                  name="username"
+                  defaultValue={user.username}
+                  className="w-full px-3 py-2 rounded-border bg-bg-elev border border-border focus:outline-none focus:ring-2 focus:ring-text"
+                  placeholder="Entrez votre nouveau pseudo"
+                />
             </div>
             <div>
               <label className="block text-[10px] uppercase tracking-wider text-muted mb-1">Email</label>
-              <input
-                type="email"
-                name="email"
-                value={user.email}
-                className="w-full px-3 py-2 rounded-border bg-bg-elev border border-border focus:outline-none focus:ring-2 focus:ring-text"
-                placeholder="Entrez votre nouvel email"
-              />
+                <input
+                  type="email"
+                  name="email"
+                  defaultValue={user.email}
+                  className="w-full px-3 py-2 rounded-border bg-bg-elev border border-border focus:outline-none focus:ring-2 focus:ring-text"
+                  placeholder="Entrez votre nouvel email"
+                />
             </div>
           </div>
           <div>

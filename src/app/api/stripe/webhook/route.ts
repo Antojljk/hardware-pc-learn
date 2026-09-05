@@ -25,8 +25,12 @@ export async function POST(req: Request) {
     case 'checkout.session.completed': {
       const userId = session.client_reference_id;
       const plan = session.metadata?.plan;
-      const stripeCustomerId = session.customer;
-      const stripeSubscriptionId = session.subscription;
+      const stripeCustomerId = typeof session.customer === 'string' ? session.customer : null;
+      const stripeSubscriptionId = typeof session.subscription === 'string' ? session.subscription : null;
+
+      if (!userId) {
+        return NextResponse.json({ error: 'Missing client_reference_id' }, { status: 400 });
+      }
 
       await prisma.user.update({
         where: { id: userId },

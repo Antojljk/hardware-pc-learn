@@ -1,65 +1,40 @@
-// HardwarePC - schema Prisma (SQLite pour dev local, compatible PostgreSQL en prod)
-// Pour passer en Postgres : changer provider en "postgresql" et DATABASE_URL.
-
 generator client {
   provider = "prisma-client-js"
 }
+
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
-// ============================================================
-// OFFRES / PLANS
-// ============================================================
-// Quatre offres normalisées : FREE / ESSENTIEL / PRO / ULTIMATE.
-// La logique d'accès est centralisée dans src/lib/plans.ts — ne pas
-// disperser de conditions "if (user.plan === ...)" dans le code.
-enum Plan {
-  FREE
-  ESSENTIEL
-  PRO
-  ULTIMATE
-}
-
-// ============================================================
-// UTILISATEURS & SESSIONS
-// ============================================================
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  username     String   @unique
-  passwordHash String
-  isGuest      Boolean  @default(false)
-  xp           Int      @default(0)
-  streak       Int      @default(0)
-  lastActiveAt DateTime?
-  createdAt    DateTime @default(now())
-
-  // Offre associée au compte. Défaut : FREE.
-  plan         Plan     @default(FREE)
-  stripeCustomerId String? @unique
-  stripeSubscriptionId String? @unique
-
-
-  progress            LessonProgress[]
-  quizAttempts        QuizAttempt[]
-  examAttempts        ExamAttempt[]
-  interviewAttempts   InterviewAttempt[]
-  diagnosticAttempts  DiagnosticAttempt[]
-  configBuilds        ConfigBuild[]
-  reviewCards         ReviewCard[]
-  badgesUnlocked      BadgesOnUsers[]
-  reviews             Review[]
-  sessions            Session[]
-  aiUsage             AiMessageUsage[]
-  pageViews           PageView[]
+  id                   String              @id @default(cuid())
+  email                String              @unique
+  username             String              @unique
+  passwordHash         String
+  isGuest              Boolean             @default(false)
+  xp                   Int                 @default(0)
+  streak               Int                 @default(0)
+  lastActiveAt         DateTime?
+  createdAt            DateTime            @default(now())
+  plan                 Plan                @default(FREE)
+  stripeCustomerId     String?             @unique
+  stripeSubscriptionId String?             @unique
+  aiUsage              AiMessageUsage[]
+  badgesUnlocked       BadgesOnUsers[]
+  configBuilds         ConfigBuild[]
+  diagnosticAttempts   DiagnosticAttempt[]
+  examAttempts         ExamAttempt[]
+  interviewAttempts    InterviewAttempt[]
+  progress             LessonProgress[]
+  pageViews            PageView[]
+  quizAttempts         QuizAttempt[]
+  reviews              Review[]
+  reviewCards          ReviewCard[]
+  sessions             Session[]
 }
 
-// Compteur mensuel des messages IA (Tuteur). Une ligne par (user, mois UTC).
-// monthKey = "YYYY-MM" — pas de cron, le compteur se réinitialise
-// automatiquement quand la clé de mois change.
 model AiMessageUsage {
   id        String   @id @default(cuid())
   userId    String
@@ -67,6 +42,7 @@ model AiMessageUsage {
   count     Int      @default(0)
   updatedAt DateTime @updatedAt
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([userId, monthKey])
   @@index([userId, monthKey])
 }
@@ -79,9 +55,6 @@ model Session {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-// ============================================================
-// COURS & PARCOURS
-// ============================================================
 model Track {
   id          String   @id @default(cuid())
   slug        String   @unique
@@ -93,22 +66,22 @@ model Track {
 }
 
 model Lesson {
-  id            String   @id @default(cuid())
-  slug          String   @unique
-  trackId       String
-  title         String
-  level         String
-  durationMin   Int
-  order         Int
-  objective     String
-  simple        String
-  technical     String
-  examples      String
-  mistakes      String
-  keyTakeaways  String
-  diagram       String?
-  track         Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
-  progress      LessonProgress[]
+  id           String           @id @default(cuid())
+  slug         String           @unique
+  trackId      String
+  title        String
+  level        String
+  durationMin  Int
+  order        Int
+  objective    String
+  simple       String
+  technical    String
+  examples     String
+  mistakes     String
+  keyTakeaways String
+  diagram      String?
+  track        Track            @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  progress     LessonProgress[]
 }
 
 model LessonProgress {
@@ -118,48 +91,43 @@ model LessonProgress {
   completed Boolean  @default(false)
   score     Int      @default(0)
   updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([userId, lessonId])
 }
 
-// ============================================================
-// QUIZ
-// ============================================================
 model QuizQuestion {
-  id          String   @id @default(cuid())
+  id          String @id @default(cuid())
   category    String
   difficulty  String
-  type        String   // mcq | truefalse | short | scenario
+  type        String
   prompt      String
-  choices     String   // JSON array
+  choices     String
   answer      String
   explanation String
-  xpReward    Int      @default(10)
+  xpReward    Int    @default(10)
 }
 
 model QuizAttempt {
   id        String   @id @default(cuid())
   userId    String
-  mode      String   // free | adaptive
+  mode      String
   category  String?
   score     Int
   total     Int
-  details   String   // JSON: [{questionId, correct, chosen}]
+  details   String
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-// ============================================================
-// EXAMENS
-// ============================================================
 model Exam {
-  id          String   @id @default(cuid())
-  slug        String   @unique
+  id          String @id @default(cuid())
+  slug        String @unique
   title       String
   level       String
   durationSec Int
-  questionIds String   // JSON array
+  questionIds String
 }
 
 model ExamAttempt {
@@ -169,35 +137,29 @@ model ExamAttempt {
   score        Int
   total        Int
   timeSpentSec Int
-  details      String   // JSON
+  details      String
   createdAt    DateTime @default(now())
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-// ============================================================
-// ENTRETIENS
-// ============================================================
 model InterviewAttempt {
   id         String   @id @default(cuid())
   userId     String
-  role       String   // monteur | technicien | support | vendeur | stage
-  level      String   // debutant | intermediaire | avance | expert
+  role       String
+  level      String
   score      Int
-  feedback   String   // JSON: {strengths, improvements, idealAnswers}
-  transcript String   // JSON: [{question, answer, evaluation}]
+  feedback   String
+  transcript String
   createdAt  DateTime @default(now())
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-// ============================================================
-// DIAGNOSTICS
-// ============================================================
 model DiagnosticScenario {
-  id         String   @id @default(cuid())
-  slug       String   @unique
+  id         String @id @default(cuid())
+  slug       String @unique
   title      String
-  symptoms   String   // JSON array
-  steps      String   // JSON object
+  symptoms   String
+  steps      String
   category   String
   difficulty String
 }
@@ -206,41 +168,35 @@ model DiagnosticAttempt {
   id          String   @id @default(cuid())
   userId      String
   scenarioId  String
-  stepsChosen String   // JSON array
+  stepsChosen String
   score       Int
-  evaluation  String   // JSON
+  evaluation  String
   createdAt   DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-// ============================================================
-// CONSTRUCTEUR PC
-// ============================================================
 model Component {
   id       String  @id @default(cuid())
-  type     String  // cpu | gpu | ram | motherboard | ssd | psu | case | cooler
+  type     String
   brand    String
   model    String
   price    Int
-  specs    String  // JSON
-  category String? // for ram: ddr4/ddr5, for motherboard: am4/am5/lga1700...
+  specs    String
+  category String?
 }
 
 model ConfigBuild {
   id          String   @id @default(cuid())
   userId      String
   name        String
-  components  String   // JSON object {cpu, gpu, ram, ...}
-  constraints String?  // JSON
+  components  String
+  constraints String?
   score       Int?
   feedback    String?
   createdAt   DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-// ============================================================
-// GLOSSAIRE
-// ============================================================
 model GlossaryTerm {
   id         String  @id @default(cuid())
   slug       String  @unique
@@ -248,13 +204,10 @@ model GlossaryTerm {
   simple     String
   technical  String
   example    String?
-  level      String  // debutant | intermediaire | avance | expert
-  categories String  // comma-separated
+  level      String
+  categories String
 }
 
-// ============================================================
-// REVISIONS ESPACEES
-// ============================================================
 model ReviewCard {
   id       String   @id @default(cuid())
   userId   String
@@ -265,15 +218,13 @@ model ReviewCard {
   reps     Int      @default(0)
   lapses   Int      @default(0)
   user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([userId, termSlug])
 }
 
-// ============================================================
-// BADGES
-// ============================================================
 model Badge {
-  id          String  @id @default(cuid())
-  slug        String  @unique
+  id          String          @id @default(cuid())
+  slug        String          @unique
   name        String
   description String
   icon        String
@@ -284,14 +235,12 @@ model BadgesOnUsers {
   userId     String
   badgeId    String
   unlockedAt DateTime @default(now())
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   badge      Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@id([userId, badgeId])
 }
 
-// ============================================================
-// AVIS
-// ============================================================
 model Review {
   id        String   @id @default(cuid())
   userId    String
@@ -299,21 +248,26 @@ model Review {
   message   String
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([createdAt])
 }
 
-// ============================================================
-// ANALYTICS
-// ============================================================
 model PageView {
-  id         String   @id @default(cuid())
-  url        String
-  visitorId  String
-  userId     String?
-  createdAt  DateTime @default(now())
-  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  id        String   @id @default(cuid())
+  url       String
+  visitorId String
+  userId    String?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id])
 
   @@index([createdAt])
   @@index([url])
   @@index([visitorId])
+}
+
+enum Plan {
+  FREE
+  ESSENTIEL
+  PRO
+  ULTIMATE
 }
