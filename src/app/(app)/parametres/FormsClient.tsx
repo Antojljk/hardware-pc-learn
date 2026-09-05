@@ -252,15 +252,16 @@ export default function FormsClient({ user }: { user: User }) {
         </h2>
         <div className="space-y-4">
           {/* Plan actuel */}
-          <div className="card p-4">
-            <div className="flex items-center justify-between mb-2">
-              <span className="font-medium text-text">Offre actuelle</span>
-              <span className="badge-accent">{planLabel(user.plan)}</span>
-            </div>
-            <p className="text-sm text-muted">
-              Pour changer d&apos;offre, rendez-vous sur la page des <Link href="/tarifs" className="text-text underline">tarifs</Link>.
-            </p>
-          </div>
+           <div className="card p-4">
+             <div className="flex items-center justify-between mb-2">
+               <span className="font-medium text-text">Offre actuelle</span>
+               <span className="badge-accent">{planLabel(user.plan)}</span>
+             </div>
+             <p className="text-sm text-muted">
+               Pour changer d&apos;offre, rendez-vous sur la page des <Link href="/vente" className="text-text underline">tarifs</Link>.
+             </p>
+           </div>
+
 
           {/* Suppression du compte */}
           {deleteSuccess && (

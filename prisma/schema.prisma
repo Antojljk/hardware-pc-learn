@@ -38,10 +38,10 @@ model User {
   createdAt    DateTime @default(now())
 
   // Offre associée au compte. Défaut : FREE.
-  // Étape 8 ajoutera les champs de facturation (date de début,
-  // renouvellement, identifiant de paiement externe). À l'étape 6,
-  // seul ce champ est nécessaire pour préparer l'architecture.
   plan         Plan     @default(FREE)
+  stripeCustomerId String? @unique
+  stripeSubscriptionId String? @unique
+
 
   progress            LessonProgress[]
   quizAttempts        QuizAttempt[]

@@ -222,6 +222,8 @@ const PLANS = [
       '2 parcours d’apprentissage sur 4',
       'Tuteur IA — 3 messages / mois',
     ],
+    cta: 'Commencer gratuitement',
+    href: '/auth',
   },
   {
     name: 'ESSENTIEL',
@@ -235,6 +237,8 @@ const PLANS = [
       'Examens et entretiens basiques',
       'Tuteur IA — 10 messages / mois',
     ],
+    cta: 'Choisir Essentiel',
+    href: '/api/plan',
   },
   {
     name: 'PRO',
@@ -247,6 +251,8 @@ const PLANS = [
       'Diagnostics, constructeur PC, benchmarks, monitoring',
       'Tuteur IA — 50 messages / mois',
     ],
+    cta: 'Choisir Pro',
+    href: '/api/plan',
   },
   {
     name: 'ULTIMATE',
@@ -259,6 +265,8 @@ const PLANS = [
       'Modules en avance / accès anticipé',
       'Tuteur IA — 150 messages / mois',
     ],
+    cta: 'Choisir Ultimate',
+    href: '/api/plan',
   },
 ];
 
@@ -602,42 +610,44 @@ export default function VentePage() {
           />
           <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {PLANS.map((plan) => (
-              <div
-                key={plan.name}
-                className={
-                  'card p-5 flex flex-col gap-4 ' +
-                  (plan.accent ? 'border-accent/50' : '')
-                }
-              >
-                <div className="flex items-center justify-between">
-                  <h3 className="font-display text-base font-semibold tracking-wider text-text">
-                    {plan.name}
-                  </h3>
-                  {plan.accent ? (
-                    <span className="badge badge-accent">
-                      Le plus populaire
-                    </span>
-                  ) : (
-                    <span className="badge">{plan.badge}</span>
-                  )}
-                </div>
-                <div className="flex items-baseline gap-1">
-                  <span className="font-display text-3xl font-bold text-text tabular-nums">
-                    {plan.price}
-                  </span>
-                  {plan.cadence && (
-                    <span className="text-muted text-sm">{plan.cadence}</span>
-                  )}
-                </div>
-                <ul className="space-y-2 text-sm text-text/90">
-                  {plan.bullets.map((b) => (
-                    <li key={b} className="flex items-start gap-2">
-                      <CheckCircle2 className="w-4 h-4 mt-0.5 text-accent shrink-0" />
-                      <span>{b}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+               <div
+                 key={plan.name}
+                 className={
+                   'card p-5 flex flex-col gap-4 ' +
+                   (plan.accent ? 'border-accent/50' : '')
+                 }
+               >
+                 <div className="flex items-center justify-between">
+                   <h3 className="font-display text-base font-semibold tracking-wider text-text">
+                     {plan.name}
+                   </h3>
+                   {plan.accent ? (
+                     <span className="badge badge-accent">
+                       Le plus populaire
+                     </span>
+                   ) : (
+                     <span className="badge">{plan.badge}</span>
+                   )}
+                 </div>
+                 <div className="flex items-baseline gap-1">
+                   <span className="font-display text-3xl font-bold text-text tabular-nums">
+                     {plan.price}
+                   </span>
+                   {plan.cadence && (
+                     <span className="text-muted text-sm">{plan.cadence}</span>
+                   )}
+                 </div>
+                 <ul className="space-y-2 text-sm text-text/90">
+                   {plan.bullets.map((b) => (
+                     <li key={b} className="flex items-start gap-2">
+                       <CheckCircle2 className="w-4 h-4 mt-0.5 text-accent shrink-0" />
+                       <span>{b}</span>
+                     </li>
+                   ))}
+                 </ul>
+                 <SubscriptionButton plan={plan} />
+               </div>
+
             ))}
           </div>
           <p className="mt-6 text-center text-muted text-sm">
@@ -722,7 +732,40 @@ export default function VentePage() {
   );
 }
 
-// --- Sous-composant --------------------------------------------------------
+// --- Sous-composants ----------------------------------------------------------
+
+function SubscriptionButton({ plan }: { plan: { name: string; href: string; cta: string } }) {
+  const handleSubscription = async () => {
+    if (plan.name === 'FREE') {
+      window.location.href = plan.href;
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/plan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan: plan.name }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert('Erreur lors de la souscription');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Une erreur est survenue');
+    }
+  };
+
+  return (
+    <button onClick={handleSubscription} className="btn-primary w-full">
+      {plan.cta}
+      <ArrowRight className="w-4 h-4" />
+    </button>
+  );
+}
 
 function SectionHeader({
   eyebrow,
