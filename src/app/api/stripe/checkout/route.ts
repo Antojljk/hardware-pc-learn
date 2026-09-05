@@ -9,13 +9,15 @@ export async function POST(req: Request) {
 
     const { plan } = await req.json();
     
+    const normalizedPlan = String(plan).trim().toUpperCase();
+    
     const priceIds: Record<string, string> = {
       ESSENTIEL: process.env.STRIPE_PRICE_ESSENTIEL!,
       PRO: process.env.STRIPE_PRICE_PRO!,
       ULTIMATE: process.env.STRIPE_PRICE_ULTIMATE!,
     };
 
-    const priceId = priceIds[plan as string];
+    const priceId = priceIds[normalizedPlan];
     if (!priceId) return NextResponse.json({ error: 'Plan invalide ou non disponible' }, { status: 400 });
 
       const stripe = getStripe();
