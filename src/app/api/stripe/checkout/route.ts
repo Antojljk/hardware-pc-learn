@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { stripe } from '@/lib/stripe';
+import { getStripe } from '@/lib/stripe';
 import { getCurrentUser } from '@/lib/auth';
 
 export async function POST(req: Request) {
@@ -18,7 +18,8 @@ export async function POST(req: Request) {
     const priceId = priceIds[plan as string];
     if (!priceId) return NextResponse.json({ error: 'Plan invalide ou non disponible' }, { status: 400 });
 
-    const session = await stripe.checkout.sessions.create({
+      const stripe = getStripe();
+      const session = await stripe.checkout.sessions.create({
       customer: user.stripeCustomerId || undefined,
       payment_method_types: ['card'],
       line_items: [{ price: priceId, quantity: 1 }],
