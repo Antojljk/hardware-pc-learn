@@ -9,14 +9,10 @@ export async function POST(req: Request) {
 
     const { plan } = await req.json();
     
-    console.log('[DIAG] plan:', plan);
-    
     const normalizedPlan = String(plan).trim().toUpperCase();
-    console.log('[DIAG] normalizedPlan:', normalizedPlan);
-    console.log('[DIAG] hasEssentielPrice:', !!process.env.STRIPE_PRICE_ESSENTIEL);
-    console.log('[DIAG] hasProPrice:', !!process.env.STRIPE_PRICE_PRO);
-    console.log('[DIAG] hasUltimatePrice:', !!process.env.STRIPE_PRICE_ULTIMATE);
-    console.log('[DIAG] hasSecretKey:', !!process.env.STRIPE_SECRET_KEY);
+    console.log('[DIAG] STRIPE_SECRET_KEY starts with:', process.env.STRIPE_SECRET_KEY?.substring(0, 7));
+    console.log('[DIAG] STRIPE_SECRET_KEY ends with:', process.env.STRIPE_SECRET_KEY?.slice(-4));
+    console.log('[DIAG] Is Test Key:', process.env.STRIPE_SECRET_KEY?.startsWith('sk_test'));
     
     const priceIds: Record<string, string> = {
       ESSENTIEL: process.env.STRIPE_PRICE_ESSENTIEL!,
