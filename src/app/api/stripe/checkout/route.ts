@@ -13,12 +13,17 @@ export async function POST(req: Request) {
 
     try {
       const stripe = getStripe();
-      // We retrieve the account details by using the balance or a similar call that doesn't require an ID 
-      // or we simply log the existence of the stripe object and check the price.
-      const price = await stripe.prices.retrieve('price_1UCRfrRkSVAzmjB1yVqRRgf9').catch(() => null);
-      
-      console.log('[DIAG] Mode:', process.env.STRIPE_SECRET_KEY?.startsWith('sk_test') ? 'test' : 'live');
-      console.log('[DIAG] PriceFound:', !!price);
+      const price = await stripe.prices.retrieve('price_1UCRfrRkSVAzmjB1yVqRRgf9').catch((e) => {
+        console.log('[DIAG] Price error code:', (e as Error).message);
+        return null;
+      });
+
+      if (price) {
+        console.log('[DIAG] Price found: true');
+        console.log('[DIAG] Price active:', price.active);
+      } else {
+        console.log('[DIAG] Price found: false');
+      }
     } catch (e) {
       console.log('[DIAG] Retrieval Error:', (e as Error).message);
     }
