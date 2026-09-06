@@ -10,9 +10,18 @@ export async function POST(req: Request) {
     const { plan } = await req.json();
     
     const normalizedPlan = String(plan).trim().toUpperCase();
-    console.log('[DIAG] STRIPE_SECRET_KEY starts with:', process.env.STRIPE_SECRET_KEY?.substring(0, 7));
-    console.log('[DIAG] STRIPE_SECRET_KEY ends with:', process.env.STRIPE_SECRET_KEY?.slice(-4));
-    console.log('[DIAG] Is Test Key:', process.env.STRIPE_SECRET_KEY?.startsWith('sk_test'));
+
+    try {
+      const stripe = getStripe();
+      const account = await stripe.accounts.retrieve(); 
+      const price = await stripe.prices.retrieve('price_1UCRfrRkSVAzmjB1yVqRRgf9').catch(() => null);
+      
+      console.log('[DIAG] Mode:', process.env.STRIPE_SECRET_KEY?.startsWith('sk_test') ? 'test' : 'live');
+      console.log('[DIAG] AccountID:', account.id);
+      console.log('[DIAG] PriceFound:', !!price);
+    } catch (e) {
+      console.log('[DIAG] Account Retrieval Error:', e.message);
+    }
     
     const priceIds: Record<string, string> = {
       ESSENTIEL: process.env.STRIPE_PRICE_ESSENTIEL!,
