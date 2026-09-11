@@ -36,16 +36,37 @@ const DOMAIN_COLORS = ['text-accent', 'text-warning', 'text-success', 'text-text
 export default async function DashboardPage() {
   const user = await getCurrentUser();
   if (!user) redirect('/auth');
-  await updateStreak(user.id);
-  await unlockBadges(user.id);
 
-  const [mastery, attempts, completedLessons, allLessons, badges] = await Promise.all([
+  const [
+    mastery, 
+    attempts, 
+    completedLessons, 
+    allLessons, 
+    badges, 
+    completedIdsList, 
+    _streakUpdate, 
+    _badgeUnlock
+  ] = await Promise.all([
     computeDomainMastery(user.id),
     prisma.quizAttempt.findMany({ where: { userId: user.id }, orderBy: { createdAt: 'desc' }, take: 5 }),
     prisma.lessonProgress.count({ where: { userId: user.id, completed: true } }),
     prisma.lesson.count(),
     prisma.badgesOnUsers.findMany({ where: { userId: user.id }, include: { badge: true } }),
+    prisma.lessonProgress.findMany({ where: { userId: user.id, completed: true }, select: { lessonId: true } }),
+    updateStreak(user.id),
+    unlockBadges(user.id),
   ]);
+
+  // To avoid unused-vars ESLint error on these:
+  void _streakUpdate;
+  void _badgeUnlock;
+
+  const completedIds = new Set(completedIdsList.map(l => l.lessonId));
+  
+  const nextLesson = await prisma.lesson.findFirst({
+    where: { id: { notIn: Array.from(completedIds) } },
+    orderBy: [{ trackId: 'asc' }, { order: 'asc' }],
+  });
 
   const lvl = getLevel(user.xp);
   const avgScore = attempts.length
@@ -59,15 +80,6 @@ export default async function DashboardPage() {
   })).sort((a, b) => b.value - a.value);
 
   const weakDomains = domainEntries.slice().sort((a, b) => a.value - b.value).filter(d => d.value < 65).slice(0, 3);
-
-  const completedIds = new Set(
-    (await prisma.lessonProgress.findMany({ where: { userId: user.id, completed: true }, select: { lessonId: true } }))
-      .map(l => l.lessonId)
-  );
-  const nextLesson = await prisma.lesson.findFirst({
-    where: { id: { notIn: Array.from(completedIds) } },
-    orderBy: [{ trackId: 'asc' }, { order: 'asc' }],
-  });
 
   const today = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
 

@@ -1,0 +1,1 @@
+export default function Loading() { return <div className="animate-pulse space-y-6"> <div className="h-10 bg-bg-elev rounded-xl w-1/4" /> <div className="h-64 bg-bg-elev rounded-3xl" /> <div className="grid grid-cols-1 sm:grid-cols-2 gap-4"> <div className="h-32 bg-bg-elev rounded-2xl" /> <div className="h-32 bg-bg-elev rounded-2xl" /> </div> </div> }

@@ -1,0 +1,1 @@
+export default function Loading() { return <div className="flex items-center justify-center min-h-[60vh]"><div className="animate-pulse space-y-4 text-center"> <div className="h-12 bg-bg-elev rounded-xl w-80 mx-auto" /> </div> </div> }
