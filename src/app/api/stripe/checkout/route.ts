@@ -13,20 +13,35 @@ export async function POST(req: Request) {
 
     try {
       const stripe = getStripe();
-      const price = await stripe.prices.retrieve('price_1UCRfrRkSVAzmjB1yVqRRgf9').catch((e) => {
-        console.log('[DIAG] Price error code:', (e as Error).message);
-        return null;
-      });
+      const priceIdToTest = 'price_1UCRfrRkSVAzmjB1yVqRRgf9';
 
-      if (price) {
-        console.log('[DIAG] Price found: true');
-        console.log('[DIAG] Price active:', price.active);
-      } else {
-        console.log('[DIAG] Price found: false');
+      const secretKey = process.env.STRIPE_SECRET_KEY || '';
+      const mode = secretKey.startsWith('sk_test') ? 'test' : secretKey.startsWith('sk_live') ? 'live' : 'unknown';
+      console.log(`[STRIPE-DIAG] mode: ${mode}`);
+
+      try {
+        await stripe.balance.retrieve();
+        console.log(`[STRIPE-DIAG] account: identity_verified`);
+      } catch {
+        console.log(`[STRIPE-DIAG] account: verification_failed`);
+      }
+
+      try {
+        const price = await stripe.prices.retrieve(priceIdToTest);
+        console.log(`[STRIPE-DIAG] price_found: true`);
+        console.log(`[STRIPE-DIAG] price_active: ${price.active}`);
+        console.log(`[STRIPE-DIAG] price_currency: ${price.currency}`);
+        console.log(`[STRIPE-DIAG] price_type: ${price.type}`);
+      } catch (err: unknown) {
+        const stripeError = err as { code?: string; message: string };
+        console.log(`[STRIPE-DIAG] price_found: false`);
+        if (stripeError.code) console.log(`[STRIPE-DIAG] price_error_code: ${stripeError.code}`);
+        console.log(`[STRIPE-DIAG] price_error_message: ${stripeError.message}`);
       }
     } catch (e) {
-      console.log('[DIAG] Retrieval Error:', (e as Error).message);
+      console.log('[STRIPE-DIAG] Fatal diagnostic error:', (e as Error).message);
     }
+
     
     const priceIds: Record<string, string> = {
       ESSENTIEL: process.env.STRIPE_PRICE_ESSENTIEL!,
