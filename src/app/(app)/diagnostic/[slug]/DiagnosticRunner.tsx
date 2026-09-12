@@ -26,8 +26,19 @@ export function DiagnosticRunner({
         body: JSON.stringify({ slug, stepsChosen: chosen }),
       });
       const data = await res.json();
+      if (data.error) {
+        alert(`Erreur : ${data.error}`);
+        return;
+      }
+      if (!data.score || !data.evaluation) {
+        alert('Réponse invalide du serveur');
+        return;
+      }
       setResult(data);
       router.refresh();
+    } catch (e) {
+      console.error(e);
+      alert('Une erreur réseau est survenue');
     } finally { setSubmitting(false); }
   }
 

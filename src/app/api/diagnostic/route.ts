@@ -76,7 +76,9 @@ export async function POST(req: Request) {
       ok: true, score, xpAwarded,
       evaluation: { good, missed, wrong: wrongChosen },
     });
-  } catch {
-    return NextResponse.json({ error: 'Erreur' }, { status: 500 });
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : 'Erreur interne du serveur';
+    console.error('[DIAGNOSTIC_API_ERROR]', message);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

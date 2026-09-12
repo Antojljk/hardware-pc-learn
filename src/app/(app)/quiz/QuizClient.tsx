@@ -17,14 +17,21 @@ export function QuizClient({ initialCategory, mode }: { initialCategory?: string
 
   const load = useCallback(async () => {
     setLoading(true); setDone(false); setIndex(0); setChosen(null); setFeedback(null); setResults([]); setFinalResult(null);
-    const url = new URL('/api/quiz', window.location.origin);
-    if (mode === 'adaptive') url.searchParams.set('mode', 'adaptive');
-    if (initialCategory) url.searchParams.set('category', initialCategory);
-    url.searchParams.set('count', '10');
-    const res = await fetch(url);
-    const data = await res.json();
-    setQuestions(data.questions);
-    setLoading(false);
+    try {
+      const url = new URL('/api/quiz', window.location.origin);
+      if (mode === 'adaptive') url.searchParams.set('mode', 'adaptive');
+      if (initialCategory) url.searchParams.set('category', initialCategory);
+      url.searchParams.set('count', '10');
+      const res = await fetch(url);
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      setQuestions(data.questions || []);
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : 'Une erreur inconnue est survenue';
+      alert(`Erreur de chargement : ${message}`);
+    } finally {
+      setLoading(false);
+    }
   }, [mode, initialCategory]);
 
   useEffect(() => { load(); }, [load]);
@@ -32,25 +39,36 @@ export function QuizClient({ initialCategory, mode }: { initialCategory?: string
   async function submit() {
     if (!chosen || feedback) return;
     const q = questions[index];
-    const res = await fetch('/api/quiz', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ questionId: q.id, answer: chosen }),
-    });
-    const data = await res.json();
-    setFeedback(data);
-    setResults(r => [...r, { questionId: q.id, chosen, correct: data.correct, category: q.category }]);
+    try {
+      const res = await fetch('/api/quiz', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ questionId: q.id, answer: chosen }),
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      setFeedback(data);
+      setResults(r => [...r, { questionId: q.id, chosen, correct: data.correct, category: q.category }]);
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : 'Une erreur inconnue est survenue';
+      alert(`Erreur : ${message}`);
+    }
   }
 
   async function next() {
     if (index + 1 >= questions.length) {
-      // Submit final
-      const res = await fetch('/api/quiz/attempt', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mode, category: initialCategory, details: results }),
-      });
-      const data = await res.json();
-      setFinalResult(data);
-      setDone(true);
+      try {
+        const res = await fetch('/api/quiz/attempt', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ mode, category: initialCategory, details: results }),
+        });
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+        setFinalResult(data);
+        setDone(true);
+      } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : 'Une erreur inconnue est survenue';
+        alert(`Erreur lors de la validation finale : ${message}`);
+      }
     } else {
       setIndex(i => i + 1); setChosen(null); setFeedback(null);
     }
