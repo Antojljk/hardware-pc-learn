@@ -7,7 +7,7 @@ const SITE_URL = 'https://hardware-pc-learn.vercel.app';
 // sont référencées ici.
 const PUBLIC_ROUTES = [
   { path: '/', priority: 1.0, changeFrequency: 'weekly' as const },
-  { path: '/glossaire', priority: 0.8, changeFrequency: 'weekly' as const },
+  { path: '/glossaire', priority: 0.9, changeFrequency: 'weekly' as const },
   { path: '/cours', priority: 0.8, changeFrequency: 'weekly' as const },
   { path: '/quiz', priority: 0.8, changeFrequency: 'weekly' as const },
   { path: '/constructeur', priority: 0.8, changeFrequency: 'weekly' as const },
