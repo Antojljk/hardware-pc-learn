@@ -17,7 +17,7 @@ export async function POST(req: Request) {
   // serveur applique déjà cette restriction ; on la confirme ici pour
   // qu'aucun client ne puisse soumettre une tentative en bypassant
   // l'UI.
-  if (!canAccessDiagnostic(user.plan)) {
+  if (!canAccessDiagnostic(user.plan, undefined, user.id)) {
     return buildLockedResponse('diagnostic_full', 'PRO');
   }
   try {
