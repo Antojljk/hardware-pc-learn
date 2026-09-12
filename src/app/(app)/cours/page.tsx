@@ -1,7 +1,13 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
+import { Metadata } from 'next';
 import { Clock, BookOpen, CheckCircle2, ChevronRight, GraduationCap, Layers, BarChart3 } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'Apprendre le hardware PC — Cours complets | HardwarePC',
+  description: 'Découvrez nos cours complets sur les composants PC, le montage, le diagnostic et l\'optimisation. Formez-vous au hardware PC de zéro.',
+};
 
 export default async function CoursesPage() {
   const user = await getCurrentUser();

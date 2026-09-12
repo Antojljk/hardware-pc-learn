@@ -1,9 +1,15 @@
 import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
+import { Metadata } from 'next';
 import { QuizClient } from './QuizClient';
 import { Brain, Sparkles, Shuffle, History, ChevronRight, Activity } from 'lucide-react';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'Quiz hardware PC — Testez vos connaissances | HardwarePC',
+  description: 'Testez et améliorez vos connaissances en hardware PC avec nos quiz interactifs sur les composants, la compatibilité et le dépannage.',
+};
 
 export default async function QuizPage({ searchParams }: { searchParams: { category?: string; mode?: string } }) {
   const user = await getCurrentUser();

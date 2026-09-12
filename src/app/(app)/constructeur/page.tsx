@@ -1,11 +1,17 @@
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
 import { redirect } from 'next/navigation';
+import { Metadata } from 'next';
 import { PcCase, Sparkles, Wrench, Layers, Cpu, ChevronRight } from 'lucide-react';
 import { BuildClient } from './BuildClient';
 import Link from 'next/link';
 import { canAccess } from '@/lib/plans';
 import { LockedState } from '@/components/LockedState';
+
+export const metadata: Metadata = {
+  title: 'Constructeur PC gratuit — Vérifiez la compatibilité | HardwarePC',
+  description: 'Créez votre configuration PC, vérifiez la compatibilité des composants et comparez les prix. Outil gratuit sans inscription.',
+};
 
 export const dynamic = 'force-dynamic';
 
