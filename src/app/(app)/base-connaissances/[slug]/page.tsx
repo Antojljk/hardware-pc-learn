@@ -75,8 +75,7 @@ const KNOWLEDGE: Record<string, { title: string; description: string; sections: 
       { heading: 'BIOS et Mise à jour', body: 'Le BIOS (ou UEFI) est le premier logiciel lancé au démarrage. Il configure le matériel avant le boot de Windows. Mettre à jour le BIOS peut être nécessaire pour supporter un nouveau CPU ou améliorer la stabilité de la RAM (XMP/EXPO). Attention : une coupure de courant pendant un flash BIOS peut rendre la carte mère inutilisable, sauf si elle possède un bouton BIOS Flashback.' },
     ],
   },
-},
-
+};
 export async function generateStaticParams() {
   return Object.keys(KNOWLEDGE).map((slug) => ({
     slug: slug,
