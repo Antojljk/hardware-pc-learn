@@ -1,9 +1,10 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Wrench, Send, Loader2, AlertTriangle, CircleCheck, CircleAlert, CircleX, Settings, Lightbulb, ArrowLeft, Plus, Activity, ListChecks } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
 type Step = { id: string; label: string; type: string; category: string };
 
@@ -14,16 +15,25 @@ export function DiagnosticRunner({
   idealSequence: string[]; optionalAcceptable: string[]; wrongMoves: string[]; rootCause: string; solution: string;
 }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const mode = searchParams.get('mode') || 'standard';
   const [chosen, setChosen] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
+  const [startTime, setStartTime] = useState<number | null>(null);
+  const [errorCount, setErrorCount] = useState(0);
   const [result, setResult] = useState<{ score: number; xpAwarded: number; evaluation: { good: string[]; missed: string[]; wrong: string[] } } | null>(null);
+
+  useEffect(() => {
+    setStartTime(Date.now());
+  }, []);
 
   async function submit() {
     setSubmitting(true);
+    const timeSpent = startTime ? Math.floor((Date.now() - startTime) / 1000) : 0;
     try {
       const res = await fetch('/api/diagnostic', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ slug, stepsChosen: chosen }),
+        body: JSON.stringify({ slug, stepsChosen: chosen, timeSpentSec: timeSpent, errorCount, mode }),
       });
       const data = await res.json();
       if (data.error) {
@@ -40,6 +50,15 @@ export function DiagnosticRunner({
       console.error(e);
       alert('Une erreur réseau est survenue');
     } finally { setSubmitting(false); }
+  }
+
+  function toggleStep(stepId: string) {
+    if (chosen.includes(stepId)) {
+      setChosen(c => c.filter(x => x !== stepId));
+      setErrorCount(e => e + 1);
+    } else {
+      setChosen(c => [...c, stepId]);
+    }
   }
 
   if (result) {
@@ -231,12 +250,12 @@ export function DiagnosticRunner({
                         Idéal
                       </span>
                     )}
-                    <button
-                      onClick={() => setChosen(c => c.filter(x => x !== s.id))}
-                      className="text-xs text-muted hover:text-text transition-colors shrink-0"
-                    >
-                      retirer
-                    </button>
+                     <button
+                       onClick={() => toggleStep(s.id)}
+                       className="text-xs text-muted hover:text-text transition-colors shrink-0"
+                     >
+                       retirer
+                     </button>
                   </div>
                 </li>
               );
@@ -255,11 +274,11 @@ export function DiagnosticRunner({
         </div>
         <div className="choice-grid sm:gap-2.5" data-cols={availableSteps.length > 3 ? "2" : undefined}>
           {availableSteps.map(s => (
-            <button
-              key={s.id}
-              onClick={() => setChosen(c => [...c, s.id])}
-              className="option-card group"
-            >
+               <button
+                 key={s.id}
+                 onClick={() => toggleStep(s.id)}
+                 className="option-card group"
+               >
               <span className="w-7 h-7 rounded-lg grid place-items-center bg-bg-soft border border-border text-muted shrink-0 transition-all group-hover:border-text/50 group-hover:text-text">
                 <Plus className="w-3.5 h-3.5" />
               </span>

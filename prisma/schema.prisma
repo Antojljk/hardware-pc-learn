@@ -162,6 +162,7 @@ model DiagnosticScenario {
   steps      String
   category   String
   difficulty String
+  technicienOnly Boolean @default(false)
 }
 
 model DiagnosticAttempt {
@@ -171,6 +172,9 @@ model DiagnosticAttempt {
   stepsChosen String
   score       Int
   evaluation  String
+  timeSpentSec Int?
+  errorCount Int @default(0)
+  mode String @default("standard")
   createdAt   DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

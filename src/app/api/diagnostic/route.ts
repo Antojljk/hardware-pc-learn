@@ -7,7 +7,13 @@ import { z } from 'zod';
 import { canAccessDiagnostic } from '@/lib/content-access';
 import { buildLockedResponse } from '@/lib/plan-guard';
 
-const Schema = z.object({ slug: z.string(), stepsChosen: z.array(z.string()) });
+const Schema = z.object({ 
+  slug: z.string(), 
+  stepsChosen: z.array(z.string()), 
+  timeSpentSec: z.number().optional(), 
+  errorCount: z.number().optional(), 
+  mode: z.string().optional() 
+});
 
 export async function POST(req: Request) {
   const user = await getCurrentUser();
@@ -21,7 +27,7 @@ export async function POST(req: Request) {
     return buildLockedResponse('diagnostic_full', 'PRO');
   }
   try {
-    const { slug, stepsChosen } = Schema.parse(await req.json());
+    const { slug, stepsChosen, timeSpentSec, errorCount, mode } = Schema.parse(await req.json());
     const scenario = SCENARIOS.find(s => s.slug === slug);
     if (!scenario) return NextResponse.json({ error: 'Scénario introuvable' }, { status: 404 });
 
@@ -61,11 +67,19 @@ export async function POST(req: Request) {
 
     score = Math.max(0, Math.min(100, score));
 
+    // Pénalités de performance
+    const finalErrorCount = errorCount ?? 0;
+    const finalTime = timeSpentSec ?? 0;
+    score = Math.max(0, score - (finalErrorCount * 5) - (finalTime > 120 ? 10 : 0));
+
     await prisma.diagnosticAttempt.create({
       data: {
         userId: user.id, scenarioId: scenario.slug, score,
         stepsChosen: JSON.stringify(stepsChosen),
         evaluation: JSON.stringify({ good, missed, wrong: wrongChosen }),
+        timeSpentSec: finalTime,
+        errorCount: finalErrorCount,
+        mode: mode || 'standard',
       },
     });
     const xpAwarded = Math.round(score * 0.5);
