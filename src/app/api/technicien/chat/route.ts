@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     const { messages, scenario } = await req.json();
 
     const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.0-flash',
       systemInstruction: `Tu joues le rôle d'un client non-technique qui a un problème avec son PC. 
 Le scénario est : ${JSON.stringify(scenario)}. 
 Tu décris tes symptômes en langage simple, tu réponds aux questions du technicien de façon réaliste. 
