@@ -25,11 +25,18 @@ Tu ne donnes pas la solution directement.
 Quand le technicien a correctement identifié le problème et proposé la bonne solution, tu confirmes que ça a résolu le problème.`,
     });
 
+    const rawHistory = messages.slice(0, -1).map((m: { role: string; content: string }) => ({
+      role: m.role === 'user' ? 'user' : 'model',
+      parts: [{ text: m.content }],
+    }));
+
+    const filteredHistory = rawHistory.filter((m: { role: string; parts: { text: string }[] }, idx: number) => {
+      if (idx === 0) return m.role === 'user';
+      return m.role !== rawHistory[idx - 1].role;
+    });
+
     const chat = model.startChat({
-      history: messages.slice(0, -1).map((m: { role: string; content: string }) => ({
-        role: m.role === 'user' ? 'user' : 'model',
-        parts: [{ text: m.content }],
-      })),
+      history: filteredHistory,
     });
 
     const lastMessage = messages[messages.length - 1].content;
