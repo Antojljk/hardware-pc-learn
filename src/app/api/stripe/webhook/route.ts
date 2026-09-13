@@ -24,6 +24,7 @@ export async function POST(req: Request) {
 
   switch (event.type) {
     case 'checkout.session.completed': {
+      const session = event.data.object as Stripe.Checkout.Session;
       const userId = session.client_reference_id;
       const plan = session.metadata?.plan;
       const stripeCustomerId = typeof session.customer === 'string' ? session.customer : null;
@@ -44,7 +45,24 @@ export async function POST(req: Request) {
 
       break;
     }
+    case 'charge.refunded': {
+      const charge = event.data.object as Stripe.Charge;
+      const stripeCustomerId = charge.customer as string;
+
+      const user = await prisma.user.findUnique({
+        where: { stripeCustomerId },
+      });
+
+      if (user) {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { plan: 'FREE' as any },
+        });
+      }
+      break;
+    }
     case 'customer.subscription.updated':
+
     case 'customer.subscription.deleted': {
       const subscription = event.data.object as Stripe.Subscription;
       const stripeSubscriptionId = subscription.id;
