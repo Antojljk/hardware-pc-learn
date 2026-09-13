@@ -26,7 +26,7 @@ Quand le technicien a correctement identifié le problème et proposé la bonne 
     });
 
     const chat = model.startChat({
-      history: messages.slice(0, -1).map((m: any) => ({
+      history: messages.slice(0, -1).map((m: { role: string; content: string }) => ({
         role: m.role === 'user' ? 'user' : 'model',
         parts: [{ text: m.content }],
       })),
