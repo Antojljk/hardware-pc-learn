@@ -1,43 +1,20 @@
-import { redirect } from 'next/navigation';
+'use client';
+import { useState } from 'react';
 import Link from 'next/link';
-import { getCurrentUser } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
 import { Hammer, ArrowRight, Wrench, AlertTriangle, Activity, Layers, Wrench as Tool } from 'lucide-react';
-import { canAccess } from '@/lib/plans';
-import { LockedState } from '@/components/LockedState';
+import { TechnicienChat } from '@/components/technicien/TechnicienChat';
 
-export const metadata = { title: 'Mode technicien — HardwarePC' };
+export default function TechnicienModePage({ 
+  user, scenarios, difficultyCount 
+}: { 
+  user: any; scenarios: any[]; difficultyCount: any 
+}) {
+  const [selectedScenario, setSelectedScenario] = useState<any | null>(null);
 
-export default async function TechnicienModePage() {
-  const user = await getCurrentUser();
-  if (!user) redirect('/auth');
-
-  // Mode technicien = PRO+.
-  if (!canAccess(user.plan, 'mode_technicien', user.id)) {
-    return (
-      <div className="max-w-3xl mx-auto space-y-4">
-        <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight">Mode technicien</h1>
-        <LockedState
-          feature="Mode technicien"
-          required="PRO"
-          current={user.plan}
-          description="Le mode technicien est réservé à l'offre Pro et supérieures. Diagnostique sans guidage, puis compare ta procédure à la cause racine."
-        />
-      </div>
-    );
-  }
-
-  const scenarios = await prisma.diagnosticScenario.findMany({ orderBy: { difficulty: 'asc' } });
-
-  const difficultyCount = {
-    facile: scenarios.filter(s => s.difficulty.toLowerCase() === 'facile').length,
-    moyen: scenarios.filter(s => s.difficulty.toLowerCase() === 'moyen').length,
-    difficile: scenarios.filter(s => s.difficulty.toLowerCase() === 'difficile').length,
-  };
+  if (!user) return null;
 
   return (
     <div className="space-y-6">
-      {/* HERO */}
       <section className="module-hero">
         <div className="relative flex flex-wrap items-end justify-between gap-6">
           <div className="space-y-3 max-w-2xl">
@@ -83,7 +60,6 @@ export default async function TechnicienModePage() {
         </div>
       </section>
 
-      {/* BANDEAU D'INFO */}
       <section className="info-banner text-sm anim-rise anim-rise-1">
         <Wrench className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
         <span>
@@ -92,7 +68,6 @@ export default async function TechnicienModePage() {
         </span>
       </section>
 
-      {/* LISTE SCÉNARIOS */}
       <section>
         <div className="flex items-center justify-between mb-4">
           <h2 className="section-title flex items-center gap-2">
@@ -105,9 +80,8 @@ export default async function TechnicienModePage() {
             let symptoms: string[] = [];
             try { symptoms = JSON.parse(s.symptoms); } catch { /* ignore */ }
             return (
-              <Link
+              <div
                 key={s.slug}
-                href={`/diagnostic/${s.slug}`}
                 className={`card-depth relative overflow-hidden lift-3d group p-5 sm:p-6 anim-rise anim-rise-${(i % 4) + 1}`}
               >
                 <div
@@ -139,17 +113,39 @@ export default async function TechnicienModePage() {
                     <span className="text-[10px] text-muted uppercase tracking-wider">
                       {symptoms.length} symptôme{symptoms.length > 1 ? 's' : ''}
                     </span>
-                    <span className="inline-flex items-center gap-1.5 text-sm text-text">
-                      Diagnostiquer
-                      <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
-                    </span>
+                    <div className="flex gap-2">
+                      <Link
+                        href={`/diagnostic/${s.slug}`}
+                        className="text-sm text-text hover:underline inline-flex items-center gap-1.5"
+                      >
+                        Diagnostiquer
+                        <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+                      </Link>
+                      <button 
+                        onClick={() => setSelectedScenario(s)}
+                        className="text-sm text-accent hover:underline font-medium"
+                      >
+                        Simulation Client
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </Link>
+              </div>
             );
           })}
         </div>
       </section>
+
+      {selectedScenario && (
+        <TechnicienChat 
+          scenario={selectedScenario} 
+          onClose={() => setSelectedScenario(null)} 
+          onComplete={(score) => {
+            alert(`Diagnostic terminé ! Votre score de performance est de ${score}/100`);
+            setSelectedScenario(null);
+          }} 
+        />
+      )}
     </div>
   );
 }
