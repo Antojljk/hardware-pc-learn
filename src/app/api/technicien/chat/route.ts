@@ -1,11 +1,9 @@
 import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { canAccess } from '@/lib/plans';
-import Anthropic from '@anthropic-ai/sdk';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 export async function POST(req: Request) {
   const user = await getCurrentUser();
@@ -18,18 +16,27 @@ export async function POST(req: Request) {
   try {
     const { messages, scenario } = await req.json();
 
-    const response = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20240620',
-      max_tokens: 1000,
-      system: `Tu joues le rôle d'un client non-technique qui a un problème avec son PC. 
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-1.5-flash',
+      systemInstruction: `Tu joues le rôle d'un client non-technique qui a un problème avec son PC. 
 Le scénario est : ${JSON.stringify(scenario)}. 
 Tu décris tes symptômes en langage simple, tu réponds aux questions du technicien de façon réaliste. 
 Tu ne donnes pas la solution directement. 
 Quand le technicien a correctement identifié le problème et proposé la bonne solution, tu confirmes que ça a résolu le problème.`,
-      messages: messages,
     });
 
-    return NextResponse.json({ text: response.content[0].type === 'text' ? response.content[0].text : '' });
+    const chat = model.startChat({
+      history: messages.slice(0, -1).map((m: any) => ({
+        role: m.role === 'user' ? 'user' : 'model',
+        parts: [{ text: m.content }],
+      })),
+    });
+
+    const lastMessage = messages[messages.length - 1].content;
+    const result = await chat.sendMessage(lastMessage);
+    const response = await result.response;
+    
+    return NextResponse.json({ text: response.text() });
   } catch (e) {
     console.error(e);
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
