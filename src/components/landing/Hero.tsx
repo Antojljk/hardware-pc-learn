@@ -43,15 +43,18 @@ export function Hero() {
 
         {/* Contenu du hero (devant le fond) */}
         <div className="l-s01-content">
-          <div className="l-s01-content-inner">
-            <span className="l-s01-eyebrow">
-              <span className="l-s01-eyebrow-dot" aria-hidden="true" />
-              Plateforme d&apos;apprentissage hardware
-            </span>
+            <div className="l-s01-content-inner">
+              <h1 className="l-s01-title">
+                Comprends enfin <span className="text-white">ton PC.</span>
+              </h1>
+              <div className="text-muted text-sm font-medium mb-6 tracking-wide text-center">
+                12 modules · 4 niveaux · Accès immédiat
+              </div>
 
-            <h1 className="l-s01-title">
-              Comprends enfin <span className="l-s01-title-accent">ton PC.</span>
-            </h1>
+          <div className="text-muted text-sm font-medium mb-6 tracking-wide text-center">
+            12 modules · 4 niveaux · Accès immédiat
+          </div>
+
 
             <p className="l-s01-lede">
               Maîtrise le hardware via des cours interactifs et des outils pro, du niveau

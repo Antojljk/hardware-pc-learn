@@ -1,6 +1,4 @@
 'use client';
-
-import { useState } from 'react';
 import Link from 'next/link';
 
 interface Feature {
@@ -11,7 +9,6 @@ interface Feature {
   alt: string;
   ctaLabel: string;
   ctaHref: string;
-  /** Petit label d'aria pour le dot correspondant. */
   dotLabel: string;
 }
 
@@ -20,8 +17,7 @@ const FEATURES: Feature[] = [
     title: 'Anatomie Système',
     sub: 'Bases du Hardware',
     body: 'Décompose chaque composant : CPU, GPU, RAM. Apprends leur rôle et leur interaction au sein de la machine.',
-    image:
-      'https://images.unsplash.com/photo-1719927604476-dc404b85358f?w=1200&h=1200&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1719927604476-dc404b85358f?w=1200&h=1200&fit=crop&q=80',
     alt: 'Illustration technique d’un processeur moderne',
     ctaLabel: 'Explorer',
     ctaHref: '/cours',
@@ -31,8 +27,7 @@ const FEATURES: Feature[] = [
     title: 'Montage Expert',
     sub: "Guide d'Assemblage",
     body: 'Suis des procédures pas à pas pour monter un PC stable et performant.',
-    image:
-      'https://images.unsplash.com/photo-1555617778-02518510b9fa?w=1200&h=1200&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1555617778-02518510b9fa?w=1200&h=1200&fit=crop&q=80',
     alt: "Vue éclatée d'une carte graphique haute performance",
     ctaLabel: 'Démarrer le montage',
     ctaHref: '/constructeur',
@@ -42,8 +37,7 @@ const FEATURES: Feature[] = [
     title: 'Diagnostic',
     sub: 'Résolution de pannes',
     body: 'Apprends à identifier les codes erreurs, les surchauffes et les instabilités de manière méthodique et rapide.',
-    image:
-      'https://images.unsplash.com/photo-1555618254-84e2cf498b01?w=1200&h=1200&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1555618254-84e2cf498b01?w=1200&h=1200&fit=crop&q=80',
     alt: 'Schéma technique des barrettes de mémoire vive',
     ctaLabel: 'Lancer le debug',
     ctaHref: '/diagnostic',
@@ -53,8 +47,7 @@ const FEATURES: Feature[] = [
     title: 'Build Pro',
     sub: 'Configurateur PC',
     body: 'Simule des configurations avec vérification de compatibilité, calcul de puissance et estimation de performance.',
-    image:
-      'https://images.unsplash.com/photo-1602837385569-08ac19ec83af?w=1200&h=1200&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1602837385569-08ac19ec83af?w=1200&h=1200&fit=crop&q=80',
     alt: "Vue d'ensemble d'une carte mère haut de gamme",
     ctaLabel: "Accéder à l'outil",
     ctaHref: '/constructeur',
@@ -62,16 +55,7 @@ const FEATURES: Feature[] = [
   },
 ];
 
-/**
- * Section 02 — 4 grandes features en cards alternées + dot slider.
- * Client Component : gère l'index actif quand on clique sur un dot.
- * (Visuellement, on n'affiche qu'une card à la fois : on masque les autres
- * pour rester fidèle au design, mais on garde la grille pour le SEO
- * en exposant toutes les cards dans le DOM.)
- */
 export function Features() {
-  const [active, setActive] = useState(0);
-
   return (
     <section
       id="section02"
@@ -80,68 +64,44 @@ export function Features() {
       className="l-section"
     >
       <div className="l-container">
-        <ul className="l-s02-list">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {FEATURES.map((f, i) => (
-            <li
+            <div
               key={f.title}
-              className={
-                'l-s02-card' + (i === active ? ' l-s02-card--active' : '')
-              }
-              hidden={i !== active}
-              aria-hidden={i !== active}
+              className="group relative p-6 rounded-xl border border-white/10 bg-white/5 hover:border-white/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
-              <div className="l-s02-card-inner">
-                <div className="l-s02-text">
-                  <span className="l-s02-kicker">0{i + 1} · {f.dotLabel}</span>
-                  <h2 className="l-m-heading l-s02-title">{f.title}</h2>
-                  <h3 className="l-s02-sub">{f.sub}</h3>
-                  <p className="l-s02-body">{f.body}</p>
-                  <Link href={f.ctaHref} className="l-s02-cta">
-                    {f.ctaLabel}
-                    <svg
-                      className="l-s02-cta-arrow"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      width="14"
-                      height="14"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 12h14M13 5l7 7-7 7" />
-                    </svg>
-                  </Link>
-                </div>
-                <figure className="l-s02-media">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={f.image} alt={f.alt} width={1200} height={1200} />
-                  <div className="l-s02-media-overlay" aria-hidden="true" />
-                </figure>
+              <div className="absolute top-4 left-4 text-4xl font-display font-bold text-white/10 pointer-events-none">
+                {String(i + 1).padStart(2, '0')}
               </div>
-            </li>
+              <div className="relative z-10 space-y-4">
+                <div className="aspect-video overflow-hidden rounded-lg mb-4">
+                  <img src={f.image} alt={f.alt} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                </div>
+                <div>
+                  <h2 className="text-white font-display font-bold text-xl mb-1">{f.title}</h2>
+                  <h3 className="text-cyan-400 text-sm font-medium mb-2">{f.sub}</h3>
+                  <p className="text-muted text-sm leading-relaxed mb-4">{f.body}</p>
+                </div>
+                <Link href={f.ctaHref} className="inline-flex items-center gap-2 text-sm font-medium text-white hover:text-cyan-400 transition-colors">
+                  {f.ctaLabel}
+                  <svg
+                    className="w-4 h-4 transition-transform group-hover:translate-x-1"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M5 12h14M13 5l7 7-7 7" />
+                  </svg>
+                </Link>
+              </div>
+            </div>
           ))}
-        </ul>
-
-        <ol className="l-s02-dots" aria-label="Indicateur slide">
-          {FEATURES.map((f, i) => (
-            <li key={f.dotLabel}>
-              <button
-                type="button"
-                className={
-                  'l-s02-dot' + (i === active ? ' l-s02-dot--active' : '')
-                }
-                aria-label={`Sélection : ${f.dotLabel}`}
-                aria-current={i === active ? 'true' : undefined}
-                onClick={() => setActive(i)}
-              >
-                <span>{i + 1}</span>
-              </button>
-            </li>
-          ))}
-        </ol>
+        </div>
       </div>
     </section>
   );
 }
+
