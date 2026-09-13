@@ -77,25 +77,27 @@ export function Features() {
                 <div className="aspect-video overflow-hidden rounded-lg mb-4">
                   <img src={f.image} alt={f.alt} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                 </div>
-                <div>
+                <div className="text-center">
                   <h2 className="text-white font-display font-bold text-xl mb-1">{f.title}</h2>
                   <h3 className="text-cyan-400 text-sm font-medium mb-2">{f.sub}</h3>
                   <p className="text-muted text-sm leading-relaxed mb-4">{f.body}</p>
                 </div>
-                <Link href={f.ctaHref} className="inline-flex items-center gap-2 text-sm font-medium text-white hover:text-cyan-400 transition-colors">
-                  {f.ctaLabel}
-                  <svg
-                    className="w-4 h-4 transition-transform group-hover:translate-x-1"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M5 12h14M13 5l7 7-7 7" />
-                  </svg>
-                </Link>
+                <div className="flex justify-center">
+                  <Link href={f.ctaHref} className="inline-flex items-center gap-2 text-sm font-medium text-white hover:text-cyan-400 transition-colors">
+                    {f.ctaLabel}
+                    <svg
+                      className="w-4 h-4 transition-transform group-hover:translate-x-1"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M5 12h14M13 5l7 7-7 7" />
+                    </svg>
+                  </Link>
+                </div>
               </div>
             </div>
           ))}
