@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
-import Link from 'next/link';
-import { Hammer, ArrowRight, Wrench, AlertTriangle, Activity, Layers, Wrench as Tool } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Hammer, Wrench, AlertTriangle, Activity, Layers, Wrench as Tool } from 'lucide-react';
 import { TechnicienChat } from '@/components/technicien/TechnicienChat';
 import { DiagnosticScenario } from '@prisma/client';
 
@@ -11,6 +11,26 @@ export function TechnicienModeClient({
   scenarios: DiagnosticScenario[]; difficultyCount: { facile: number; moyen: number; difficile: number } 
 }) {
   const [selectedScenario, setSelectedScenario] = useState<DiagnosticScenario | null>(null);
+  const [showWarning, setShowWarning] = useState(false);
+  const [pendingScenario, setPendingScenario] = useState<DiagnosticScenario | null>(null);
+  const router = useRouter();
+
+  const handleSimulationClick = (s: DiagnosticScenario) => {
+    setPendingScenario(s);
+    setShowWarning(true);
+  };
+
+  const confirmSimulation = () => {
+    setSelectedScenario(pendingScenario);
+    setShowWarning(false);
+    setPendingScenario(null);
+  };
+
+  const cancelSimulation = () => {
+    setShowWarning(false);
+    setPendingScenario(null);
+    router.push('/diagnostic');
+  };
 
   return (
     <div className="space-y-6">
@@ -113,15 +133,8 @@ export function TechnicienModeClient({
                       {symptoms.length} symptôme{symptoms.length > 1 ? 's' : ''}
                     </span>
                     <div className="flex gap-2">
-                      <Link
-                        href={`/diagnostic/${s.slug}`}
-                        className="text-sm text-text hover:underline inline-flex items-center gap-1.5"
-                      >
-                        Diagnostiquer
-                        <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
-                      </Link>
                       <button 
-                        onClick={() => setSelectedScenario(s)}
+                        onClick={() => handleSimulationClick(s)}
                         className="text-sm text-accent hover:underline font-medium"
                       >
                         Simulation Client
@@ -144,6 +157,33 @@ export function TechnicienModeClient({
             setSelectedScenario(null);
           }} 
         />
+      )}
+
+      {showWarning && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg/80 backdrop-blur-sm">
+          <div className="bg-bg-elev border border-border p-6 rounded-3xl max-w-md w-full shadow-2xl space-y-4 text-center animate-in fade-in zoom-in duration-200">
+            <div className="w-12 h-12 bg-accent/20 text-accent rounded-full flex items-center justify-center mx-auto mb-2">
+              <AlertTriangle className="w-6 h-6" />
+            </div>
+            <p className="text-text font-medium leading-relaxed">
+              ⚠️ Ce mode est réservé aux utilisateurs ayant déjà fait quelques diagnostics guidés. Es-tu prêt ?
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+              <button 
+                onClick={cancelSimulation}
+                className="flex-1 px-4 py-2 text-sm font-medium text-muted hover:text-text transition-colors"
+              >
+                Retour aux diagnostics
+              </button>
+              <button 
+                onClick={confirmSimulation}
+                className="flex-1 px-4 py-2 text-sm font-medium bg-accent text-bg rounded-xl hover:bg-accent/90 transition-colors"
+              >
+                Oui, je me lance
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
