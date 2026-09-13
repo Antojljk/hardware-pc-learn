@@ -20,8 +20,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: `Webhook Error: ${err instanceof Error ? err.message : 'Unknown error'}` }, { status: 400 });
   }
 
-  const session = event.data.object as Stripe.Checkout.Session;
-
   switch (event.type) {
     case 'checkout.session.completed': {
       const session = event.data.object as Stripe.Checkout.Session;
@@ -37,7 +35,7 @@ export async function POST(req: Request) {
       await prisma.user.update({
         where: { id: userId },
         data: {
-          plan: plan as any, // eslint-disable-line @typescript-eslint/no-explicit-any
+          plan: plan as 'FREE' | 'ESSENTIEL' | 'PRO' | 'ULTIMATE',
           stripeCustomerId,
           stripeSubscriptionId,
         },
@@ -56,7 +54,7 @@ export async function POST(req: Request) {
       if (user) {
         await prisma.user.update({
           where: { id: user.id },
-          data: { plan: 'FREE' as any },
+          data: { plan: 'FREE' as const },
         });
       }
       break;
@@ -81,7 +79,7 @@ export async function POST(req: Request) {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
         await prisma.user.update({
           where: { id: user.id },
-          data: { plan: newPlan as any }, // eslint-disable-line @typescript-eslint/no-explicit-any
+          data: { plan: newPlan as 'FREE' | 'ESSENTIEL' | 'PRO' | 'ULTIMATE' },
         });
       }
       break;
