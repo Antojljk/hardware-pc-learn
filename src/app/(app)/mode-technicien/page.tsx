@@ -3,13 +3,14 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Hammer, ArrowRight, Wrench, AlertTriangle, Activity, Layers, Wrench as Tool } from 'lucide-react';
 import { TechnicienChat } from '@/components/technicien/TechnicienChat';
+import { User, DiagnosticScenario } from '@prisma/client';
 
 export default function TechnicienModePage({ 
   user, scenarios, difficultyCount 
 }: { 
-  user: any; scenarios: any[]; difficultyCount: any 
+  user: User; scenarios: DiagnosticScenario[]; difficultyCount: { facile: number; moyen: number; difficile: number } 
 }) {
-  const [selectedScenario, setSelectedScenario] = useState<any | null>(null);
+  const [selectedScenario, setSelectedScenario] = useState<DiagnosticScenario | null>(null);
 
   if (!user) return null;
 

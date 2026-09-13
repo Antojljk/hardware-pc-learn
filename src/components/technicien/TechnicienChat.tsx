@@ -1,7 +1,8 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { Send, User, Wrench, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { useState } from 'react';
+import { Send, Clock, CheckCircle, XCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { DiagnosticScenario } from '@prisma/client';
 
 type Message = { role: 'user' | 'assistant'; content: string };
 
@@ -10,7 +11,7 @@ export function TechnicienChat({
   onClose, 
   onComplete 
 }: { 
-  scenario: any; 
+  scenario: DiagnosticScenario; 
   onClose: () => void; 
   onComplete: (score: number) => void 
 }) {
@@ -59,7 +60,8 @@ export function TechnicienChat({
           scenario 
         }),
       });
-      const data = await res.json();
+      await res.json();
+
       
       // Calcul score basé sur le temps
       const timeSpent = Math.floor((Date.now() - startTime) / 1000);
