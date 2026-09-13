@@ -1,16 +1,10 @@
 import Link from 'next/link';
-import { ParallaxHero } from './ParallaxHero';
-import { HeroVisual } from './HeroVisual';
 
 /**
  * Section 01 — Hero plein écran premium.
- * - Image retirée, remplacée par un fond CSS 3D (grille perspective + halos)
- * - Pill d'eyebrow animée (statut "live")
- * - Titre avec mot accentué
- * - Lede, double CTA avec micro-relief au survol
- * - Effets 3D : perspective + translateZ (contenu en avant, grille en arrière)
- * - Parallaxe très subtile au scroll (ParallaxHero, client)
- * - Halo lumineux qui suit doucement le curseur (HeroVisual, client)
+ * - Fond 3D CSS (grille perspective + halos)
+ * - Titre clean blanc
+ * - Lede, double CTA
  * - Lignes de scan très subtiles pour le côté tech
  */
 export function Hero() {
@@ -35,27 +29,18 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Halo lumineux qui suit le curseur (3D subtil) */}
-        <HeroVisual />
-
         {/* Vignette douce par-dessus le fond */}
         <div className="l-s01-media-vignette" aria-hidden="true" />
 
         {/* Contenu du hero (devant le fond) */}
         <div className="l-s01-content">
-            <div className="l-s01-content-inner">
-              <h1 className="l-s01-title">
-                Comprends enfin <span className="text-white">ton PC.</span>
-              </h1>
-              <div className="text-muted text-sm font-medium mb-6 tracking-wide text-center">
-                12 modules · 4 niveaux · Accès immédiat
-              </div>
-
-          <div className="text-muted text-sm font-medium mb-6 tracking-wide text-center">
-            12 modules · 4 niveaux · Accès immédiat
-          </div>
-
-
+          <div className="l-s01-content-inner">
+            <h1 className="l-s01-title">
+              Comprends enfin <span className="text-white">ton PC.</span>
+            </h1>
+            <div className="text-muted text-sm font-medium mb-6 tracking-wide text-center">
+              12 modules · 4 niveaux · Accès immédiat
+            </div>
             <p className="l-s01-lede">
               Maîtrise le hardware via des cours interactifs et des outils pro, du niveau
               débutant jusqu&apos;à l&apos;expertise technique.
@@ -101,8 +86,6 @@ export function Hero() {
             </ul>
           </div>
         </div>
-
-        <ParallaxHero />
 
         {/* Lignes de scan très subtiles pour le côté tech */}
         <div className="l-s01-scanlines" aria-hidden="true" />
