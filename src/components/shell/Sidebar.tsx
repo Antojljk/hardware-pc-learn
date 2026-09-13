@@ -10,7 +10,7 @@ import {
 import { useSession } from './SessionProvider';
 
 const ITEMS = [
-  { href: '/vente',       label: 'Vente',            icon: ShoppingBag },
+  { href: '/offres',       label: 'Offres',            icon: ShoppingBag },
   { href: '/dashboard',   label: 'Dashboard',        icon: LayoutDashboard },
   { href: '/cours',       label: 'Cours',            icon: BookOpen },
   { href: '/parcours',    label: 'Parcours',         icon: Compass },

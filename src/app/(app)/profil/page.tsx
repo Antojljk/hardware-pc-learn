@@ -345,7 +345,7 @@ export default async function ProfilePage() {
             Modifier mon profil
             <ChevronRight className="w-4 h-4" />
           </Link>
-          <Link href="/tarifs" className="btn-outline">
+          <Link href="/offres" className="btn-outline">
             Gérer mon offre
             <ChevronRight className="w-4 h-4" />
           </Link>

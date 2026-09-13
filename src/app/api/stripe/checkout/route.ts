@@ -49,7 +49,7 @@ export async function POST(req: Request) {
       line_items: [{ price: priceId, quantity: 1 }],
       mode: 'subscription',
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/parametres?session_success=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/tarifs`,
+       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/offres`,
       client_reference_id: user.id,
       metadata: { plan },
     });

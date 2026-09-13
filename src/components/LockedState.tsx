@@ -18,7 +18,7 @@ type Props = {
   description?: string;
 };
 
-export function LockedState({ feature, required, current, upgradeHref = '/vente', description }: Props) {
+export function LockedState({ feature, required, current, upgradeHref = '/offres', description }: Props) {
   return (
     <section className="module-frame anim-rise">
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">

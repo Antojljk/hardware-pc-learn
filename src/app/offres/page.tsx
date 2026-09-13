@@ -29,7 +29,7 @@ import SubscriptionButton from './SubscriptionButton';
 
 
 // ---------------------------------------------------------------------------
-// Page de vente HardwarePC — `/vente`
+// Page des offres HardwarePC — `/offres`
 //
 // Cette page est un point d'entrée commercial public (non authentifié).
 // Elle réutilise l'identité visuelle déjà en place (palette dark + accent
@@ -37,20 +37,20 @@ import SubscriptionButton from './SubscriptionButton';
 // globals.css et la tailwind.config.ts).
 //
 // IMPORTANT : aucun paiement réel n'est déclenché ici. Tous les CTA
-// pointent vers `/auth` (inscription) ou `/tarifs` (comparaison des
+// pointent vers `/auth` (inscription) ou `/offres` (comparaison des
 // offres). Les promesses sont volontairement alignées sur ce qui
-// existe déjà dans l'application (voir /tarifs).
+// existe déjà dans l'application (voir /offres).
 // ---------------------------------------------------------------------------
 
 const SITE_URL = 'https://hardware-pc-learn-3zmsiaq0x-antoine-drutel.vercel.app';
-const PAGE_URL = `${SITE_URL}/vente`;
+const PAGE_URL = `${SITE_URL}/offres`;
 
 export const metadata: Metadata = {
   title: 'Deviens technicien PC — Formation hardware, montage & diagnostic',
   description:
     "Apprends le hardware, le montage, le diagnostic et les compétences indispensables pour construire, dépanner et comprendre un PC comme un professionnel. Cours, parcours, quiz, examens, tuteur IA et outils interactifs.",
   alternates: {
-    canonical: '/vente',
+        canonical: '/offres',
   },
   openGraph: {
     type: 'website',
@@ -370,7 +370,7 @@ export default function VentePage() {
               Commencer gratuitement
               <ArrowRight className="w-4 h-4" />
             </Link>
-            <Link href="/tarifs" className="btn-outline">
+            <Link href="/offres" className="btn-outline">
               Voir les offres
             </Link>
           </div>
@@ -511,7 +511,7 @@ export default function VentePage() {
                 ))}
               </ul>
               <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-                <Link href="/tarifs" className="btn-primary">
+                <Link href="/offres" className="btn-primary">
                   Voir les offres
                 </Link>
                 <Link href="/tuteur" className="btn-outline">
@@ -538,7 +538,7 @@ export default function VentePage() {
                 <div className="hair-rule" />
                 <p className="text-xs text-muted">
                   Disponible selon ton offre · voir{' '}
-                  <Link href="/tarifs" className="text-accent">
+                  <Link href="/offres" className="text-accent">
                     les détails
                   </Link>
                   .
@@ -601,7 +601,7 @@ export default function VentePage() {
         </section>
 
         {/* ============================================================
-            8. TARIFS (présentation courte, renvoie vers /tarifs)
+            8. OFFRES (présentation courte, renvoie vers /offres)
             ============================================================ */}
         <section aria-labelledby="pricing-title">
           <SectionHeader
@@ -724,7 +724,7 @@ export default function VentePage() {
               Commencer gratuitement
               <ArrowRight className="w-4 h-4" />
             </Link>
-            <Link href="/tarifs" className="btn-outline">
+            <Link href="/offres" className="btn-outline">
               Voir les offres
             </Link>
           </div>

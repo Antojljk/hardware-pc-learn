@@ -258,7 +258,7 @@ export default function FormsClient({ user }: { user: User }) {
                <span className="badge-accent">{planLabel(user.plan)}</span>
              </div>
              <p className="text-sm text-muted">
-               Pour changer d&apos;offre, rendez-vous sur la page des <Link href="/vente" className="text-text underline">tarifs</Link>.
+                Pour changer d&apos;offre, rendez-vous sur la page des <Link href="/offres" className="text-text underline">tarifs</Link>.
              </p>
            </div>
 

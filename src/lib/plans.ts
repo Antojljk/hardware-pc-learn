@@ -11,7 +11,7 @@
 //
 // À l'étape 6 (cette livraison) : aucune passerelle de paiement réelle
 // n'est branchée. L'utilisateur peut sélectionner une offre depuis la
-// page /tarifs — son plan est simplement mis à jour en base. L'étape 8
+// page /offres — son plan est simplement mis à jour en base. L'étape 8
 // ajoutera Stripe (ou équivalent) et des champs de facturation.
 //
 // Les "features" sont des identifiants fonctionnels (ex. "interviews",
@@ -63,7 +63,7 @@ export type PlanDef = {
 };
 
 /**
- * Définition unique des quatre offres. Toute l'UI (page /tarifs,
+  * Définition unique des quatre offres. Toute l'UI (page /offres,
  * restrictions d'accès, badges de plan) lit cette structure.
  */
 export const PLANS: readonly PlanDef[] = [
