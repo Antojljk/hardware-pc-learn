@@ -7,7 +7,6 @@ export { Hero } from './Hero';
 export { HeroVisual } from './HeroVisual';
 export { ParallaxHero } from './ParallaxHero';
 export { Features } from './Features';
-export { Devices } from './Devices';
 export { Stats } from './Stats';
 export { PricingCTA } from './PricingCTA';
 export { Footer } from './Footer';
