@@ -57,7 +57,7 @@ export function PricingCTA() {
           </p>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 justify-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 mx-auto w-full">
           {PLANS.map((plan) => (
             <div
               key={plan.name}
