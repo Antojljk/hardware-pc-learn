@@ -120,7 +120,7 @@ export function PricingCTA() {
               <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 32px 0', flex: 1 }}>
                 {plan.features.map((f) => (
                   <li key={f} style={{ display: 'flex', alignItems: 'start', gap: '12px', fontSize: '14px', color: '#9ca3af', marginBottom: '12px' }}>
-                    <Check style={{ width: '16px', height: '16px', color: '#22d3ee', marginTop: '2px', shrink: 0 }} />
+                    <Check style={{ width: '16px', height: '16px', color: '#22d3ee', marginTop: '2px', flexShrink: 0 }} />
                     <span>{f}</span>
                   </li>
                 ))}
