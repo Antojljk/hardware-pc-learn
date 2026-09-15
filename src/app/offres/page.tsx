@@ -185,7 +185,7 @@ const PRACTICE = [
   {
     icon: Target,
     title: 'Mode technicien & mode client',
-    body: 'Deux angles pour comprendre la relation client et la posture pro.',
+    body: 'Réservé à l\'offre Ultimate : deux angles pour comprendre la relation client et la posture pro.',
   },
 ];
 
@@ -326,7 +326,7 @@ const FAQS = [
   },
   {
     q: 'Quelle est la différence entre les abonnements ?',
-    a: "L'offre FREE permet de découvrir. ESSENTIEL débloque les cours et parcours étendus. PRO ajoute examens, entretiens, modes technicien/client et un Tuteur IA plus généreux. ULTIMATE va encore plus loin avec diagnostic, monitoring et révisions avancés.",
+    a: "L'offre FREE permet de découvrir. ESSENTIEL débloque les cours et parcours étendus. PRO ajoute examens, entretiens et un Tuteur IA plus généreux. ULTIMATE va encore plus loin avec le Mode Client, le Mode Technicien, le diagnostic, le monitoring et les révisions avancés.",
   },
   {
     q: 'Puis-je suivre ma progression ?',
@@ -365,15 +365,15 @@ export default function VentePage() {
             indispensables pour construire, dépanner et comprendre un PC comme
             un professionnel.
           </p>
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Link href="/auth" className="btn-primary">
-              Commencer gratuitement
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link href="/offres" className="btn-outline">
-              Voir les offres
-            </Link>
-          </div>
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+              <Link href="/auth" className="btn-primary">
+                Commencer gratuitement
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link href="/auth" className="btn-outline">
+                Commencer
+              </Link>
+            </div>
           <p className="mt-4 text-xs text-muted">
             Aucune carte bancaire requise pour commencer.
           </p>
@@ -510,14 +510,14 @@ export default function VentePage() {
                   </li>
                 ))}
               </ul>
-              <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-                <Link href="/offres" className="btn-primary">
-                  Voir les offres
-                </Link>
-                <Link href="/tuteur" className="btn-outline">
-                  Découvrir le Tuteur IA
-                </Link>
-              </div>
+                <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+                  <Link href="/auth" className="btn-primary">
+                    Commencer
+                  </Link>
+                  <Link href="/tuteur" className="btn-outline">
+                    Découvrir le Tuteur IA
+                  </Link>
+                </div>
             </div>
             <div className="mt-8 lg:mt-0 flex-1 hidden lg:block">
               <div className="card p-5 text-left space-y-3 max-w-md mx-auto">
@@ -595,6 +595,29 @@ export default function VentePage() {
                   {p.title}
                 </h3>
                 <p className="text-muted text-sm leading-relaxed">{p.body}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ============================================================
+            7b. APERÇU DE LA PLATEFORME
+            ============================================================ */}
+        <section aria-labelledby="preview-title">
+          <SectionHeader
+            eyebrow="Immersion"
+            title="Aperçu de la plateforme"
+            id="preview-title"
+            description="Une interface moderne, sombre et intuitive pour un apprentissage sans distraction."
+          />
+          <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              'https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1200&h=800&fit=crop&q=80',
+              'https://images.unsplash.com/photo-1618477388954-7852f32655ec?w=1200&h=800&fit=crop&q=80',
+              'https://images.unsplash.com/photo-1555099962-4199c345e5dd?w=1200&h=800&fit=crop&q=80',
+            ].map((url, i) => (
+              <div key={i} className="aspect-video rounded-2xl overflow-hidden border border-border bg-bg-elev shadow-xl">
+                <img src={url} alt={`Aperçu plateforme ${i + 1}`} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
               </div>
             ))}
           </div>
@@ -719,15 +742,15 @@ export default function VentePage() {
             Commence gratuitement et construis progressivement tes compétences
             en hardware et en informatique.
           </p>
-          <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/auth" className="btn-primary">
-              Commencer gratuitement
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link href="/offres" className="btn-outline">
-              Voir les offres
-            </Link>
-          </div>
+           <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+             <Link href="/auth" className="btn-primary">
+               Commencer gratuitement
+               <ArrowRight className="w-4 h-4" />
+             </Link>
+             <Link href="/auth" className="btn-outline">
+               Commencer
+             </Link>
+           </div>
         </section>
       </main>
     </div>
