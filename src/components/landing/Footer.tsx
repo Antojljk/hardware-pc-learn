@@ -38,6 +38,7 @@ const COL_SOCIETE = [
   { label: 'Études', href: '#' },
   { label: 'Carrière', href: '#' },
   { label: 'Partenariats', href: '#' },
+  { label: 'Contact', href: '/contact' },
   { label: 'Mentions Légales', href: '/mentions-legales' },
   { label: 'Confidentialité', href: '/confidentialite' },
   { label: 'Cookies', href: '/cookies' },

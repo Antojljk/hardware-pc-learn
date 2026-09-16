@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { CookieConsent } from '@/components/CookieConsent';
+import Script from 'next/script';
 
 // Polices alignées sur l'AccueilHardwarePC de référence : Inter (display + body)
 const inter = Inter({
@@ -58,11 +59,30 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const gaId = process.env.NEXT_PUBLIC_GA_ID;
+
   return (
     <html lang="fr" className={inter.variable} style={{ ['--font-body' as string]: `var(${inter.variable})` }}>
       <body className="relative">
         {children}
         <CookieConsent />
+        {gaId && (
+          <>
+            <Script
+              async
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${gaId}');
+              `}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   );
