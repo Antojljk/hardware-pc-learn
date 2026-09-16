@@ -4,7 +4,7 @@ export default function MentionsLegales() {
       <h1 className="text-3xl font-display font-semibold">Mentions Légales</h1>
       <section className="space-y-4">
         <h2 className="text-xl font-semibold text-accent">Éditeur</h2>
-        <p>Le site HardwarePC est édité par : [NOM_EDITEUR], situé à [ADRESSE].<br />Contact : [EMAIL_CONTACT]</p>
+        <p>Le site HardwarePC est édité par : Drutel Antoine, situé à 14 impasse des bastides, 69210 Saint-Pierre-la-Palud.<br />Contact : antoine.drutel@gmail.com</p>
       </section>
       <section className="space-y-4">
         <h2 className="text-xl font-semibold text-accent">Hébergement</h2>

@@ -12,7 +12,7 @@ export default function Confidentialite() {
       </section>
       <section className="space-y-4">
         <h2 className="text-xl font-semibold text-accent">Vos Droits (RGPD)</h2>
-        <p>Conformément au RGPD, vous disposez d&apos;un droit d&apos;accès, de rectification et de suppression de vos données. Pour exercer ces droits, contactez : [EMAIL_CONTACT].</p>
+        <p>Conformément au RGPD, vous disposez d&apos;un droit d&apos;accès, de rectification et de suppression de vos données. Pour exercer ces droits, contactez : antoine.drutel@gmail.com.</p>
       </section>
     </div>
   );

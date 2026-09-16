@@ -8,7 +8,7 @@ export default function Remboursement() {
       </section>
       <section className="space-y-4">
         <h2 className="text-xl font-semibold text-accent">Procédure</h2>
-        <p>Pour demander un remboursement, veuillez envoyer un email à [EMAIL_CONTACT] en précisant votre adresse email de compte et le numéro de commande Stripe.</p>
+        <p>Pour demander un remboursement, veuillez envoyer un email à antoine.drutel@gmail.com en précisant votre adresse email de compte et le numéro de commande Stripe.</p>
       </section>
       <section className="space-y-4">
         <h2 className="text-xl font-semibold text-accent">Conditions</h2>
