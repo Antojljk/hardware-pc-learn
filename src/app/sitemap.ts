@@ -22,6 +22,10 @@ const PUBLIC_ROUTES = [
   { path: '/base-connaissances/storage', priority: 0.9, changeFrequency: 'weekly' as const },
   { path: '/base-connaissances/reseau', priority: 0.9, changeFrequency: 'weekly' as const },
   { path: '/base-connaissances/depannage', priority: 0.9, changeFrequency: 'weekly' as const },
+  { path: '/mentions-legales', priority: 0.3, changeFrequency: 'monthly' as const },
+  { path: '/confidentialite', priority: 0.3, changeFrequency: 'monthly' as const },
+  { path: '/cookies', priority: 0.3, changeFrequency: 'monthly' as const },
+  { path: '/remboursement', priority: 0.3, changeFrequency: 'monthly' as const },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

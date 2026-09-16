@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import { CookieConsent } from '@/components/CookieConsent';
 
 // Polices alignées sur l'AccueilHardwarePC de référence : Inter (display + body)
 const inter = Inter({
@@ -59,7 +60,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr" className={inter.variable} style={{ ['--font-body' as string]: `var(${inter.variable})` }}>
-      <body>{children}</body>
+      <body className="relative">
+        {children}
+        <CookieConsent />
+      </body>
     </html>
   );
 }
