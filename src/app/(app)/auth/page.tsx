@@ -8,13 +8,13 @@ export default function AuthPage() {
       <header className="border-b border-border bg-bg">
         <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link href="/" className="font-display font-bold text-lg tracking-tight text-text">
-            HardPC
+            HardwarePC
           </Link>
           <Link
-            href="/"
+            href="/offres"
             className="text-sm text-muted hover:text-text transition-colors"
           >
-            ← Retour à l&apos;accueil
+            Offres
           </Link>
         </div>
       </header>

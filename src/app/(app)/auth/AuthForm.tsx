@@ -78,8 +78,7 @@ export function AuthForm() {
         <button className="btn-primary w-full" disabled={loading}>{loading ? '…' : mode === 'register' ? 'Créer mon compte' : 'Se connecter'}</button>
       </form>
       <div className="relative my-2"><div className="absolute inset-0 flex items-center"><div className="w-full border-t border-border" /></div><div className="relative flex justify-center"><span className="bg-bg-soft px-2 text-xs text-muted">ou</span></div></div>
-      <button onClick={guest} disabled={loading} className="btn-outline w-full">Continuer en invité</button>
-      <p className="text-xs text-muted text-center">Tes données restent locales. Aucune information envoyée à un serveur externe.</p>
-    </div>
+       <button onClick={guest} disabled={loading} className="btn-outline w-full">Continuer en invité</button>
+     </div>
   );
 }

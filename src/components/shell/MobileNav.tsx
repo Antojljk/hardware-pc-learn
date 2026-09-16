@@ -12,10 +12,10 @@ const ITEMS = [
   { href: '/dashboard',    label: 'Accueil',  icon: LayoutDashboard },
   { href: '/cours',        label: 'Cours',    icon: BookOpen },
   { href: '/quiz',         label: 'Quiz',     icon: Brain },
-  { href: '/diagnostic',   label: 'Diag',     icon: Stethoscope },
+  { href: '/diagnostic',   label: 'Diagnostic', icon: Stethoscope },
   { href: '/constructeur', label: 'Build',    icon: PcCase },
-  { href: '/glossaire',    label: 'Gloss.',   icon: Library },
-  { href: '/entretiens',   label: 'Inter.',   icon: MessageSquareQuote },
+  { href: '/glossaire',    label: 'Glossaire',   icon: Library },
+  { href: '/entretiens',   label: 'Entretiens',   icon: MessageSquareQuote },
   { href: '/avis',         label: 'Avis',     icon: Star },
 ];
 
