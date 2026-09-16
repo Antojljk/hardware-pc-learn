@@ -20,6 +20,7 @@ import {
   Award,
   Target,
   TrendingUp,
+  Trophy,
   GraduationCap as GraduationCapIcon,
   Wrench as WrenchIcon,
   Briefcase as BriefcaseIcon,
@@ -601,23 +602,30 @@ export default function VentePage() {
         </section>
 
         {/* ============================================================
-            7b. APERÇU DE LA PLATEFORME
+            7b. PRÉSENTATION DES MODULES
             ============================================================ */}
         <section aria-labelledby="preview-title">
           <SectionHeader
             eyebrow="Immersion"
-            title="Aperçu de la plateforme"
+            title="Découvre nos modules"
             id="preview-title"
-            description="Une interface moderne, sombre et intuitive pour un apprentissage sans distraction."
+            description="Une approche complète et interactive pour maîtriser chaque aspect du hardware."
           />
-          <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              'https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1200&h=800&fit=crop&q=80',
-              'https://images.unsplash.com/photo-1618477388954-7852f32655ec?w=1200&h=800&fit=crop&q=80',
-              'https://images.unsplash.com/photo-1555099962-4199c345e5dd?w=1200&h=800&fit=crop&q=80',
-            ].map((url, i) => (
-              <div key={i} className="aspect-video rounded-2xl overflow-hidden border border-border bg-bg-elev shadow-xl">
-                <img src={url} alt={`Aperçu plateforme ${i + 1}`} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+              { icon: BookOpen, title: 'Cours', body: 'Des cours clairs sur chaque composant' },
+              { icon: Trophy, title: 'Quiz & Examens', body: 'Teste tes connaissances en conditions réelles' },
+              { icon: Wrench, title: 'Diagnostic PC', body: 'Apprends à identifier et résoudre les pannes' },
+              { icon: Cpu, title: 'Constructeur PC', body: 'Configure et vérifie la compatibilité de ta build' },
+            ].map(({ icon: Icon, title, body }) => (
+              <div key={title} className="card p-5 space-y-3 bg-bg-elev/50">
+                <div className="w-10 h-10 rounded-xl grid place-items-center bg-bg-elev border border-border text-cyan-400">
+                  <Icon className="w-5 h-5" />
+                </div>
+                <h3 className="font-display text-lg font-semibold text-text">
+                  {title}
+                </h3>
+                <p className="text-muted text-sm leading-relaxed">{body}</p>
               </div>
             ))}
           </div>
