@@ -1,24 +1,17 @@
 import { NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { name, email, subject, message } = body;
 
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.CONTACT_EMAIL,
-        pass: process.env.CONTACT_EMAIL_PASSWORD,
-      },
-    });
-
-    await transporter.sendMail({
-      from: email,
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    await resend.emails.send({
+      from: 'onboarding@resend.dev',
       to: 'antoine.drutel@gmail.com',
-      subject: `Contact HardwarePC: ${subject}`,
-      text: `Nom: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+      subject: `[HardwarePC Contact] ${subject}`,
+      html: `<p><strong>De :</strong> ${name} (${email})</p><p><strong>Message :</strong> ${message}</p>`
     });
 
     return NextResponse.json({ message: 'Sent' }, { status: 200 });
