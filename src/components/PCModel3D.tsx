@@ -14,7 +14,7 @@ export default function PCModel3D() {
     <div style={{ width: '100%', height: '100%', minHeight: '400px' }}>
       <Canvas shadows camera={{ position: [0, 0, 5], fov: 50 }} gl={{ alpha: true }}>
         <Suspense fallback={null}>
-          <Stage environment="city" intensity={0.6} contactShadow={false}>
+          <Stage environment="city" intensity={0.6}>
             <Model />
           </Stage>
         </Suspense>

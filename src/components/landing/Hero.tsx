@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import PCModel3D from '@/components/PCModel3D';
 
@@ -12,18 +12,6 @@ import PCModel3D from '@/components/PCModel3D';
  * - Lignes de scan très subtiles pour le côté tech
  */
 export function Hero() {
-  const [scrollProgress, setScrollProgress] = React.useState(0);
-
-  React.useEffect(() => {
-    const handleScroll = () => {
-      const scrolled = window.scrollY;
-      const maxScroll = window.innerHeight;
-      setScrollProgress(Math.min(scrolled / maxScroll, 1));
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   return (
     <section
