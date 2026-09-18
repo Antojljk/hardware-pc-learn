@@ -1,4 +1,8 @@
+'use client'
+
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import PCModel3D from '@/components/PCModel3D';
 
 /**
  * Section 01 — Hero plein écran premium.
@@ -8,6 +12,19 @@ import Link from 'next/link';
  * - Lignes de scan très subtiles pour le côté tech
  */
 export function Hero() {
+  const [scrollProgress, setScrollProgress] = React.useState(0);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      const scrolled = window.scrollY;
+      const maxScroll = window.innerHeight;
+      setScrollProgress(Math.min(scrolled / maxScroll, 1));
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <section
       id="section01"
@@ -84,6 +101,20 @@ export function Hero() {
                 <span className="l-s01-meta-label">accès aux outils</span>
               </li>
             </ul>
+          </div>
+
+          {/* Modèle 3D intégré comme visuel principal */}
+          <div style={{ 
+            position: 'absolute', 
+            top: '50%', 
+            left: '50%', 
+            transform: 'translate(-50%, -50%)', 
+            width: '100%', 
+            height: '100%', 
+            zIndex: -1,
+            pointerEvents: 'none' 
+          }}>
+            <PCModel3D />
           </div>
         </div>
 
