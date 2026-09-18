@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import PCModel3D from '@/components/PCModel3D';
 
 /**
  * Section 01 — Hero plein écran premium.
@@ -89,26 +88,12 @@ export function Hero() {
                 <span className="l-s01-meta-label">accès aux outils</span>
               </li>
             </ul>
-          </div>
+            </div>
 
-          {/* Modèle 3D intégré comme visuel principal */}
-          <div style={{ 
-            position: 'absolute', 
-            top: '50%', 
-            left: '50%', 
-            transform: 'translate(-50%, -50%)', 
-            width: '100%', 
-            height: '100%', 
-            zIndex: -1,
-            pointerEvents: 'none' 
-          }}>
-            <PCModel3D />
+            {/* Lignes de scan très subtiles pour le côté tech */}
+            <div className="l-s01-scanlines" aria-hidden="true" />
           </div>
         </div>
-
-        {/* Lignes de scan très subtiles pour le côté tech */}
-        <div className="l-s01-scanlines" aria-hidden="true" />
-      </div>
-    </section>
-  );
+      </section>
+    );
 }
