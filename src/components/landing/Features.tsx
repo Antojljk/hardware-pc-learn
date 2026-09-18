@@ -1,4 +1,5 @@
 'use client';
+import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 
 interface Feature {
@@ -56,6 +57,28 @@ const FEATURES: Feature[] = [
 ];
 
 export function Features() {
+  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    cardsRef.current.forEach((card) => {
+      if (card) observer.observe(card);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section
       id="section02"
@@ -68,6 +91,12 @@ export function Features() {
           {FEATURES.map((f, i) => (
             <div
               key={f.title}
+              ref={(el) => { cardsRef.current[i] = el; }}
+              style={{ 
+                opacity: 0, 
+                transform: 'translateY(20px)', 
+                transition: `all 0.5s ease ${i * 100}ms` 
+              }}
               className="group relative p-6 rounded-xl border border-white/10 bg-white/5 hover:border-white/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
               <div className="absolute top-4 left-4 text-4xl font-display font-bold text-white/10 pointer-events-none">
@@ -84,19 +113,19 @@ export function Features() {
                 </div>
                 <div className="flex justify-center">
                   <Link href={f.ctaHref} className="inline-flex items-center gap-2 text-sm font-medium text-white hover:text-cyan-400 transition-colors">
-                    {f.ctaLabel}
-                    <svg
-                      className="w-4 h-4 transition-transform group-hover:translate-x-1"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M5 12h14M13 5l7 7-7 7" />
-                    </svg>
-                  </Link>
+                      {f.ctaLabel}
+                      <svg
+                        className="w-4 h-4 transition-transform group-hover:translate-x-1"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M5 12h14M13 5l7 7-7 7" />
+                      </svg>
+                    </Link>
                 </div>
               </div>
             </div>
@@ -106,4 +135,5 @@ export function Features() {
     </section>
   );
 }
+
 

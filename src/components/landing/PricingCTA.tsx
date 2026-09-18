@@ -68,10 +68,9 @@ export function PricingCTA() {
           }}>
             Deviens un véritable technicien PC.
           </h2>
-          <p style={{ color: '#9ca3af', maxWidth: '672px', margin: '0 auto' }}>
-            Hardware PC Learn t&apos;accompagne pas à pas : apprentissage du hardware,
-            montage, diagnostic et compétences avancées.
-          </p>
+           <p style={{ color: '#9ca3af', maxWidth: '672px', margin: '0 auto' }}>
+             Apprends à ton rythme. Progresse jusqu&apos;au niveau technicien.
+           </p>
         </header>
 
         <div style={{ 

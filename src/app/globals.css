@@ -37,7 +37,10 @@
     --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
 
-  html { color-scheme: dark; }
+  html { 
+    color-scheme: dark; 
+    scroll-behavior: smooth;
+  }
 
   body {
     background-color: var(--color-bg);

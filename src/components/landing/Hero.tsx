@@ -45,10 +45,9 @@ export function Hero() {
             <div className="text-muted text-sm font-medium mb-6 tracking-wide text-center">
               12 modules · 4 niveaux · Accès immédiat
             </div>
-            <p className="l-s01-lede">
-              Maîtrise le hardware via des cours interactifs et des outils pro, du niveau
-              débutant jusqu&apos;à l&apos;expertise technique.
-            </p>
+             <p className="l-s01-lede animate-fade-in">
+               Des cours clairs, des outils concrets. Du débutant au niveau technicien.
+             </p>
 
             <div className="l-s01-actions">
               <Link href="/auth" className="l-m-btn l-s01-cta-primary">
