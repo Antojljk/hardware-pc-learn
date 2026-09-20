@@ -1,8 +1,7 @@
 'use client'
 
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { Timeline } from 'animejs';
 
 /**
  * Section 01 — Hero plein écran premium.
@@ -12,31 +11,6 @@ import { Timeline } from 'animejs';
  * - Lignes de scan très subtiles pour le côté tech
  */
 export function Hero() {
-  const titleRef = useRef<HTMLHeadingElement>(null);
-
-  useEffect(() => {
-    if (titleRef.current) {
-      const title = titleRef.current;
-      const text = title.innerText;
-      const words = text.split(' ');
-      
-      title.innerHTML = words
-        .map(word => `<span class="inline-block opacity-0 translate-y-[30px]">${word} </span>`)
-        .join('');
-
-      new Timeline({
-        easing: 'easeOutExpo',
-      })
-      .add({
-        targets: '.l-s01-title span',
-        opacity: [0, 1],
-        translateY: [30, 0],
-        delay: stagger(80),
-        duration: 800,
-      });
-    }
-  }, []);
-
   return (
     <section
       id="section01"
@@ -64,7 +38,7 @@ export function Hero() {
         {/* Contenu du hero (devant le fond) */}
         <div className="l-s01-content">
           <div className="l-s01-content-inner">
-            <h1 ref={titleRef} className="l-s01-title">
+            <h1 className="l-s01-title hero-title-animate">
               Comprends enfin <span className="text-white">ton PC.</span>
             </h1>
             <div className="text-muted text-sm font-medium mb-6 tracking-wide text-center">
