@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { animate, Timeline, stagger } from 'animejs';
+import { Timeline, stagger } from 'animejs';
 
 /**
  * Section 01 — Hero plein écran premium.
