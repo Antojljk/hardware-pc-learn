@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
-import * as anime from 'animejs';
+import { animate, Timeline, stagger } from 'animejs';
 
 /**
  * Section 01 — Hero plein écran premium.
@@ -24,14 +24,14 @@ export function Hero() {
         .map(word => `<span class="inline-block opacity-0 translate-y-[30px]">${word} </span>`)
         .join('');
 
-      anime.timeline({
+      new Timeline({
         easing: 'easeOutExpo',
       })
       .add({
         targets: '.l-s01-title span',
         opacity: [0, 1],
         translateY: [30, 0],
-        delay: anime.stagger(80),
+        delay: stagger(80),
         duration: 800,
       });
     }
