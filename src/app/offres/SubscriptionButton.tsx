@@ -30,11 +30,14 @@ export default function SubscriptionButton({ plan }: { plan: { name: string; hre
 
   return (
     <div className="flex flex-col gap-3 w-full">
-      <button onClick={handleSubscription} className="btn-primary w-full">
-        {plan.cta}
-        <ArrowRight className="w-4 h-4" />
-      </button>
-      {plan.name !== 'FREE' && <PayPalPayment plan={plan} />}
+      {plan.name === 'FREE' ? (
+        <button onClick={handleSubscription} className="btn-primary w-full">
+          {plan.cta}
+          <ArrowRight className="w-4 h-4" />
+        </button>
+      ) : (
+        <PayPalPayment plan={plan} />
+      )}
     </div>
   );
 }

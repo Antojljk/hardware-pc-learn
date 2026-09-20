@@ -27,12 +27,13 @@ export default function PayPalPayment({ plan }: { plan: { name: string; price: s
   };
 
   return (
-    <div className="mt-3">
+    <div>
       <PayPalScriptProvider options={{ clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || '' }}>
         <PayPalButtons 
-          style={{ layout: 'vertical', shape: 'pill' }} 
+          style={{ color: 'gold', shape: 'pill', layout: 'vertical' }} 
           createOrder={createOrder} 
           onApprove={onApprove} 
+          fundingSource="paypal"
         />
       </PayPalScriptProvider>
     </div>
