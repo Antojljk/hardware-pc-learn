@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { CookieConsent } from '@/components/CookieConsent';
-import { PageTransition } from '@/components/PageTransition';
 import Script from 'next/script';
 
 // Polices alignées sur l'AccueilHardwarePC de référence : Inter (display + body)
@@ -66,9 +65,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr" className={inter.variable} style={{ ['--font-body' as string]: `var(${inter.variable})` }}>
       <body className="relative">
-        <PageTransition>
-          {children}
-        </PageTransition>
+        {children}
         <CookieConsent />
         {gaId && (
           <>
