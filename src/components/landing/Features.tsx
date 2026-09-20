@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface Feature {
   title: string;
@@ -104,7 +105,13 @@ export function Features() {
               </div>
               <div className="relative z-10 space-y-4">
                 <div className="aspect-video overflow-hidden rounded-lg mb-4">
-                  <img src={f.image} alt={f.alt} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                   <Image 
+                      src={f.image} 
+                      alt={f.alt} 
+                      width={1200} 
+                      height={675} 
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                    />
                 </div>
                 <div className="text-center">
                   <h2 className="text-white font-display font-bold text-xl mb-1">{f.title}</h2>

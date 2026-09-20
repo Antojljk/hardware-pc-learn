@@ -14,7 +14,7 @@ export default function PayPalPayment({ plan }: { plan: { name: string; price: s
       const data = await res.json();
       
       if (data.links) {
-        const approveLink = data.links.find((link: any) => link.rel === 'approve');
+        const approveLink = data.links.find((link: { href: string; rel: string }) => link.rel === 'approve');
         if (approveLink) {
           window.location.href = approveLink.href;
         } else {
