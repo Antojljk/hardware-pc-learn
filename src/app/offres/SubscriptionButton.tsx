@@ -1,8 +1,9 @@
 'use client';
 
 import { ArrowRight } from 'lucide-react';
+import PayPalPayment from './PayPalPayment';
 
-export default function SubscriptionButton({ plan }: { plan: { name: string; href: string; cta: string } }) {
+export default function SubscriptionButton({ plan }: { plan: { name: string; href: string; cta: string; price: string } }) {
   const handleSubscription = async () => {
     if (plan.name === 'FREE') {
       window.location.href = plan.href;
@@ -28,9 +29,12 @@ export default function SubscriptionButton({ plan }: { plan: { name: string; hre
   };
 
   return (
-    <button onClick={handleSubscription} className="btn-primary w-full">
-      {plan.cta}
-      <ArrowRight className="w-4 h-4" />
-    </button>
+    <div className="flex flex-col gap-3 w-full">
+      <button onClick={handleSubscription} className="btn-primary w-full">
+        {plan.cta}
+        <ArrowRight className="w-4 h-4" />
+      </button>
+      {plan.name !== 'FREE' && <PayPalPayment plan={plan} />}
+    </div>
   );
 }
