@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
-import anime from 'animejs';
+import * as anime from 'animejs';
 
 /**
  * Section 01 — Hero plein écran premium.
