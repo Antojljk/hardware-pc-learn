@@ -36,7 +36,7 @@ export function ReviewRunner({ cards }: { cards: Card[] }) {
   async function rate(quality: 0 | 3 | 4 | 5) {
     setBusy(true);
     try {
-      await fetch('/api/review', {
+      await fetch('/api/study-cards', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ termSlug: current.slug, quality }),

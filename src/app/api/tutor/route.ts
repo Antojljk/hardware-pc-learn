@@ -70,22 +70,6 @@ export async function POST(req: NextRequest) {
   const parsed = schema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: 'invalid' }, { status: 400 });
 
-  // Consommation du quota mensuel (source de vérité côté serveur).
-  const quota = await consumeAiMessage(user.id, user.plan);
-  if (!quota.ok) {
-    return NextResponse.json(
-      {
-        error: `Quota mensuel atteint pour l'offre ${planLabel(user.plan)}.`,
-        code: 'QUOTA_EXCEEDED',
-        feature: 'tutor_ai',
-        plan: planLabel(user.plan),
-        used: quota.used,
-        limit: quota.limit,
-      },
-      { status: 403 },
-    );
-  }
-
   // Si une clé OpenAI est présente, on pourrait appeler l'API. Sinon, fallback local.
   const apiKey = process.env.OPENAI_API_KEY;
   if (apiKey) {
@@ -106,6 +90,20 @@ export async function POST(req: NextRequest) {
         const data = await r.json();
         const reply = data.choices?.[0]?.message?.content?.trim();
         if (reply) {
+          const quota = await consumeAiMessage(user.id, user.plan);
+          if (!quota.ok) {
+            return NextResponse.json(
+              {
+                error: `Quota mensuel atteint pour l'offre ${planLabel(user.plan)}.`,
+                code: 'QUOTA_EXCEEDED',
+                feature: 'tutor_ai',
+                plan: planLabel(user.plan),
+                used: quota.used,
+                limit: quota.limit,
+              },
+              { status: 403 },
+            );
+          }
           return NextResponse.json({
             reply,
             source: 'openai',
@@ -119,7 +117,6 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({
     reply: localAnswer(parsed.data.message),
     source: 'local',
-    quota: { used: quota.used, limit: quota.limit, remaining: quota.limit - quota.used },
   });
 }
 

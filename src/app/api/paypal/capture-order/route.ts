@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
+import { getPlan, PlanKey } from '@/lib/plans';
 
 export async function POST(req: NextRequest) {
   try {
@@ -10,6 +11,9 @@ export async function POST(req: NextRequest) {
     if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const planKey = plan as PlanKey;
+    const planDef = getPlan(planKey);
 
     const response = await fetch(`https://api-m.sandbox.paypal.com/v1/payments/capture?PayerID=${orderID}`, {
       method: 'POST',
@@ -22,10 +26,17 @@ export async function POST(req: NextRequest) {
     const data = await response.json();
 
     if (data.status === 'COMPLETED') {
+      const amountPaid = parseFloat(data.purchase_units[0].payments.captures[0].amount.value);
+      const expectedPrice = planDef.priceMonthly;
+
+      if (isNaN(amountPaid) || amountPaid < expectedPrice) {
+        return NextResponse.json({ error: 'Insufficient payment amount' }, { status: 400 });
+      }
+
       await prisma.user.update({
         where: { id: user.id },
         data: { 
-          plan: plan,
+          plan: planKey,
         },
       });
       return NextResponse.json({ status: 'success' });
