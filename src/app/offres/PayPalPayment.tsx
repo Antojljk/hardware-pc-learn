@@ -40,7 +40,7 @@ export default function PayPalPayment({ plan }: { plan: { name: string; price: s
   return (
     <div className="w-full">
       <PayPalScriptProvider options={{ 
-        clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "", 
+        clientId: "BAAVHhDX4rhe0eK1hrvT9gXtzVz7AO2FrFDfqti2-e3lFIYBOyrEHTwAvfqGC_iNl4aHvZP8ARTgt5_MX4", 
         currency: "EUR" 
       }}>
         <PayPalButtons 
