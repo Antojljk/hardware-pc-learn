@@ -1,42 +1,54 @@
 'use client';
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
+import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 
 export default function PayPalPayment({ plan }: { plan: { name: string; price: string } }) {
-  const handlePayment = async () => {
+  const createOrder = async () => {
     try {
       const res = await fetch('/api/paypal/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ plan: plan.name }),
       });
-      
       const data = await res.json();
-      
-      if (data.links) {
-        const approveLink = data.links.find((link: { href: string; rel: string }) => link.rel === 'approve');
-        if (approveLink) {
-          window.location.href = approveLink.href;
-        } else {
-          alert('Lien d\'approbation PayPal introuvable');
-        }
+      return data.id;
+    } catch (error) {
+      console.error('PayPal Create Order Error:', error);
+      throw error;
+    }
+  };
+
+  const onApprove = async (data: { orderID: string }) => {
+    try {
+      const res = await fetch('/api/paypal/capture-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderID: data.orderID, plan: plan.name }),
+      });
+      const result = await res.json();
+      if (result.status === 'success') {
+        alert('Paiement réussi !');
       } else {
-        alert('Erreur lors de la création de la commande PayPal');
+        alert('Erreur lors de la capture du paiement');
       }
     } catch (error) {
-      console.error('PayPal Error:', error);
-      alert('Une erreur est survenue lors du paiement');
+      console.error('PayPal Approve Error:', error);
+      alert('Une erreur est survenue lors de la confirmation du paiement');
     }
   };
 
   return (
-    <div className="relative w-full">
-      <button 
-        onClick={handlePayment}
-        className="btn-primary w-full flex items-center justify-center gap-2"
-      >
-        Payer avec PayPal <ArrowRight className="w-4 h-4" />
-      </button>
+    <div className="w-full">
+      <PayPalScriptProvider options={{ 
+        clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "", 
+        currency: "EUR" 
+      }}>
+        <PayPalButtons 
+          createOrder={createOrder} 
+          onApprove={onApprove}
+          style={{ layout: 'vertical', shape: 'rect' }}
+        />
+      </PayPalScriptProvider>
     </div>
   );
 }

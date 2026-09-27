@@ -3,6 +3,26 @@ import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
 import { getPlan, PlanKey } from '@/lib/plans';
 
+async function getPayPalAccessToken() {
+  const auth = Buffer.from(`${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`).toString('base64');
+  const response = await fetch('https://api-m.sandbox.paypal.com/v1/oauth2/token', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Accept-Language': 'en_US',
+      Authorization: `Basic ${auth}`,
+    },
+    body: 'grant_type=client_credentials',
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch PayPal access token: ${response.status}`);
+  }
+
+  const data = await response.json();
+  return data.access_token;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { orderID, plan } = await req.json();
@@ -15,11 +35,13 @@ export async function POST(req: NextRequest) {
     const planKey = plan as PlanKey;
     const planDef = getPlan(planKey);
 
-    const response = await fetch(`https://api-m.sandbox.paypal.com/v1/payments/capture?PayerID=${orderID}`, {
+    const accessToken = await getPayPalAccessToken();
+
+    const response = await fetch(`https://api-m.sandbox.paypal.com/v2/checkout/orders/${orderID}/capture`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_SECRET}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     });
 

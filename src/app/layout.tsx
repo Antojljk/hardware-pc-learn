@@ -5,6 +5,8 @@ import { CookieConsent } from '@/components/CookieConsent';
 import Script from 'next/script';
 
 // Polices alignées sur l'AccueilHardwarePC de référence : Inter (display + body)
+
+// Polices alignées sur l'AccueilHardwarePC de référence : Inter (display + body)
 const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
