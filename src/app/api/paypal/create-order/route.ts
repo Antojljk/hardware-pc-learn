@@ -13,7 +13,9 @@ async function getPayPalAccessToken() {
   });
 
   if (!response.ok) {
-    throw new Error('Failed to fetch PayPal access token');
+    const errorData = await response.text();
+    console.error('PayPal Token Error Response:', errorData);
+    throw new Error(`Failed to fetch PayPal access token: ${response.status}`);
   }
 
   const data = await response.json();
@@ -51,6 +53,12 @@ export async function POST(req: NextRequest) {
         ],
       }),
     });
+
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error('PayPal Order Error Response:', errorData);
+      return NextResponse.json({ error: 'PayPal API Error', details: errorData }, { status: response.status });
+    }
 
     const data = await response.json();
     return NextResponse.json(data);
