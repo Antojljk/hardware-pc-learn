@@ -61,8 +61,16 @@ export async function POST(req: NextRequest) {
     }
 
     const data = await response.json();
-    return NextResponse.json(data); // Trigger redeploy
+    
+    // On récupère le lien d'approbation pour rediriger l'utilisateur
+    const approveLink = data.links.find((link: any) => link.rel === 'approve');
+    
+    return NextResponse.json({
+      id: data.id,
+      url: approveLink ? approveLink.href : null
+    });
   } catch (error) {
+
     console.error('PayPal Create Order Error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
