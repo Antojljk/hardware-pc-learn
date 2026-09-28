@@ -21,9 +21,10 @@ export default function PayPalPayment({ plan }: { plan: { name: string; price: s
       } else {
         throw new Error('Lien de paiement non trouvé');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Une erreur est survenue lors de la redirection vers PayPal';
       console.error('PayPal Error:', error);
-      alert(`Erreur : ${error.message}`);
+      alert(`Erreur : ${errorMessage}`);
     }
   };
 
