@@ -10,7 +10,13 @@ export default function PayPalPayment({ plan }: { plan: { name: string; price: s
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ plan: plan.name }),
       });
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
       const data = await res.json();
+      if (!data.id) {
+        throw new Error('Order ID not found in response');
+      }
       return data.id;
     } catch (error) {
       console.error('PayPal Create Order Error:', error);
