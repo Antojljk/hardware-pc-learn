@@ -53,7 +53,7 @@ export default function PayPalPayment({ plan }: { plan: { name: string; price: s
         <PayPalButtons 
           createOrder={createOrder} 
           onApprove={onApprove}
-          style={{ layout: 'vertical', shape: 'pill', color: 'white' }}
+          style={{ layout: 'horizontal', shape: 'pill', color: 'white' }}
         />
       </PayPalScriptProvider>
     </div>
