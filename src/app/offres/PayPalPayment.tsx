@@ -3,26 +3,27 @@ import React from 'react';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 
 export default function PayPalPayment({ plan }: { plan: { name: string; price: string } }) {
-  const createOrder = async () => {
-    try {
-      const res = await fetch('/api/paypal/create-order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan: plan.name }),
-      });
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      const data = await res.json();
-      if (!data.id) {
-        throw new Error('Order ID not found in response');
-      }
-      return data.id;
-    } catch (error) {
-      console.error('PayPal Create Order Error:', error);
-      throw error;
-    }
-  };
+      const createOrder = async () => {
+        try {
+          const res = await fetch('/api/paypal/create-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ plan: plan.name }),
+          });
+          if (!res.ok) {
+            const errorData = await res.json().catch(() => ({}));
+            throw new Error(errorData.error || `HTTP error! status: ${res.status}`);
+          }
+          const data = await res.json();
+          if (!data || !data.id) {
+            throw new Error('Order ID not found in response');
+          }
+          return data.id;
+        } catch (error) {
+          console.error('PayPal Create Order Error:', error);
+          throw error;
+        }
+      };
 
   const onApprove = async (data: { orderID: string }) => {
     try {
@@ -52,7 +53,7 @@ export default function PayPalPayment({ plan }: { plan: { name: string; price: s
         <PayPalButtons 
           createOrder={createOrder} 
           onApprove={onApprove}
-          style={{ layout: 'vertical', shape: 'rect' }}
+          style={{ layout: 'vertical', shape: 'pill', color: 'white' }}
         />
       </PayPalScriptProvider>
     </div>
