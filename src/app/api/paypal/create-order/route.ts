@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     const data = await response.json();
     
     // On récupère le lien d'approbation pour rediriger l'utilisateur
-    const approveLink = data.links.find((link: any) => link.rel === 'approve');
+    const approveLink = data.links.find((link: { rel: string; href: string }) => link.rel === 'approve');
     
     return NextResponse.json({
       id: data.id,
