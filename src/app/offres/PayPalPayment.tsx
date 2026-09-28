@@ -4,7 +4,7 @@ import React from 'react';
 export default function PayPalPayment({ plan }: { plan: { name: string; price: string } }) {
   const handlePayment = async () => {
     try {
-      const res = await fetch('/api/paypal/create-order', {
+      const res = await fetch('/api/paypal', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ plan: plan.name }),
