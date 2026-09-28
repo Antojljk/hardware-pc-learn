@@ -1,61 +1,42 @@
 'use client';
 import React from 'react';
-import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 
 export default function PayPalPayment({ plan }: { plan: { name: string; price: string } }) {
-      const createOrder = async () => {
-        try {
-          const res = await fetch('/api/paypal/create-order', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ plan: plan.name }),
-          });
-          if (!res.ok) {
-            const errorData = await res.json().catch(() => ({}));
-            throw new Error(errorData.error || `HTTP error! status: ${res.status}`);
-          }
-          const data = await res.json();
-          if (!data || !data.id) {
-            throw new Error('Order ID not found in response');
-          }
-          return data.id;
-        } catch (error) {
-          console.error('PayPal Create Order Error:', error);
-          throw error;
-        }
-      };
-
-  const onApprove = async (data: { orderID: string }) => {
+  const handlePayment = async () => {
     try {
-      const res = await fetch('/api/paypal/capture-order', {
+      const res = await fetch('/api/paypal/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderID: data.orderID, plan: plan.name }),
+        body: JSON.stringify({ plan: plan.name }),
       });
-      const result = await res.json();
-      if (result.status === 'success') {
-        alert('Paiement réussi !');
+
+      if (!res.ok) throw new Error('Erreur lors de la création de la commande');
+      
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else if (data.id) {
+        // Fallback if only ID is returned: construct the PayPal link manually or use a dedicated redirect endpoint
+        window.location.href = `/api/paypal/redirect?orderId=${data.id}`;
       } else {
-        alert('Erreur lors de la capture du paiement');
+        throw new Error('Lien de paiement non trouvé');
       }
     } catch (error) {
-      console.error('PayPal Approve Error:', error);
-      alert('Une erreur est survenue lors de la confirmation du paiement');
+      console.error('PayPal Error:', error);
+      alert('Une erreur est survenue lors de la redirection vers PayPal');
     }
   };
 
   return (
-    <div className="w-full">
-      <PayPalScriptProvider options={{ 
-        clientId: "BAAVHhDX4rhe0eK1hrvT9gXtzVz7AO2FrFDfqti2-e3lFIYBOyrEHTwAvfqGC_iNl4aHvZP8ARTgt5_MX4", 
-        currency: "EUR" 
-      }}>
-        <PayPalButtons 
-          createOrder={createOrder} 
-          onApprove={onApprove}
-          style={{ layout: 'horizontal', shape: 'pill', color: 'white' }}
-        />
-      </PayPalScriptProvider>
-    </div>
+    <button 
+      onClick={handlePayment} 
+      className="w-full py-2 px-4 bg-[#FFC439] hover:bg-[#f2ba33] text-[#003087] font-semibold rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M20.067 6.18c-.36-.096-.84-.12-1.23-.043-.33.067-.7.14-.96.23-.23.08-.43.17-.64.31l-1.27 1.15c-.23.21-.43.41-.64.62-.21.21-.41.41-.62.62l-1.27 1.15c-.21.21-.41.41-.62.62-.21.21-.41.41-.62.62l-1.27 1.15c-.21.21-.41.41-.62.62-.21.21-.41.41-.62.62l-1.27 1.15c-.21.21-.41.41-.62.62-.21.21-.41.41-.62.62l-1.27 1.15c-.21.21-.41.41-.62.62-.21.21-.41.41-.62.62l-1.27 1.15c-.21.21-.41.41-.62.62-.21.21-.41.41-.62.62l-1.27 1.15c-.21.21-.41.41-.62.62-.21.21-.41.41-.62.62l-1.27 1.15c-.21.21-.41.41-.62.62-.21.21-.41.41-.62.62l-1.27 1.15c-.21.21-.41.41-.62.62-.21.21-.41.41-.62.62l-1.27 1.15c-.21.21-.41.41-.62.62-.21.21-.41.41-.62.62l-1.27 1.15c-.21.21-.41.41-.62.62-.21.21-.41.41-.62.62l-1.27 1.15c-.21.21-.41.41-.62.62-.21.21-.41.41-.62.62l-1.27 1.15c-.21.21-.41.41-.62.62-.21.21-.41.41-.62.62z" />
+      </svg>
+      Payer avec PayPal
+    </button>
   );
 }
+
