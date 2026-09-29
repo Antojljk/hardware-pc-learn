@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
     const amount = prices[plan] || '0.00';
     const accessToken = await getPayPalAccessToken();
 
-    const response = await fetch('https://api-m.sandbox.paypal.com/v1/orders', {
+    const response = await fetch('https://api-m.sandbox.paypal.com/v2/checkout/orders', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
