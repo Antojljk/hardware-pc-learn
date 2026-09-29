@@ -18,9 +18,10 @@ export default function SubscriptionButton({ plan }: { plan: { name: string; hre
           {plan.cta}
           <ArrowRight className="w-4 h-4" />
         </button>
-      ) : (
-        <PayPalPayment plan={plan} />
-      )}
+       ) : (
+         <PayPalPayment plan={plan.name as "ESSENTIEL" | "PRO" | "ULTIMATE"} />
+       )}
+
     </div>
   );
 }
