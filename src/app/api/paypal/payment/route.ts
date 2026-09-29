@@ -15,7 +15,31 @@ export async function POST(req: Request) {
     }
 
     const origin = process.env.NEXT_PUBLIC_APP_URL ?? new URL(req.url).origin;
+    const amount = PLANS[plan]?.price || '0.00';
     const accessToken = await getAccessToken();
+
+    const orderBody = {
+      intent: "CAPTURE",
+      purchase_units: [
+        {
+          custom_id: `${userId}:${plan}`,
+          description: PLANS[plan]?.label || 'Plan Hardware PC',
+          amount: { currency_code: "EUR", value: amount },
+        },
+      ],
+      payment_source: {
+        paypal: {
+          experience_context: {
+            user_action: "PAY_NOW",
+            shipping_preference: "NO_SHIPPING",
+            return_url: `${origin}/offres/succes`,
+            cancel_url: `${origin}/offres?paiement=annule`,
+          },
+        },
+      },
+    };
+
+    console.log("[paypal/payment] Sending body to PayPal:", JSON.stringify(orderBody));
 
     const res = await fetch(`${paypalBase}/v2/checkout/orders`, {
       method: "POST",
@@ -24,26 +48,7 @@ export async function POST(req: Request) {
         "Content-Type": "application/json",
         "PayPal-Request-Id": crypto.randomUUID(),
       },
-      body: JSON.stringify({
-        intent: "CAPTURE",
-        purchase_units: [
-          {
-            custom_id: `${userId}:${plan}`,
-            description: PLANS[plan].label,
-            amount: { currency_code: "EUR", value: PLANS[plan].price },
-          },
-        ],
-        payment_source: {
-          paypal: {
-            experience_context: {
-              user_action: "PAY_NOW",
-              shipping_preference: "NO_SHIPPING",
-              return_url: `${origin}/offres/succes`,
-              cancel_url: `${origin}/offres?paiement=annule`,
-            },
-          },
-        },
-      }),
+      body: JSON.stringify(orderBody),
     });
 
     const order = await res.json();
