@@ -33,7 +33,7 @@ function Content() {
   if (state === "error")
     return (
       <p>
-        Le paiement n'a pas pu être finalisé. <Link href="/offres">Retour aux offres</Link>
+        Le paiement n&apos;a pas pu être finalisé. <Link href="/offres">Retour aux offres</Link>
       </p>
     );
   return (
