@@ -118,7 +118,7 @@ export async function POST(req: Request) {
 
   try {
     await prisma.user.update({
-      where: { id: toDbId(userId) },
+      where: { id: toDbId(sessionUserId) },
       data: { plan },
     });
   } catch (e) {
