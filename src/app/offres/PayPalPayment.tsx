@@ -1,59 +1,41 @@
-'use client';
-import React, { useState } from 'react';
+"use client";
 
-export default function PayPalPayment({ plan }: { plan: { name: string; price: string } }) {
-  const [isLoading, setIsLoading] = useState(false);
+import { useState } from "react";
 
-  const handlePayment = async () => {
-    console.log('PayPal: Début du processus de paiement pour le plan:', plan.name);
-    setIsLoading(true);
+type Props = { plan: "ESSENTIEL" | "PRO" | "ULTIMATE" };
+
+export default function PayPalPayment({ plan }: Props) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handlePay() {
+    setLoading(true);
+    setError(null);
     try {
-      const res = await fetch('/api/paypal/payment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan: plan.name }),
+      const res = await fetch("/api/paypal/payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan }),
       });
-      
-      console.log('PayPal: Réponse reçue de l\'API, status:', res.status);
-
-      if (!res.ok) throw new Error('Erreur lors de la création de la commande');
-      
       const data = await res.json();
-      console.log('PayPal: Données reçues:', data);
-
-      if (data.url) {
-        console.log('PayPal: Redirection vers:', data.url);
-        window.location.href = data.url;
-      } else if (data.id) {
-        console.log('PayPal: Redirection via ID:', data.id);
-        window.location.href = `/api/paypal/redirect?orderId=${data.id}`;
-      } else {
-        throw new Error('Lien de paiement non trouvé');
-      }
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Une erreur est survenue lors de la redirection vers PayPal';
-      console.error('PayPal Error:', error);
-      alert(`Erreur : ${errorMessage}`);
-    } finally {
-      setIsLoading(false);
+      if (!res.ok || !data.url) throw new Error(data.error ?? "Erreur inconnue");
+      window.location.href = data.url;
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Erreur de paiement");
+      setLoading(false);
     }
-  };
+  }
 
   return (
-    <button 
-      onClick={handlePayment} 
-      disabled={isLoading}
-      className={`w-full py-2 px-4 bg-[#FFC439] hover:bg-[#f2ba33] text-[#003087] font-semibold rounded-lg transition-colors flex items-center justify-center gap-2 text-sm ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-      title="Payment via PayPal"
-    >
-      {isLoading ? (
-        <span className="animate-spin">🌀</span>
-      ) : (
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
-        </svg>
-      )}
-      {isLoading ? 'Traitement...' : 'Payer avec PayPal'}
-    </button>
+    <div className="flex flex-col gap-2">
+      <button 
+        onClick={handlePay} 
+        disabled={loading}
+        className="w-full py-2 px-4 bg-[#FFC439] hover:bg-[#f2ba33] text-[#003087] font-semibold rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
+      >
+        {loading ? "Redirection..." : "Payer avec PayPal"}
+      </button>
+      {error && <p className="text-red-500 text-xs text-center">{error}</p>}
+    </div>
   );
 }

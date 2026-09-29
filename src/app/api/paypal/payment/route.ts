@@ -1,74 +1,70 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
+import { getAccessToken, isPaidPlan, paypalBase, PLANS } from "@/lib/paypal";
+import { getCurrentUserId } from "@/lib/auth";
 
-async function getPayPalAccessToken() {
-  const auth = Buffer.from(`${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`).toString('base64');
-  const response = await fetch('https://api-m.sandbox.paypal.com/v1/oauth2/token', {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Accept-Language': 'en_US',
-      Authorization: `Basic ${auth}`,
-    },
-    body: 'grant_type=client_credentials',
-  });
-
-  if (!response.ok) {
-    const errorData = await response.text();
-    console.error('PayPal Token Error Response:', errorData);
-    throw new Error(`Failed to fetch PayPal access token: ${response.status}`);
-  }
-
-  const data = await response.json();
-  return data.access_token;
-}
-
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
+    const userId = await getCurrentUserId();
+    if (!userId) {
+      return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+    }
+
     const { plan } = await req.json();
+    if (!isPaidPlan(plan)) {
+      return NextResponse.json({ error: "Plan invalide" }, { status: 400 });
+    }
 
-    const prices: Record<string, string> = {
-      'ESSENTIEL': '7.99',
-      'PRO': '14.99',
-      'ULTIMATE': '24.99',
-    };
+    const origin = process.env.NEXT_PUBLIC_APP_URL ?? new URL(req.url).origin;
+    const accessToken = await getAccessToken();
 
-    const amount = prices[plan] || '0.00';
-    const accessToken = await getPayPalAccessToken();
-
-    const response = await fetch('https://api-m.sandbox.paypal.com/v2/checkout/orders', {
-      method: 'POST',
+    const res = await fetch(`${paypalBase}/v2/checkout/orders`, {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+        "PayPal-Request-Id": crypto.randomUUID(),
       },
       body: JSON.stringify({
-        intent: 'CAPTURE',
+        intent: "CAPTURE",
         purchase_units: [
           {
-            amount: {
-              currency_code: 'EUR',
-              value: amount,
-            },
+            custom_id: `${userId}:${plan}`,
+            description: PLANS[plan].label,
+            amount: { currency_code: "EUR", value: PLANS[plan].price },
           },
         ],
+        payment_source: {
+          paypal: {
+            experience_context: {
+              user_action: "PAY_NOW",
+              shipping_preference: "NO_SHIPPING",
+              return_url: `${origin}/offres/succes`,
+              cancel_url: `${origin}/offres?paiement=annule`,
+            },
+          },
+        },
       }),
     });
 
-    if (!response.ok) {
-      const errorData = await response.text();
-      console.error('PayPal Order Error Response:', errorData);
-      return NextResponse.json({ error: 'PayPal API Error', details: errorData }, { status: response.status });
+    const order = await res.json();
+    if (!res.ok) {
+      console.error("PayPal create order error:", JSON.stringify(order));
+      return NextResponse.json(
+        { error: "Erreur lors de la création de la commande" },
+        { status: 502 }
+      );
     }
 
-    const data = await response.json();
-    const approveLink = data.links.find((link: { rel: string; href: string }) => link.rel === 'approve');
-    
-    return NextResponse.json({
-      id: data.id,
-      url: approveLink ? approveLink.href : null
-    });
-  } catch (error) {
-    console.error('PayPal API Error:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    const approve = order.links?.find(
+      (l: { rel: string }) => l.rel === "payer-action" || l.rel === "approve"
+    );
+    if (!approve) {
+      return NextResponse.json({ error: "Lien d'approbation absent" }, { status: 502 });
+    }
+
+    return NextResponse.json({ url: approve.href, orderId: order.id });
+  } catch (e) {
+    console.error(e);
+    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }
