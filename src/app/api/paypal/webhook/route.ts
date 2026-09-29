@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-async function verifyPayPalWebhookSignature(req: NextRequest, body: any) {
+async function verifyPayPalWebhookSignature(req: NextRequest, body: unknown) {
   const webhookId = process.env.PAYPAL_WEBHOOK_ID;
   if (!webhookId) {
     throw new Error('PAYPAL_WEBHOOK_ID is not configured');
