@@ -24,18 +24,17 @@ export async function POST(req: Request) {
         {
           custom_id: `${userId}:${plan}`,
           description: PLANS[plan]?.label || 'Plan Hardware PC',
-          amount: { currency_code: "EUR", value: amount },
-        },
-      ],
-      payment_source: {
-        paypal: {
-          experience_context: {
-            user_action: "PAY_NOW",
-            shipping_preference: "NO_SHIPPING",
-            return_url: `${origin}/offres/succes`,
-            cancel_url: `${origin}/offres?paiement=annule`,
+          amount: { 
+            currency_code: "EUR", 
+            value: amount 
           },
         },
+      ],
+      application_context: {
+        user_action: "PAY_NOW",
+        shipping_preference: "NO_SHIPPING",
+        return_url: `${origin}/offres/succes`,
+        cancel_url: `${origin}/offres?paiement=annule`,
       },
     };
 
