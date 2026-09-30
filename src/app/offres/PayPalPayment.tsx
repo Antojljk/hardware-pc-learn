@@ -4,7 +4,7 @@ import { useState } from "react";
 
 type Props = { plan: "ESSENTIEL" | "PRO" | "ULTIMATE" };
 
-export default function PayPalPayment({ plan }: Props) {
+export default function StripePayment({ plan }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -12,7 +12,7 @@ export default function PayPalPayment({ plan }: Props) {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/paypal/payment", {
+      const res = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ plan }),
@@ -31,9 +31,9 @@ export default function PayPalPayment({ plan }: Props) {
       <button 
         onClick={handlePay} 
         disabled={loading}
-        className="w-full py-2 px-4 bg-[#FFC439] hover:bg-[#f2ba33] text-[#003087] font-semibold rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
+        className="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
       >
-        {loading ? "Redirection..." : "Payer avec PayPal"}
+        {loading ? "Redirection..." : "Payer avec Carte Bancaire"}
       </button>
       {error && <p className="text-red-500 text-xs text-center">{error}</p>}
     </div>

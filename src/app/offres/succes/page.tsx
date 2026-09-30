@@ -10,6 +10,7 @@ function Content() {
   const started = useRef(false);
   const [state, setState] = useState<"loading" | "ok" | "error">("loading");
   const [plan, setPlan] = useState<string>("");
+  const [errorCode, setErrorCode] = useState<string>("");
 
   useEffect(() => {
     if (!token || started.current) return;
@@ -21,7 +22,10 @@ function Content() {
     })
       .then(async (r) => {
         const data = await r.json();
-        if (!r.ok || !data.success) throw new Error(data.error);
+        if (!r.ok || !data.success) {
+          setErrorCode(data.issue ?? data.code ?? `HTTP_${r.status}`);
+          throw new Error(data.code);
+        }
         setPlan(data.plan);
         setState("ok");
       })
@@ -32,9 +36,12 @@ function Content() {
   if (state === "loading") return <p>Finalisation de votre paiement…</p>;
   if (state === "error")
     return (
-      <p>
-        Le paiement n&apos;a pas pu être finalisé. <Link href="/offres">Retour aux offres</Link>
-      </p>
+      <div className="text-center p-10">
+        <p>
+          Le paiement n&apos;a pas pu être finalisé (code : {errorCode || "inconnu"}).{" "}
+          <Link href="/offres" className="text-blue-500 underline">Retour aux offres</Link>
+        </p>
+      </div>
     );
   return (
     <div className="text-center p-10">
