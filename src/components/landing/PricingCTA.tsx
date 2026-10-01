@@ -73,78 +73,145 @@ export function PricingCTA() {
            </p>
         </header>
 
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
-          gap: '24px', 
-          width: '100%',
-          marginBottom: '48px'
-        }}>
-          {PLANS.map((plan) => (
-            <div
-              key={plan.name}
-              style={{
-                position: 'relative',
-                padding: '32px',
-                borderRadius: '16px',
-                border: plan.highlight ? '1px solid #22d3ee' : '1px solid rgba(255,255,255,0.1)',
-                background: 'rgba(255,255,255,0.05)',
-                display: 'flex',
-                flexDirection: 'column',
-                transition: 'all 0.3s ease',
-                transform: plan.highlight ? 'scale(1.05)' : 'scale(1)',
-                boxShadow: plan.highlight ? '0 0 30px rgba(0,212,255,0.15)' : 'none',
-                zIndex: plan.highlight ? 10 : 1
-              }}
-            >
-              {plan.highlight && (
-                <span style={{ 
-                  position: 'absolute', 
-                  top: '-12px', 
-                  left: '50%', 
-                  transform: 'translateX(-50%)', 
-                  background: '#22d3ee', 
-                  color: 'black', 
-                  fontSize: '10px', 
-                  fontWeight: 'bold', 
-                  padding: '4px 12px', 
-                  borderRadius: '9999px', 
-                  textTransform: 'uppercase' 
-                }}>
-                  Recommandé
-                </span>
-              )}
-              <h3 style={{ color: 'white', fontWeight: 'bold', fontSize: '20px', marginBottom: '8px', fontFamily: 'var(--font-display, sans-serif)' }}>{plan.name}</h3>
-              <div style={{ fontSize: '30px', fontWeight: 'bold', color: 'white', marginBottom: '24px', fontFamily: 'var(--font-display, sans-serif)' }}>{plan.price}</div>
-              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 32px 0', flex: 1 }}>
-                {plan.features.map((f) => (
-                  <li key={f} style={{ display: 'flex', alignItems: 'start', gap: '12px', fontSize: '14px', color: '#9ca3af', marginBottom: '12px' }}>
-                    <Check style={{ width: '16px', height: '16px', color: '#22d3ee', marginTop: '2px', flexShrink: 0 }} />
-                    <span>{f}</span>
-                  </li>
-                ))}
-              </ul>
-              <Link 
-                href="/offres" 
-                style={{ 
-                  display: 'block', 
-                  width: '100%', 
-                  padding: '12px 0', 
-                  textAlign: 'center', 
-                  borderRadius: '8px', 
-                  fontWeight: '500', 
-                  textDecoration: 'none',
-                  transition: 'all 0.3s ease',
-                  background: plan.highlight ? '#22d3ee' : 'transparent',
-                  color: plan.highlight ? 'black' : 'white',
-                  border: plan.highlight ? 'none' : '1px solid rgba(255,255,255,0.2)',
-                }}
-              >
-                Commencer
-              </Link>
-            </div>
-          ))}
-        </div>
+         <div style={{ 
+           display: 'grid', 
+           gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
+           gap: '24px', 
+           width: '100%',
+           marginBottom: '48px'
+         }}>
+           {PLANS.map((plan) => (
+             <div
+               key={plan.name}
+               style={{
+                 position: 'relative',
+                 padding: '32px',
+                 borderRadius: '16px',
+                 border: plan.highlight ? '1px solid #22d3ee' : '1px solid rgba(255,255,255,0.1)',
+                 background: 'rgba(255,255,255,0.05)',
+                 display: 'flex',
+                 flexDirection: 'column',
+                 transition: 'all 0.3s ease',
+                 transform: plan.highlight ? 'scale(1.05)' : 'scale(1)',
+                 boxShadow: plan.highlight ? '0 0 30px rgba(0,212,255,0.15)' : 'none',
+                 zIndex: plan.highlight ? 10 : 1
+               }}
+             >
+               {plan.highlight && (
+                 <span style={{ 
+                   position: 'absolute', 
+                   top: '-12px', 
+                   left: '50%', 
+                   transform: 'translateX(-50%)', 
+                   background: '#22d3ee', 
+                   color: 'black', 
+                   fontSize: '10px', 
+                   fontWeight: 'bold', 
+                   padding: '4px 12px', 
+                   borderRadius: '9999px', 
+                   textTransform: 'uppercase' 
+                 }}>
+                   Recommandé
+                 </span>
+               )}
+               <h3 style={{ color: 'white', fontWeight: 'bold', fontSize: '20px', marginBottom: '8px', fontFamily: 'var(--font-display, sans-serif)' }}>{plan.name}</h3>
+               <div style={{ fontSize: '30px', fontWeight: 'bold', color: 'white', marginBottom: '24px', fontFamily: 'var(--font-display, sans-serif)' }}>{plan.price}</div>
+               <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 32px 0', flex: 1 }}>
+                 {plan.features.map((f) => (
+                   <li key={f} style={{ display: 'flex', alignItems: 'start', gap: '12px', fontSize: '14px', color: '#9ca3af', marginBottom: '12px' }}>
+                     <Check style={{ width: '16px', height: '16px', color: '#22d3ee', marginTop: '2px', flexShrink: 0 }} />
+                     <span>{f}</span>
+                   </li>
+                 ))}
+               </ul>
+               <Link 
+                 href="/offres" 
+                 style={{ 
+                   display: 'block', 
+                   width: '100%', 
+                   padding: '12px 0', 
+                   textAlign: 'center', 
+                   borderRadius: '8px', 
+                   fontWeight: '500', 
+                   textDecoration: 'none',
+                   transition: 'all 0.3s ease',
+                   background: plan.highlight ? '#22d3ee' : 'transparent',
+                   color: plan.highlight ? 'black' : 'white',
+                   border: plan.highlight ? 'none' : '1px solid rgba(255,255,255,0.2)',
+                 }}
+               >
+                 Commencer
+               </Link>
+             </div>
+           ))}
+         </div>
+
+         <div style={{ 
+           maxWidth: '900px', 
+           margin: '0 auto 48px auto', 
+           padding: '32px', 
+           borderRadius: '24px', 
+           border: '2px solid #eab308', 
+           background: 'rgba(234, 179, 8, 0.05)', 
+           display: 'flex', 
+           flexDirection: 'column', 
+           gap: '24px',
+           position: 'relative'
+         }}>
+           <span style={{ 
+             position: 'absolute', 
+             top: '-12px', 
+             right: '24px', 
+             background: '#eab308', 
+             color: 'black', 
+             fontSize: '12px', 
+             fontWeight: 'bold', 
+             padding: '4px 12px', 
+             borderRadius: '9999px', 
+             textTransform: 'uppercase' 
+           }}>
+             Exclusif
+           </span>
+           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px', alignItems: 'center' }}>
+             <div style={{ textAlign: 'left' }}>
+               <h3 style={{ color: 'white', fontSize: '28px', fontWeight: 'bold', marginBottom: '12px', fontFamily: 'var(--font-display, sans-serif)' }}>Ultimate Lifetime</h3>
+               <p style={{ color: '#9ca3af', fontSize: '16px', marginBottom: '24px', lineHeight: '1.5' }}>
+                 Accès illimité et définitif à toutes les fonctionnalités HardwarePC. <br />
+                 Payez une fois, profitez à vie.
+               </p>
+               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                 {['Tout d\'Ultimate', 'Mises à jour incluses à vie', 'Accès anticipé aux nouvelles fonctionnalités', 'Support prioritaire à vie'].map((f) => (
+                   <li key={f} style={{ display: 'flex', alignItems: 'start', gap: '10px', fontSize: '14px', color: '#d1d5db' }}>
+                     <Check style={{ width: '16px', height: '16px', color: '#eab308', marginTop: '2px', flexShrink: 0 }} />
+                     <span>{f}</span>
+                   </li>
+                 ))}
+               </ul>
+             </div>
+             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', padding: '24px', background: 'rgba(255,255,255,0.03)', borderRadius: '16px' }}>
+               <div style={{ fontSize: '42px', fontWeight: 'bold', color: 'white', fontFamily: 'var(--font-display, sans-serif)' }}>499 €</div>
+               <div style={{ fontSize: '14px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Paiement unique</div>
+               <Link 
+                 href="/offres/lifetime" 
+                 style={{ 
+                   display: 'block', 
+                   width: '100%', 
+                   padding: '14px 0', 
+                   textAlign: 'center', 
+                   borderRadius: '8px', 
+                   fontWeight: 'bold', 
+                   textDecoration: 'none',
+                   background: '#eab308',
+                   color: 'black',
+                   transition: 'all 0.3s ease'
+                 }}
+               >
+                 Payer avec PayPal
+               </Link>
+             </div>
+           </div>
+         </div>
+
 
         <div style={{ textAlign: 'center' }}>
           <Link href="/offres" style={{ 

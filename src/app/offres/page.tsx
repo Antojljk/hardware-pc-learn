@@ -683,10 +683,41 @@ export default function VentePage() {
 
             ))}
           </div>
-          <p className="mt-6 text-center text-muted text-sm">
-            Une offre <strong className="text-text">Ultimate Lifetime</strong>{' '}
-            à 399 € (paiement unique) est également disponible.
-          </p>
+           <p className="mt-6 text-center text-muted text-sm">
+             S'offrir la tranquillité avec l'offre <strong className="text-text">Ultimate Lifetime</strong>.
+           </p>
+           <div className="mt-8 max-w-3xl mx-auto">
+             <div className="card p-8 border-yellow-500/50 bg-yellow-500/5 relative overflow-hidden group">
+               <div className="absolute top-0 right-0 p-4">
+                 <span className="badge bg-yellow-500 text-black font-bold">À vie</span>
+               </div>
+               <div className="flex flex-col md:flex-row items-center gap-8">
+                 <div className="flex-1 space-y-4">
+                   <h3 className="font-display text-2xl font-bold text-text">Ultimate Lifetime</h3>
+                   <p className="text-muted leading-relaxed">
+                     Accès illimité et définitif à toutes les fonctionnalités HardwarePC. 
+                     Payez une fois, profitez à vie.
+                   </p>
+                   <ul className="grid sm:grid-cols-2 gap-2 text-sm text-text/90">
+                     {['Tout d\'Ultimate', 'Mises à jour incluses à vie', 'Accès anticipé aux nouvelles fonctionnalités', 'Support prioritaire à vie'].map((f) => (
+                       <li key={f} className="flex items-start gap-2">
+                         <CheckCircle2 className="w-4 h-4 mt-0.5 text-yellow-500 shrink-0" />
+                         <span>{f}</span>
+                       </li>
+                     ))}
+                   </ul>
+                 </div>
+                 <div className="flex flex-col items-center gap-4 min-w-[200px]">
+                   <span className="font-display text-4xl font-bold text-text">499 €</span>
+                   <span className="text-xs text-muted uppercase tracking-wider">Paiement unique</span>
+                   <Link href="/offres/lifetime" className="btn-primary w-full text-center bg-yellow-600 hover:bg-yellow-500 border-none text-black font-bold">
+                     Payer avec PayPal
+                   </Link>
+                 </div>
+               </div>
+             </div>
+           </div>
+
         </section>
 
         {/* ============================================================
