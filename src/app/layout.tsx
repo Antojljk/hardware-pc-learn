@@ -15,7 +15,7 @@ const inter = Inter({
 });
 
 // URL canonique de production — utilisée comme base pour canonical, OG et sitemap.
-const SITE_URL = 'https://hardware-pc-learn-3zmsiaq0x-antoine-drutel.vercel.app';
+const SITE_URL = 'https://hardware-pc-learn.vercel.app';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
