@@ -30,7 +30,7 @@ const PLANS: Plan[] = [
   {
     name: 'ULTIMATE',
     price: '24,99 €/mois',
-    features: ['Tout de Pro', 'Certifications expertes', 'Accès à vie', 'Coaching 1-on-1', 'Support VIP'],
+    features: ['Tout de Pro', 'Certifications avancées (bientôt)', 'Accès à vie', 'Accès prioritaire au support', 'Support VIP'],
     highlight: false,
   },
 ];
