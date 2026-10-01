@@ -1,10 +1,14 @@
 /* eslint-disable react/no-unescaped-entities */
+'use client';
 import Link from 'next/link';
-import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
 
 import {
+
+
+
+
 
   BookOpen,
   Compass,
