@@ -69,8 +69,6 @@ import SubscriptionButton from './SubscriptionButton';
 // existe déjà dans l'application (voir /offres).
 // ---------------------------------------------------------------------------
 
-const SITE_URL = 'https://hardware-pc-learn.vercel.app';
-
 // --- Sections de la page -----------------------------------------------------
 
 const DOMAINS = [
