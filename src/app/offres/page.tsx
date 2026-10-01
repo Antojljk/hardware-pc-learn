@@ -2,27 +2,9 @@
 'use client';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+
 import {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -71,7 +53,6 @@ import {
   User as UserIcon,
 } from 'lucide-react';
 import SubscriptionButton from './SubscriptionButton';
-import LifetimeButton from './LifetimeButton';
 
 
 // ---------------------------------------------------------------------------
@@ -87,6 +68,9 @@ import LifetimeButton from './LifetimeButton';
 // offres). Les promesses sont volontairement alignées sur ce qui
 // existe déjà dans l'application (voir /offres).
 // ---------------------------------------------------------------------------
+
+const SITE_URL = 'https://hardware-pc-learn.vercel.app';
+const PAGE_URL = `${SITE_URL}/offres`;
 
 // --- Sections de la page -----------------------------------------------------
 
@@ -728,7 +712,16 @@ export default function VentePage() {
                  <div className="flex flex-col items-center gap-4 min-w-[200px]">
                    <span className="font-display text-4xl font-bold text-text">499 €</span>
                    <span className="text-xs text-muted uppercase tracking-wider">Paiement unique</span>
-                    <LifetimeButton />
+                    <button 
+                      onClick={async () => {
+                        const res = await fetch('/api/stripe/lifetime', { method: 'POST' });
+                        const data = await res.json();
+                        if (data.url) window.location.href = data.url;
+                      }}
+                      className="btn-primary w-full text-center bg-yellow-600 hover:bg-yellow-500 border-none text-black font-bold"
+                    >
+                      Acheter à vie — 499€
+                    </button>
 
                  </div>
                </div>
