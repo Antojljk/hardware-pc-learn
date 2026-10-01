@@ -70,7 +70,6 @@ import SubscriptionButton from './SubscriptionButton';
 // ---------------------------------------------------------------------------
 
 const SITE_URL = 'https://hardware-pc-learn.vercel.app';
-const PAGE_URL = `${SITE_URL}/offres`;
 
 // --- Sections de la page -----------------------------------------------------
 
