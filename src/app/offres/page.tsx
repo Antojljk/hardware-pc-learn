@@ -10,6 +10,24 @@ import {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   BookOpen,
   Compass,
   Zap,
@@ -51,32 +69,8 @@ import SubscriptionButton from './SubscriptionButton';
 // existe déjà dans l'application (voir /offres).
 // ---------------------------------------------------------------------------
 
-const SITE_URL = 'https://hardware-pc-learn-3zmsiaq0x-antoine-drutel.vercel.app';
+const SITE_URL = 'https://hardware-pc-learn.vercel.app';
 const PAGE_URL = `${SITE_URL}/offres`;
-
-export const metadata: Metadata = {
-  title: 'Deviens technicien PC — Formation hardware, montage & diagnostic',
-  description:
-    "Apprends le hardware, le montage, le diagnostic et les compétences indispensables pour construire, dépanner et comprendre un PC comme un professionnel. Cours, parcours, quiz, examens, tuteur IA et outils interactifs.",
-  alternates: {
-        canonical: '/offres',
-  },
-  openGraph: {
-    type: 'website',
-    locale: 'fr_FR',
-    url: PAGE_URL,
-    siteName: 'HardwarePC',
-    title: 'Deviens technicien PC — Formation hardware, montage & diagnostic',
-    description:
-      "Apprends le hardware, le montage, le diagnostic et les compétences indispensables pour construire, dépanner et comprendre un PC comme un professionnel.",
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Deviens technicien PC — Formation hardware, montage & diagnostic',
-    description:
-      "Apprends le hardware, le montage, le diagnostic et les compétences indispensables pour construire, dépanner et comprendre un PC comme un professionnel.",
-  },
-};
 
 // --- Sections de la page -----------------------------------------------------
 
