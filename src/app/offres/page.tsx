@@ -710,9 +710,17 @@ export default function VentePage() {
                  <div className="flex flex-col items-center gap-4 min-w-[200px]">
                    <span className="font-display text-4xl font-bold text-text">499 €</span>
                    <span className="text-xs text-muted uppercase tracking-wider">Paiement unique</span>
-                   <Link href="/offres/lifetime" className="btn-primary w-full text-center bg-yellow-600 hover:bg-yellow-500 border-none text-black font-bold">
-                     Payer avec PayPal
-                   </Link>
+                    <button 
+                      onClick={async () => {
+                        const res = await fetch('/api/stripe/lifetime', { method: 'POST' });
+                        const data = await res.json();
+                        if (data.url) window.location.href = data.url;
+                      }}
+                      className="btn-primary w-full text-center bg-yellow-600 hover:bg-yellow-500 border-none text-black font-bold"
+                    >
+                      Acheter à vie — 499€
+                    </button>
+
                  </div>
                </div>
              </div>

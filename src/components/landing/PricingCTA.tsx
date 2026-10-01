@@ -191,8 +191,12 @@ export function PricingCTA() {
              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', padding: '24px', background: 'rgba(255,255,255,0.03)', borderRadius: '16px' }}>
                <div style={{ fontSize: '42px', fontWeight: 'bold', color: 'white', fontFamily: 'var(--font-display, sans-serif)' }}>499 €</div>
                <div style={{ fontSize: '14px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Paiement unique</div>
-               <Link 
-                 href="/offres/lifetime" 
+               <button 
+                 onClick={async () => {
+                   const res = await fetch('/api/stripe/lifetime', { method: 'POST' });
+                   const data = await res.json();
+                   if (data.url) window.location.href = data.url;
+                 }}
                  style={{ 
                    display: 'block', 
                    width: '100%', 
@@ -203,11 +207,13 @@ export function PricingCTA() {
                    textDecoration: 'none',
                    background: '#eab308',
                    color: 'black',
-                   transition: 'all 0.3s ease'
+                   transition: 'all 0.3s ease',
+                   border: 'none',
+                   cursor: 'pointer'
                  }}
                >
-                 Payer avec PayPal
-               </Link>
+                 Acheter à vie — 499€
+               </button>
              </div>
            </div>
          </div>
