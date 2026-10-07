@@ -50,9 +50,14 @@ export function NavBar() {
           </li>
         </ul>
 
-        <Link href="/auth" className="l-m-btn l-nav-cta">
-          S&apos;inscrire
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link href="/auth" className="text-sm font-medium hover:text-accent transition-colors">
+            Se connecter
+          </Link>
+          <Link href="/auth" className="l-m-btn l-nav-cta">
+            S&apos;inscrire
+          </Link>
+        </div>
 
         <MobileNav />
       </nav>

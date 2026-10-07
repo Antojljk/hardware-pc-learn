@@ -32,17 +32,21 @@ export function Hero() {
             <p className="l-s01-lede">
               Des cours clairs, des outils concrets. Du débutant au niveau technicien.
             </p>
-            <div className="l-s01-actions">
-              <Link href="/auth" className="l-m-btn l-s01-cta-primary">
-                Commencer libre
-                <svg className="l-s01-cta-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16" aria-hidden="true">
-                  <path d="M5 12h14M13 5l7 7-7 7" />
-                </svg>
-              </Link>
-              <a href="#section02" className="l-m-btn-outline l-s01-ghost">
-                Voir tous nos modules
-              </a>
-            </div>
+             <div className="l-s01-actions">
+               <Link href="/auth" className="l-m-btn l-s01-cta-primary">
+                 Commencer libre
+                 <svg className="l-s01-cta-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16" aria-hidden="true">
+                   <path d="M5 12h14M13 5l7 7-7 7" />
+                 </svg>
+               </Link>
+               <a href="#section02" className="l-m-btn-outline l-s01-ghost">
+                 Voir tous nos modules
+               </a>
+               <Link href="/offres" className="l-m-btn-outline l-s01-ghost">
+                 Voir nos offres
+               </Link>
+             </div>
+
             <ul className="l-s01-meta" aria-label="Aperçu rapide">
               <li><span className="l-s01-meta-num">12+</span><span className="l-s01-meta-label">modules guidés</span></li>
               <li><span className="l-s01-meta-num">4</span><span className="l-s01-meta-label">niveaux de maîtrise</span></li>
