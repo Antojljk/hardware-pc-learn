@@ -30,20 +30,34 @@ export async function computeDomainMastery(userId: string): Promise<ProgressMap>
 export async function updateStreak(userId: string) {
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) return;
+  
   const today = new Date();
   today.setHours(0, 0, 0, 0);
+  
   const last = user.lastActiveAt ? new Date(user.lastActiveAt) : null;
   if (last) last.setHours(0, 0, 0, 0);
 
   let streak = user.streak;
-  if (!last) streak = 1;
-  else {
+  if (!last) {
+    streak = 1;
+  } else {
     const diffDays = Math.round((today.getTime() - last.getTime()) / 86400000);
-    if (diffDays === 0) { /* same day, no change */ }
-    else if (diffDays === 1) streak += 1;
-    else if (diffDays > 1) streak = 1;
+    if (diffDays === 0) {
+      // Même jour : on ne change rien à la streak
+      return streak;
+    } else if (diffDays === 1) {
+      // Jour suivant : on augmente la streak
+      streak += 1;
+    } else {
+      // Plus d'un jour d'écart : on reset la streak à 1
+      streak = 1;
+    }
   }
-  await prisma.user.update({ where: { id: userId }, data: { streak, lastActiveAt: new Date() } });
+  
+  await prisma.user.update({ 
+    where: { id: userId }, 
+    data: { streak, lastActiveAt: new Date() } 
+  });
   return streak;
 }
 
