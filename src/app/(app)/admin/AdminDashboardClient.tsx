@@ -32,7 +32,7 @@ export default function AdminDashboardClient({ initialData }: { initialData: any
     newUsers24h, newUsers7d, newUsers30d, activeUsers24h,
     totalReviewCards, totalBadges, totalReviews, avgQuizScore,
     recentInterviews, recentDiagnostics,
-    pv24h, uv24h, pv7d, uv7d, pv30d, uv30d, topPages
+    pv24h, uv24h, pv7d, uv7d, pv30d, uv30d, topPages, recentViews
   } = data;
 
   const quickStats = [
@@ -97,26 +97,56 @@ export default function AdminDashboardClient({ initialData }: { initialData: any
             </div>
             
             <div className="space-y-3">
-              <h3 className="text-xs font-semibold text-muted uppercase tracking-wider">Top 10 Pages Consultées</h3>
-              <div className="overflow-hidden rounded-xl border border-border">
-                <table className="w-full text-sm text-left">
-                  <thead className="bg-bg-elev text-xs text-muted border-b border-border">
-                    <tr>
-                      <th className="p-2 font-medium">URL</th>
-                      <th className="p-2 font-medium text-right">Vues</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border">
-                      {topPages.map((p: { url: string; count: number }) => (
-                       <tr key={p.url} className="hover:bg-bg-elev/50">
-                         <td className="p-2 font-mono text-xs">{p.url}</td>
-                         <td className="p-2 text-right font-display font-semibold">{p.count}</td>
-                       </tr>
-                     ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+               <h3 className="text-xs font-semibold text-muted uppercase tracking-wider">Top 10 Pages Consultées</h3>
+               <div className="overflow-hidden rounded-xl border border-border">
+                 <table className="w-full text-sm text-left">
+                   <thead className="bg-bg-elev text-xs text-muted border-b border-border">
+                     <tr>
+                       <th className="p-2 font-medium">URL</th>
+                       <th className="p-2 font-medium text-right">Vues</th>
+                     </tr>
+                   </thead>
+                   <tbody className="divide-y divide-border">
+                       {topPages.map((p: { url: string; count: number }) => (
+                        <tr key={p.url} className="hover:bg-bg-elev/50">
+                          <td className="p-2 font-mono text-xs">{p.url}</td>
+                          <td className="p-2 text-right font-display font-semibold">{p.count}</td>
+                        </tr>
+                      ))}
+                   </tbody>
+                 </table>
+               </div>
+             </div>
+
+             <div className="mt-6 space-y-3">
+               <h3 className="text-xs font-semibold text-muted uppercase tracking-wider">Dernières Visites (Identifiées)</h3>
+               <div className="overflow-hidden rounded-xl border border-border">
+                 <table className="w-full text-sm text-left">
+                   <thead className="bg-bg-elev text-xs text-muted border-b border-border">
+                     <tr>
+                       <th className="p-2 font-medium">Utilisateur</th>
+                       <th className="p-2 font-medium">Page</th>
+                       <th className="p-2 font-medium text-right">Date</th>
+                     </tr>
+                   </thead>
+                   <tbody className="divide-y divide-border">
+                       {recentViews?.map((v: any, i: number) => (
+                        <tr key={i} className="hover:bg-bg-elev/50">
+                          <td className="p-2 font-medium text-xs">{v.email || 'Anonyme'}</td>
+                          <td className="p-2 font-mono text-[10px] text-muted truncate max-w-[150px]">{v.url}</td>
+                          <td className="p-2 text-right text-[10px] text-muted">
+                            {new Date(v.createdAt).toLocaleDateString()}
+                          </td>
+                        </tr>
+                      ))}
+                       {(!recentViews || recentViews.length === 0) && (
+                         <tr><td colSpan={3} className="p-4 text-center text-xs text-muted">Aucune donnée disponible</td></tr>
+                       )}
+                   </tbody>
+                 </table>
+               </div>
+             </div>
+
           </div>
 
           <div className="module-frame anim-rise anim-rise-2">

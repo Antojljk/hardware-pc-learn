@@ -35,6 +35,7 @@ async function getAdminStats() {
     pv30d,
     uv30d,
     topPages,
+    recentViews,
     ,
   ] = await Promise.all([
     prisma.track.count(),
@@ -71,6 +72,11 @@ async function getAdminStats() {
       orderBy: { _count: { url: 'desc' } },
       take: 10,
     }),
+    prisma.pageView.findMany({
+      take: 10,
+      orderBy: { createdAt: 'desc' },
+      select: { url: true, email: true, createdAt: true }
+    }),
     prisma.pageView.groupBy({
       by: ['createdAt'],
       _count: { url: true },
@@ -84,7 +90,8 @@ async function getAdminStats() {
     newUsers24h, newUsers7d, newUsers30d, activeUsers24h,
     totalReviewCards, totalBadges, totalReviews, avgQuizScore: avgQuizScore?._avg?.score ?? 0,
     recentInterviews, recentDiagnostics,
-    pv24h, uv24h: uv24h?.length ?? 0, pv7d, uv7d: uv7d?.length ?? 0, pv30d, uv30d: uv30d?.length ?? 0, topPages
+    pv24h, uv24h: uv24h?.length ?? 0, pv7d, uv7d: uv7d?.length ?? 0, pv30d, uv30d: uv30d?.length ?? 0, topPages,
+    recentViews
   };
 }
 
