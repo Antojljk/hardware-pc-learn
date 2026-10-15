@@ -32,7 +32,6 @@ export async function GET() {
     const last7d = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
     const last30d = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-    // We group queries to avoid the "index-based" nightmare
     const [
       content,
       userStats,
@@ -91,7 +90,6 @@ export async function GET() {
         const pv7d = await safeCount(prisma.pageView.count({ where: { createdAt: { gte: last7d } } }));
         const pv30d = await safeCount(prisma.pageView.count({ where: { createdAt: { gte: last30d } } }));
 
-        // Optimized UV: We still use groupBy but we only select the ID to minimize data transfer
         const uv24hRaw = await safeAggregate(prisma.pageView.groupBy({ where: { createdAt: { gte: last24h } }, by: ['visitorId'] }), []);
         const uv7dRaw = await safeAggregate(prisma.pageView.groupBy({ where: { createdAt: { gte: last7d } }, by: ['visitorId'] }), []);
         const uv30dRaw = await safeAggregate(prisma.pageView.groupBy({ where: { createdAt: { gte: last30d } }, by: ['visitorId'] }), []);
