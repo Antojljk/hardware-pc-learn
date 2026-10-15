@@ -12,7 +12,7 @@ async function getAdminStats() {
   const last30d = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
   const [
-    trackCount, lessons, questions, exams, glossary, scenarios, components,
+    , lessons, questions, exams, glossary, scenarios, components,
     userCount,
     planCounts,
     totalAiMessages,
@@ -21,7 +21,7 @@ async function getAdminStats() {
     newUsers7d,
     newUsers30d,
     activeUsers24h,
-    configBuildCount,
+    ,
     totalReviewCards,
     totalBadges,
     totalReviews,
@@ -35,7 +35,7 @@ async function getAdminStats() {
     pv30d,
     uv30d,
     topPages,
-    dailyViews,
+    ,
   ] = await Promise.all([
     prisma.track.count(),
     prisma.lesson.count(),
