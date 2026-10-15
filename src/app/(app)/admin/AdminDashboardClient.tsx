@@ -130,7 +130,7 @@ export default function AdminDashboardClient({ initialData }: { initialData: any
                      </tr>
                    </thead>
                    <tbody className="divide-y divide-border">
-                       {recentViews?.map((v: any, i: number) => (
+                       {recentViews?.map((v: { url: string; email: string | null; createdAt: Date }, i: number) => (
                         <tr key={i} className="hover:bg-bg-elev/50">
                           <td className="p-2 font-medium text-xs">{v.email || 'Anonyme'}</td>
                           <td className="p-2 font-mono text-[10px] text-muted truncate max-w-[150px]">{v.url}</td>
