@@ -15,46 +15,47 @@ export async function GET() {
     const last30d = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
     const results = await Promise.allSettled([
-      prisma.track.count(),
-      prisma.lesson.count(),
-      prisma.quizQuestion.count(),
-      prisma.exam.count(),
-      prisma.glossaryTerm.count(),
-      prisma.diagnosticScenario.count(),
-      prisma.component.count(),
-      prisma.user.count(),
-      prisma.user.groupBy({ by: ['plan'], _count: { _all: true } }),
-      prisma.aiMessageUsage.aggregate({ _sum: { count: true } }),
-      prisma.examAttempt.aggregate({ _avg: { score: true } }),
-      prisma.user.count({ where: { createdAt: { gte: last24h } } }),
-      prisma.user.count({ where: { createdAt: { gte: last7d } } }),
-      prisma.user.count({ where: { createdAt: { gte: last30d } } }),
-      prisma.user.count({ where: { lastActiveAt: { gte: last24h } } }),
-      prisma.configBuild.count(),
-      prisma.reviewCard.count(),
-      prisma.badgesOnUsers.count(),
-      prisma.review.count(),
-      prisma.quizAttempt.aggregate({ _avg: { score: true } }),
-      prisma.interviewAttempt.count({ where: { createdAt: { gte: last7d } } }),
-      prisma.diagnosticAttempt.count({ where: { createdAt: { gte: last7d } } }),
-      prisma.pageView.count({ where: { createdAt: { gte: last24h } } }),
-      prisma.pageView.groupBy({ where: { createdAt: { gte: last24h } }, by: ['visitorId'], _count: { visitorId: true } }),
-      prisma.pageView.count({ where: { createdAt: { gte: last7d } } }),
-      prisma.pageView.groupBy({ where: { createdAt: { gte: last7d } }, by: ['visitorId'], _count: { visitorId: true } }),
-      prisma.pageView.count({ where: { createdAt: { gte: last30d } } }),
-      prisma.pageView.groupBy({ where: { createdAt: { gte: last30d } }, by: ['visitorId'], _count: { visitorId: true } }),
-      prisma.pageView.groupBy({
+      prisma.track.count(),             // 0
+      prisma.lesson.count(),            // 1
+      prisma.quizQuestion.count(),      // 2
+      prisma.exam.count(),               // 3
+      prisma.glossaryTerm.count(),      // 4
+      prisma.diagnosticScenario.count(), // 5
+      prisma.component.count(),         // 6
+      prisma.user.count(),             // 7
+      prisma.user.groupBy({ by: ['plan'], _count: { _all: true } }), // 8
+      prisma.aiMessageUsage.aggregate({ _sum: { count: true } }),    // 9
+      prisma.examAttempt.aggregate({ _avg: { score: true } }),       // 10
+      prisma.user.count({ where: { createdAt: { gte: last24h } } }),  // 11
+      prisma.user.count({ where: { createdAt: { gte: last7d } } }),   // 12
+      prisma.user.count({ where: { createdAt: { gte: last30d } } }),  // 13
+      prisma.user.count({ where: { lastActiveAt: { gte: last24h } } }), // 14
+      prisma.configBuild.count(),      // 15
+      prisma.reviewCard.count(),       // 16
+      prisma.badgesOnUsers.count(),    // 17
+      prisma.review.count(),           // 18
+      prisma.quizAttempt.aggregate({ _avg: { score: true } }),        // 19
+      prisma.interviewAttempt.count({ where: { createdAt: { gte: last7d } } }), // 20
+      prisma.diagnosticAttempt.count({ where: { createdAt: { gte: last7d } } }), // 21
+      prisma.pageView.count({ where: { createdAt: { gte: last24h } } }), // 22
+      prisma.pageView.groupBy({ where: { createdAt: { gte: last24h } }, by: ['visitorId'], _count: { visitorId: true } }), // 23
+      prisma.pageView.count({ where: { createdAt: { gte: last7d } } }), // 24
+      prisma.pageView.groupBy({ where: { createdAt: { gte: last7d } }, by: ['visitorId'], _count: { visitorId: true } }), // 25
+      prisma.pageView.count({ where: { createdAt: { gte: last30d } } }), // 26
+      prisma.pageView.groupBy({ where: { createdAt: { gte: last30d } }, by: ['visitorId'], _count: { visitorId: true } }), // 27
+      prisma.pageView.groupBy({                                      // 28
         by: ['url'],
         _count: { url: true },
         orderBy: { _count: { url: 'desc' } },
         take: 10,
       }),
-      prisma.pageView.groupBy({
+      prisma.pageView.groupBy({                                      // 29
           by: ['createdAt'],
           _count: { url: true },
           where: { createdAt: { gte: last30d } },
         })
     ]);
+
 
     const getValue = (index: number) => {
       const res = results[index];
@@ -63,9 +64,9 @@ export async function GET() {
       return null;
     };
 
-    const uv24h = (getValue(41) as unknown as Array<unknown>)?.length || 0;
-    const uv7d = (getValue(43) as unknown as Array<unknown>)?.length || 0;
-    const uv30d = (getValue(45) as unknown as Array<unknown>)?.length || 0;
+    const uv24h = (getValue(23) as unknown as Array<unknown>)?.length || 0;
+    const uv7d = (getValue(25) as unknown as Array<unknown>)?.length || 0;
+    const uv30d = (getValue(27) as unknown as Array<unknown>)?.length || 0;
 
     return NextResponse.json({
       lessons: Number(getValue(1)) || 0,
@@ -85,19 +86,19 @@ export async function GET() {
       newUsers7d: Number(getValue(12)) || 0,
       newUsers30d: Number(getValue(13)) || 0,
       activeUsers24h: Number(getValue(14)) || 0,
-      totalReviewCards: Number(getValue(15)) || 0,
-      totalBadges: Number(getValue(16)) || 0,
-      totalReviews: Number(getValue(17)) || 0,
-      avgQuizScore: (getValue(18) as unknown as Record<string, Record<string, unknown>>)?._avg?.score ?? 0,
-      recentInterviews: Number(getValue(19)) || 0,
-      recentDiagnostics: Number(getValue(20)) || 0,
-      pv24h: Number(getValue(40)) || 0,
+      totalReviewCards: Number(getValue(16)) || 0,
+      totalBadges: Number(getValue(17)) || 0,
+      totalReviews: Number(getValue(18)) || 0,
+      avgQuizScore: (getValue(19) as unknown as Record<string, Record<string, unknown>>)?._avg?.score ?? 0,
+      recentInterviews: Number(getValue(20)) || 0,
+      recentDiagnostics: Number(getValue(21)) || 0,
+      pv24h: Number(getValue(22)) || 0,
       uv24h: uv24h,
-      pv7d: Number(getValue(42)) || 0,
+      pv7d: Number(getValue(24)) || 0,
       uv7d: uv7d,
-      pv30d: Number(getValue(44)) || 0,
+      pv30d: Number(getValue(26)) || 0,
       uv30d: uv30d,
-      topPages: (getValue(46) as unknown as Array<Record<string, unknown>>)?.map(p => ({ 
+      topPages: (getValue(28) as unknown as Array<Record<string, unknown>>)?.map(p => ({ 
         url: String(p.url || ''), 
         count: (p._count as Record<string, unknown>)?.url ?? 0 
       })) || []

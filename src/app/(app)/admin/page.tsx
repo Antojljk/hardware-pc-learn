@@ -12,7 +12,7 @@ async function getAdminStats() {
   const last30d = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
   const [
-    , lessons, questions, exams, glossary, scenarios, components,
+    trackCount, lessons, questions, exams, glossary, scenarios, components,
     userCount,
     planCounts,
     totalAiMessages,
@@ -21,7 +21,7 @@ async function getAdminStats() {
     newUsers7d,
     newUsers30d,
     activeUsers24h,
-    ,
+    configBuildCount,
     totalReviewCards,
     totalBadges,
     totalReviews,
@@ -35,7 +35,7 @@ async function getAdminStats() {
     pv30d,
     uv30d,
     topPages,
-    ,
+    dailyViews,
   ] = await Promise.all([
     prisma.track.count(),
     prisma.lesson.count(),
@@ -80,11 +80,11 @@ async function getAdminStats() {
 
   return {
     lessons, questions, exams, glossary, scenarios, components,
-    userCount, planCounts,     totalAiMessages: totalAiMessages._sum.count, avgExamScore,
+    userCount, planCounts,     totalAiMessages: totalAiMessages?._sum?.count ?? 0, avgExamScore: avgExamScore?._avg?.score ?? 0,
     newUsers24h, newUsers7d, newUsers30d, activeUsers24h,
-    totalReviewCards, totalBadges, totalReviews, avgQuizScore,
+    totalReviewCards, totalBadges, totalReviews, avgQuizScore: avgQuizScore?._avg?.score ?? 0,
     recentInterviews, recentDiagnostics,
-    pv24h, uv24h: uv24h.length, pv7d, uv7d: uv7d.length, pv30d, uv30d: uv30d.length, topPages
+    pv24h, uv24h: uv24h?.length ?? 0, pv7d, uv7d: uv7d?.length ?? 0, pv30d, uv30d: uv30d?.length ?? 0, topPages
   };
 }
 
