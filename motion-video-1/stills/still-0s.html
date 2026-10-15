@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>HardwarePC Motion - Still t=0s</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 1080px; height: 1920px;
+      background: #080B14;
+      color: #ffffff;
+      font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+    .frame { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(48px, 8vw, 96px); letter-spacing: -0.02em; line-height: 1; }
+    .tagline { font-size: clamp(20px, 3.5vw, 32px); font-weight: 400; color: #9ca3af; text-align: center; max-width: 800px; }
+    .problem-text { font-size: clamp(18px, 3vw, 28px); text-align: center; max-width: 700px; line-height: 1.4; }
+    .solution-text { font-size: clamp(18px, 3vw, 28px); text-align: center; max-width: 700px; line-height: 1.5; color: #22d3ee; }
+    .diff-text { font-size: clamp(18px, 3vw, 28px); text-align: center; max-width: 700px; line-height: 1.5; }
+    .stat { text-align: center; }
+    .stat-value { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(48px, 8vw, 80px); color: #22d3ee; line-height: 1; }
+    .stat-label { font-size: clamp(14px, 2.5vw, 20px); color: #9ca3af; margin-top: 8px; }
+    .cta-btn { background: #22d3ee; color: #001818; font-weight: 600; font-size: clamp(16px, 3vw, 24px); padding: 16px 48px; border-radius: 8px; border: none; cursor: pointer; }
+    .qr-code { width: 120px; height: 120px; background: #ffffff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #080B14; }
+    .cta-url { font-size: clamp(14px, 2.5vw, 18px); color: #9ca3af; margin-top: 16px; font-family: monospace; }
+    .cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; width: 90%; max-width: 900px; }
+    .card { aspect-ratio: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; transform-style: preserve-3d; perspective: 1000px; }
+    .card-inner { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.16,1,0.3,1); }
+    .card-face { position: absolute; inset: 0; backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .card-front { background: rgba(255,255,255,0.05); }
+    .card-back { background: #22d3ee15; color: #22d3ee; transform: rotateY(180deg); }
+    .card-icon { font-size: 48px; margin-bottom: 16px; }
+    .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 24px; margin-bottom: 8px; }
+    .card-desc { font-size: 14px; color: #9ca3af; max-width: 200px; }
+    .pc-part { position: absolute; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; font-size: 48px; transition: transform 0.6s, opacity 0.6s; }
+    .dashboard-mock { width: 90%; max-width: 900px; aspect-ratio: 16/9; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; display: flex; flex-direction: column; padding: 32px; }
+    .dash-row { display: flex; gap: 16px; margin-bottom: 16px; }
+    .dash-item { flex: 1; background: rgba(255,255,255,0.03); border-radius: 12px; padding: 16px; }
+    .dash-label { font-size: 12px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+    .dash-bar { height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
+    .dash-fill { height: 100%; background: #22d3ee; border-radius: 4px; transition: width 0.6s ease-out; }
+    .split-screen { width: 90%; max-width: 900px; aspect-ratio: 16/9; position: relative; border-radius: 16px; overflow: hidden; }
+    .split-before, .split-after { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px; text-align: center; }
+    .split-before { background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%); border: 1px solid #ff444440; }
+    .split-after { background: linear-gradient(135deg, #0a1a0f 0%, #051008 100%); border: 1px solid #22d3ee40; clip-path: inset(0 100.0% 0 0); }
+    .split-label { font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; }
+    .split-before .split-label { color: #ff4444; }
+    .split-after .split-label { color: #22d3ee; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; width: 90%; max-width: 1000px; }
+  </style>
+</head>
+<body>
+  <div class="frame" id="frame">
+    
+        <div class="logo" style="opacity:NaN; transform: scale(NaN) translateX(NaNpx);">
+          H<span style="opacity:NaN">a</span>
+          <span style="opacity:NaN">r</span>
+          <span style="opacity:NaN">d</span>
+          <span style="opacity:NaN">w</span>
+          <span style="opacity:NaN">a</span>
+          <span style="opacity:NaN">r</span>
+          <span style="opacity:NaN">e</span>
+          <span style="opacity:NaN">P</span>
+          <span style="opacity:NaN">C</span>
+        </div>
+      
+  </div>
+  <script>
+    // Auto-refresh for live preview during dev
+    console.log('Still t=0s - Phase: hook (NaN%)');
+  </script>
+</body>
+</html>

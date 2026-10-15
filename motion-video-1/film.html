@@ -1,0 +1,192 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>HardwarePC Promo 30s</title>
+<style>
+@font-face{font-family:Geist;src:url(assets/fonts/GeistVF.woff2) format('woff2');font-weight:100 900;font-display:swap}
+@font-face{font-family:Archivo;src:url(assets/fonts/ArchivoVF.woff2) format('woff2');font-weight:100 900;font-stretch:62% 125%;font-display:swap}
+html,body{margin:0;background:#080B14;overflow:hidden}
+#stage{position:relative;width:1080px;height:1920px;overflow:hidden;background:#080B14;font-family:Geist,sans-serif;color:#ffffff;letter-spacing:-.02em}
+.a{position:absolute;left:0;top:0}
+.m{position:absolute;overflow:hidden;left:0;width:1080px;text-align:center}
+.m>span{display:inline-block;white-space:nowrap}
+.card{position:absolute;background:rgba(255,255,255,0.04);border-radius:28px;box-shadow:0 24px 60px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.06);overflow:hidden;border:1px solid rgba(255,255,255,.08)}
+.chip{position:absolute;height:72px;border-radius:36px;background:rgba(255,255,255,0.06);box-shadow:0 8px 28px rgba(0,0,0,.3),0 0 0 1px rgba(255,255,255,.08);display:flex;align-items:center;padding:0 32px;font:500 28px Geist;white-space:nowrap;letter-spacing:-.01em;color:#fff}
+.chip-accent{background:linear-gradient(135deg,rgba(34,211,228,.15),rgba(34,211,228,.05));border:1px solid rgba(34,211,228,.3);color:#22d3ee}
+.logo{position:absolute;width:120px;height:120px;border-radius:32px;background:rgba(255,255,255,0.05);box-shadow:0 16px 40px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center}
+.logo img{width:68px;height:68px;object-fit:contain}
+.row{position:absolute;left:52px;right:52px;height:80px;display:flex;align-items:center;font:500 28px Geist;border-bottom:1px solid rgba(255,255,255,.08);color:#fff}
+.hdr{position:absolute;left:52px;top:38px;font:600 24px Geist;color:#9ca3af;letter-spacing:0}
+.stat-value{font-family:Archivo,sans-serif;font-weight:700;font-stretch:110%;font-size:72px;color:#22d3ee;line-height:1}
+.stat-label{font-size:18px;color:#9ca3af;margin-top:10px}
+.btn{position:absolute;height:100px;border-radius:50px;font:700 32px Geist;display:flex;align-items:center;justify-content:center;white-space:nowrap;letter-spacing:-.01em;cursor:pointer}
+.btn-primary{background:linear-gradient(135deg,#22d3ee,#06b6d4);color:#001818;box-shadow:0 12px 40px rgba(34,211,228,.35),0 0 0 1px rgba(34,211,228,.2)}
+.qr{position:absolute;width:160px;height:160px;border-radius:20px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;color:#080B14;font-family:monospace;border:2px solid #22d3ee}
+.url{font-size:20px;color:#9ca3af;font-family:monospace;letter-spacing:.03em}
+.acc{background-image:linear-gradient(90deg,#22d3ee,#818cf8,#a78bfa,#22d3ee);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent}
+.grid-bg{position:absolute;inset:0;background-image:radial-gradient(rgba(34,211,228,.06) 1.5px, transparent 2px);background-size:40px 40px;-webkit-mask-image:radial-gradient(ellipse 85% 75% at 50% 40%,#000 25%,transparent 85%);mask-image:radial-gradient(ellipse 85% 75% at 50% 40%,#000 25%,transparent 85%);z-index:0}
+.orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:.6;z-index:1}
+.orb-1{width:600px;height:600px;background:radial-gradient(closest-side,rgba(34,211,228,.35),rgba(34,211,228,0))}
+.orb-2{width:500px;height:500px;background:radial-gradient(closest-side,rgba(167,139,250,.25),rgba(167,139,250,0))}
+.orb-3{width:450px;height:450px;background:radial-gradient(closest-side,rgba(234,179,8,.2),rgba(234,179,8,0))}
+.sheen{position:absolute;z-index:55;width:800px;height:3000px;top:-800px;background:linear-gradient(90deg,rgba(34,211,228,0),rgba(34,211,228,.12),rgba(167,139,250,.1),rgba(34,211,228,0));transform-origin:0 0;pointer-events:none}
+.flood{position:absolute;background:#22d3ee;border-radius:50%;z-index:20}
+.spark{position:absolute;border-radius:50%;z-index:18}
+.cursor{position:absolute;z-index:60;width:56px;height:56px;transform-origin:6px 4px;pointer-events:none}
+.cursor svg{width:56px;height:56px}
+.label{position:absolute;font:500 20px Geist;color:#9ca3af;letter-spacing:0;z-index:30}
+</style></head><body>
+<div id="stage">
+  <div class="a grid-bg"></div>
+  <div id="orb1" class="orb orb-1"></div>
+  <div id="orb2" class="orb orb-2"></div>
+  <div id="orb3" class="orb orb-3"></div>
+  <div id="L" class="a" style="width:1080px;height:1920px;transform-origin:540px 960px"></div>
+  <div id="sheen" class="a sheen"></div>
+  <div id="flood" class="a flood"></div>
+  <svg id="cursor" class="a cursor" viewBox="0 0 44 44"><path d="M5 3 L5 34 L12.5 27 L17.5 39 L22.5 37 L17.6 25.4 L27.5 25.4 Z" fill="#080B14" stroke="#22d3ee" stroke-width="2.4" stroke-linejoin="round"/></svg>
+</div>
+<script>
+const W=1080,H=1920,CYAN='#22d3ee',AMBER='#eab308',INK='#080B14',MUTED='#9ca3af',WHITE='#ffffff';
+const clamp=(x,a=0,b=1)=>x<a?a:x>b?b:x, lerp=(a,b,u)=>a+(b-a)*u;
+const E={io:u=>u<.5?4*u*u*u:1-Math.pow(-2*u+2,3)/2, out:u=>1-Math.pow(1-u,3), in:u=>u*u*u, o5:u=>1-Math.pow(1-u,5), expo:u=>u===1?1:1-Math.pow(2,-10*u)};
+const P=(t,t0,d,e=E.io)=>e(clamp((t-t0)/d));
+function step(tau,f=2.6,z=.7){if(tau<=0)return 0;const w=2*Math.PI*f,wd=w*Math.sqrt(1-z*z);return 1-Math.exp(-z*w*tau)*(Math.cos(wd*tau)+z*w/wd*Math.sin(wd*tau));}
+const sp=(t,t0,f,z)=>step(t-t0,f,z);
+const pop=(t,t0,f=3,z=.55)=>clamp(sp(t,t0,f,z),0,1.25);
+const $=id=>document.getElementById(id), px=v=>v+'px';
+const Lr=$('L');
+function mk(html,z=5){Lr.insertAdjacentHTML('beforeend',html);const e=Lr.lastElementChild;e.style.zIndex=z;return e;}
+function box(el,x,y,w,h,r){const s=el.style;s.left=px(x);s.top=px(y);if(w!=null)s.width=px(w);if(h!=null)s.height=px(h);if(r!=null)s.borderRadius=px(r);}
+const vis=(el,on)=>{el.style.visibility=on?'visible':'hidden';};
+function wordify(root){
+  const walk=node=>{[...node.childNodes].forEach(c=>{
+    if(c.nodeType===3){const frag=document.createDocumentFragment();c.textContent.split(/(\s+)/).forEach(w=>{
+      if(!w)return;if(/^\s+$/.test(w)){frag.appendChild(document.createTextNode(w));return;}
+      const sp=document.createElement('span');sp.className='w';sp.style.display='inline-block';sp.textContent=w;
+      if(node!==root&&node.style&&node.style.color&&node.style.color!=='rgb(255, 255, 255)'){sp.classList.add('acc');}
+      frag.appendChild(sp);});c.replaceWith(frag);}
+    else if(c.nodeType===1)walk(c);});};
+  walk(root);return root;
+}
+const line=(html,y,size,weight=700,color=WHITE)=>{const el=mk(`<div class="m" style="top:${y}px;height:${Math.round(size*1.3)}px"><span style="font:${weight} ${size}px Geist;color:${color}">${html}</span></div>`,20);wordify(el.firstElementChild);return el;};
+function rise(el,t,tin,tout,f=2.2){
+  const ws=el.querySelectorAll('.w'),o=tout==null?0:P(t,tout,.3,E.in);
+  if(!ws.length){const u=t<tin?0:clamp(step(t-tin,f,.8),0,1.03);el.firstElementChild.style.transform=`translateY(${(1-u)*105-o*105}%)`;}
+  ws.forEach((w,i)=>{const u=clamp(step(t-tin-i*.055,f,.72),0,1.06);
+    w.style.transform=`translateY(${(1-u)*110-o*110}%) rotate(${(1-clamp(u))*6}deg)`;
+    if(w.classList.contains('acc')){w.style.backgroundPosition=`${(100-(t*60)%100)}% 0`;}});
+  vis(el,t>=tin&&(tout==null||t<tout+.35));
+}
+const S={hook:[0,2.2],tagline:[2,4.2],problem:[4,7],drop:[7,11],modules:[11,15],diff:[15,19],stats:[19,23],cta:[23,27],loop:[27,30]};
+const inS=(t,k,pad=.35)=>t>=S[k][0]&&t<S[k][1]+pad;
+
+const TT={
+  hook1:line('HardwarePC',400,88),
+  tag1:line('Comprends enfin <span class="acc">ton PC.</span>',520,38,500),
+  prob1:line('Tu as un PC.',480,42),
+  prob2:line('Mais tu sais pas',480,42),
+  prob3:line('<span class="acc">ce qu\'il fait.</span>',580,42),
+  drop1:line('XP. Niveaux. Badges. Série.',380,44),
+  drop2:line('Ton <span class="acc">Duolingo du hardware.</span>',460,44),
+  mod1:line('Cours',280,56),
+  mod2:line('Quiz',280,56),
+  mod3:line('Diagnostic',280,56),
+  mod4:line('Constructeur',280,56),
+  diff1:line('Avant : perdu.',320,48),
+  diff2:line('Après : <span class="acc">parcours clair.</span>',320,48),
+  stat1:line('2 400+',320,72),
+  stat2:line('130+',320,72),
+  stat3:line('10',320,72),
+  stat4:line('4',320,72),
+  cta1:line('Commencer libre',600,40),
+  cta2:line('hardwarepc.fr',700,24,500,MUTED)
+};
+
+const QS=['CPU','GPU','RAM','SSD','Socket','VRM','PCIe','DDR5','NVMe','FPS','Bottleneck','Throttle'];
+const qchips=QS.map((q,i)=>mk(`<div class="chip">${q}</div>`,10));
+
+const scan=mk(`<div class="card" style="border-radius:24px;padding:32px"><div id="dom" class="a" style="left:44px;top:32px;font:600 40px Geist;white-space:pre;color:${CYAN}"></div><div class="a" style="left:44px;top:100px;font:500 22px Geist;color:${MUTED}">Scan en cours...</div></div>`,10);
+
+const ENG=['Cours','Quiz','Diagnostic','Constructeur'];
+const engCards=ENG.map((t,i)=>mk(`<div class="card" style="width:420px;height:420px;border-radius:24px;padding:36px"><div class="a" style="left:0;top:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center"><div style="font-size:72px;margin-bottom:16px">${['📚','❓','🔧','🖥️'][i]}</div><div style="font:700 36px Geist;color:${CYAN};margin-bottom:12px">${t}</div><div style="font:500 20px Geist;color:${MUTED};max-width:280px">${['4 parcours · 40+ leçons','Adaptatif · ~60 questions','10 pannes réelles','Compatibilité live'][i]}</div></div></div>`,12));
+
+const split=mk(`<div class="card" style="width:960px;height:600px;border-radius:28px;overflow:hidden"><div id="splitBefore" class="a" style="inset:0;background:linear-gradient(135deg,rgba(255,68,68,.15),rgba(255,68,68,0));display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;text-align:center"><div style="font:700 20px Geist;color:#ff4444;text-transform:uppercase;letter-spacing:.1em;margin-bottom:24px">Avant HardwarePC</div><div style="font:600 42px Geist;color:#fff;margin-bottom:16px">❌ Pas de méthode</div><div style="font:500 24px Geist;color:${MUTED}">Pas de progression · Pas de maîtrise</div></div><div id="splitAfter" class="a" style="inset:0;background:linear-gradient(135deg,rgba(34,211,228,.15),rgba(34,211,228,0));display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;text-align:center;clip-path:inset(0 100% 0 0)"><div style="font:700 20px Geist;color:${CYAN};text-transform:uppercase;letter-spacing:.1em;margin-bottom:24px">Après HardwarePC</div><div style="font:600 42px Geist;color:${CYAN};margin-bottom:16px">✅ Parcours guidé</div><div style="font:500 24px Geist;color:${MUTED}">Maîtrise par domaine · Révisions auto</div></div></div>`,12);
+
+const statCards=[2400,130,10,4].map((v,i)=>mk(`<div class="card" style="width:220px;height:220px;border-radius:24px;padding:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center"><div class="stat-value" id="statV${i}">0</div><div class="stat-label">${['apprenants','termes glossaire','scénarios diag','niveaux'][i]}</div></div>`,12));
+
+const ctaBtn=mk(`<button class="btn btn-primary" style="width:400px">Commencer libre</button>`,21);
+const qr=mk(`<div class="qr">QR CODE</div>`,21);
+const url=mk(`<div class="url">hardwarepc.fr</div>`,21);
+
+const sparks=Array.from({length:24},(_,i)=>mk(`<div class="a spark" style="width:${10+(i%3)*6}px;height:${10+(i%3)*6}px;background:${i%3===0?CYAN:i%3===1?'#a78bfa':AMBER}"></div>`,16));
+
+const beams=new Map();
+function borderBeam(host,t,on,speed=.55,r=28){
+  let b=beams.get(host);
+  if(!b){b=document.createElement('div');b.className='a';
+    b.style.cssText=`inset:0;width:100%;height:100%;border-radius:${r}px;padding:2.5px;box-sizing:border-box;pointer-events:none;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;z-index:50`;
+    host.appendChild(b);beams.set(host,b);}
+  b.style.visibility=on?'inherit':'hidden';
+  b.style.background=`conic-gradient(from ${(t*360*speed)%360}deg at 50% 50%, rgba(34,211,228,0) 0deg, rgba(34,211,228,0) 250deg, #22d3ee 305deg, #a78bfa 335deg, rgba(167,139,250,0) 360deg)`;
+}
+const cardIn=(el,t,k,y,h)=>{const g=clamp(sp(t,S[k][0]+.15,2.4,.8),0,1.03),o=P(t,S[k][1]-.05,.35,E.in);
+  box(el,70,lerp(y+180,y,g)-o*100,940,h,28);el.style.transform=`scale(${lerp(.9,1,clamp(g))*(1-o*.06)}) rotate(${(1-clamp(g))*-3+o*2}deg)`;el.style.opacity=1;vis(el,t>=S[k][0]+.15&&t<S[k][1]+.3);
+  el.style.clipPath=`inset(0 0 ${o*100}% 0 round 28px)`;return g;};
+
+window.seek=async(t)=>{
+  const BEAT=60/120;
+  let punch=0;for(let k=0;8+k*4*BEAT<30;k++){const bt=8+k*4*BEAT;if(t>=bt)punch+=.018*Math.exp(-(t-bt)*7)*Math.sin(Math.min(Math.PI,(t-bt)*22));}
+  for(let k=0;k<4;k++){const bt=8+k*BEAT;if(t>=bt)punch+=.01*Math.exp(-(t-bt)*9)*Math.sin(Math.min(Math.PI,(t-bt)*26));}
+  $('L').style.transform=`scale(${1+.015*Math.sin(t*.6)+punch})`;
+  document.querySelectorAll('.orb').forEach((b,i)=>{const a=t*(.35+i*.12)+i*2.1;box(b,540+Math.cos(a)*380-300,960+Math.sin(a*1.3)*500-300);});
+  const cuts=[2,4,7,11,15,19,23,27];let sh=null;for(const c of cuts)if(t>=c-.1&&t<c+.45)sh=P(t,c-.1,.55,E.io);
+  const sheen=$('sheen');vis(sheen,sh!==null);if(sh!==null)sheen.style.transform=`translate(${lerp(-1000,1400,sh)}px,0) rotate(18deg)`;
+  sparks.forEach((d,i)=>{const a=i/24*Math.PI*2+.3,u=P(t,7.3+(i%4)*.02,.75,E.o5),r=u*(280+(i%5)*80);
+    box(d,540+Math.cos(a)*r,960+Math.sin(a)*r);d.style.transform=`scale(${(1-u)*1.2})`;vis(d,t>=7.3&&t<8.1);});
+  $('orb1').style.transform=`translateX(${Math.sin(t*.35)*80}px)`;
+  // HOOK
+  rise(TT.hook1,t,0.1,2.1,2.4);
+  // TAGLINE
+  rise(TT.tag1,t,2.1,4.1);
+  // PROBLEM: chips marquee
+  qchips.forEach((el,i)=>{const row=i%3,dir=row%2?1:-1,w=el.offsetWidth||420;
+    const j=(i/3)|0;const x=((j*600+row*200+dir*t*140)%1920+1920)%1920-500;
+    box(el,x,620+row*120);el.style.transform=`scale(${pop(t,.5+i*.05)*(1-P(t,6.8,.3,E.in))})`;vis(el,t>=.5&&t<7.1);});
+  rise(TT.prob1,t,4.2,6.9);rise(TT.prob2,t,4.6,6.9);rise(TT.prob3,t,5.1,6.9);
+  // DROP 7.0: sky flood from center
+  const fu=P(t,7.0,.3,E.in),fo=P(t,7.35,.35,E.io);const R=t<7.35?lerp(30,1400,fu):lerp(1400,0,fo);
+  box($('flood'),540-R,960-R,2*R,2*R,R);vis($('flood'),t>=7.0&&t<7.7&&R>1);
+  rise(TT.drop1,t,7.4,10.85);rise(TT.drop2,t,7.65,10.85);
+  // Dashboard mock animate
+  // MODULES
+  rise(TT.mod1,t,11.2,14.85);rise(TT.mod2,t,11.45,14.85);rise(TT.mod3,t,11.7,14.85);rise(TT.mod4,t,11.95,14.85);
+  engCards.forEach((el,i)=>{const u=P(t,11.2+i*.4,.6,E.o5);box(el,70+i*240-20,lerp(1400,680,u));el.style.transform=`scale(${lerp(.3,1,u)*(1-P(t,14.85,.2,E.in))}) rotate(${(1-u)*-4}deg)`;vis(el,t>=11.2&&t<15.15);});
+  // DIFF split screen
+  rise(TT.diff1,t,15.2,18.85);rise(TT.diff2,t,15.5,18.85);
+  cardIn(split,t,'diff',300,600);borderBeam(split,t,true,.45);
+  const slider=P(t,15.2,3.8,E.io);$('splitAfter').style.clipPath=`inset(0 ${100*(1-slider)}% 0 0)`;
+  // STATS
+  rise(TT.stat1,t,19.2,22.85);rise(TT.stat2,t,19.45,22.85);rise(TT.stat3,t,19.7,22.85);rise(TT.stat4,t,19.95,22.85);
+  statCards.forEach((el,i)=>{const u=P(t,19.2+i*.15,.9,E.expo);const target=[2400,130,10,4][i];el.querySelector('.stat-value').textContent=Math.round(target*u).toLocaleString();el.style.transform=`scale(${pop(t,19.3+i*.12,3.4,.6)*(1-P(t,22.85,.2,E.in))})`;vis(el,t>=19.2&&t<23.15);});
+  // CTA
+  rise(TT.cta1,t,23.2,26.85);rise(TT.cta2,t,23.6,26.85);
+  const btnScale=pop(t,23.2,2.8,.55)*lerp(1,1.03,Math.sin(t*8)*.5+.5);
+  box(ctaBtn,340,1420);ctaBtn.style.transform=`scale(${btnScale})`;vis(ctaBtn,t>=23.2);
+  box(qr,460,1540);qr.style.transform=`scale(${P(t,23.6,.5,E.o5)})`;vis(qr,t>=23.6);
+  box(url,380,1720);vis(url,t>=23.8);
+  borderBeam(ctaBtn,t,t>=23.6,.7,50);
+  // LOOP: micro-settle to frame 0
+  const loopFade=P(t,27,3,E.in);
+  if(t>=27){TT.hook1.style.opacity=1-loopFade;TT.hook1.style.transform=`translateY(${loopFade*-50}%) scale(${1-loopFade*.1})`;}
+  // CURSOR
+  const cur=$('cursor');let on=false,x=0,y=0,dip=0;
+  if(t>=3.1&&t<4.2){const u=P(t,3.1,.7,E.io);x=lerp(1120,100+940-170,u);y=lerp(2000,680+70,u);on=true;if(t>=3.85&&t<4.0)dip=.14;}
+  if(t>=7.1&&t<8.2){const u=P(t,7.1,.45,E.io);x=lerp(1120,100+940-170,u);y=lerp(2000,680+70,u);on=true;if(t>=7.85&&t<8.0)dip=.14;}
+  if(t>=23.4&&t<24.5){const u=P(t,23.4,.8,E.io);x=lerp(1120,540,u);y=lerp(2000,1480,u);on=true;if(t>=24.2&&t<24.4)dip=.14;}
+  vis(cur,on);cur.style.transform=`translate(${x-6}px,${y-4}px) scale(${1-dip})`;
+  if(t>=24.2&&t<24.4)ctaBtn.style.transform=`scale(${btnScale*(1-Math.sin(Math.PI*(t-24.2)/.2)*.06)})`;
+  return true;
+};
+(async()=>{await document.fonts.load('700 100px Geist');await document.fonts.load('700 100px Archivo');await document.fonts.ready;
+  await Promise.all([...document.images].map(i=>i.complete?0:new Promise(r=>{i.onload=i.onerror=r;})));
+  await window.seek(0);window.ready=true;})();
+</script></body></html>

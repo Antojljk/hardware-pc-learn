@@ -1,54 +1,51 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { 
-  Settings, BookOpen, Brain, Wrench, Library, Sparkles, 
+import {
+  Settings, BookOpen, Brain, Wrench, Library, Sparkles,
   Users, UserPlus, MessageSquare, Trophy,
   TrendingUp, BarChart3, MousePointer2, Globe
 } from 'lucide-react';
 import Link from 'next/link';
+import { AdminStats } from '@/types/admin';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function AdminDashboardClient({ initialData }: { initialData: any }) {
-  const [data, setData] = useState(initialData);
+export default function AdminDashboardClient({ initialData }: { initialData: AdminStats }) {
+  const [data, setData] = useState<AdminStats>(initialData);
+  const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
-      const interval = setInterval(async () => {
-        try {
-          const res = await fetch('/api/admin/stats');
-          if (res.ok) {
-            const newData = await res.json();
-            setData(newData);
-          }
-        } catch (e) {
-          console.error('Failed to refresh stats:', e);
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      setIsLoading(true);
+      try {
+        const res = await fetch('/api/admin/stats');
+        if (res.ok) {
+          const newData = await res.json();
+          setData(newData);
         }
-      }, 10000);
-      return () => clearInterval(interval);
-    }, []);
+      } catch (e) {
+        console.error('Failed to refresh stats:', e);
+      } finally {
+        setIsLoading(false);
+      }
+    }, 30000); // Increased to 30s to reduce DB load
+    return () => clearInterval(interval);
+  }, []);
 
-  const {
-    lessons, questions, exams, glossary, scenarios, components,
-    userCount, planCounts, totalAiMessages, avgExamScore,
-    newUsers24h, newUsers7d, newUsers30d, activeUsers24h,
-    totalReviewCards, totalBadges, totalReviews, avgQuizScore,
-    recentInterviews, recentDiagnostics,
-    pv24h, uv24h, pv7d, uv7d, pv30d, uv30d, topPages
-  } = data;
+  const { content, users, performance, traffic, aiSupport } = data;
 
   const quickStats = [
-    { label: 'Visites (24h)', value: pv24h, icon: MousePointer2, color: 'text-blue-500' },
-    { label: 'Uniques (24h)', value: uv24h, icon: Users, color: 'text-green-500' },
-    { label: 'Pages Vues (7j)', value: pv7d, icon: Globe, color: 'text-orange-500' },
-    { label: 'Uniques (7j)', value: uv7d, icon: UserPlus, color: 'text-purple-500' },
+    { label: 'Visites (24h)', value: traffic.pv24h, icon: MousePointer2, color: 'text-blue-500' },
+    { label: 'Uniques (24h)', value: traffic.uv24h, icon: Users, color: 'text-green-500' },
+    { label: 'Pages Vues (7j)', value: traffic.pv7d, icon: Globe, color: 'text-orange-500' },
+    { label: 'Uniques (7j)', value: traffic.uv7d, icon: UserPlus, color: 'text-purple-500' },
   ];
 
   const contentItems = [
-    { href: '/admin/cours',   icon: BookOpen, label: 'Cours', count: lessons, desc: 'Cours et parcours' },
-    { href: '/admin/quiz',    icon: Brain,    label: 'Quiz', count: questions, desc: 'Banque de questions' },
-    { href: '/admin/examens', icon: Sparkles, label: 'Examens', count: exams, desc: 'Examens blancs' },
-    { href: '/admin/glossaire', icon: Library, label: 'Glossaire', count: glossary, desc: 'Termes techniques' },
-    { href: '/admin/diagnostics', icon: Wrench, label: 'Diagnostics', count: scenarios, desc: 'Scénarios de panne' },
-    { href: '/admin/composants', icon: Settings, label: 'Composants', count: components, desc: 'Catalogue composants' },
+    { href: '/admin/cours',   icon: BookOpen, label: 'Cours', count: content.lessons, desc: 'Cours et parcours' },
+    { href: '/admin/quiz',    icon: Brain,    label: 'Quiz', count: content.questions, desc: 'Banque de questions' },
+    { href: '/admin/examens', icon: Sparkles, label: 'Examens', count: content.exams, desc: 'Examens blancs' },
+    { href: '/admin/glossaire', icon: Library, label: 'Glossaire', count: content.glossary, desc: 'Termes techniques' },
+    { href: '/admin/diagnostics', icon: Wrench, label: 'Diagnostics', count: content.scenarios, desc: 'Scénarios de panne' },
+    { href: '/admin/composants', icon: Settings, label: 'Composants', count: content.components, desc: 'Catalogue composants' },
   ];
 
   return (
@@ -59,6 +56,7 @@ export default function AdminDashboardClient({ initialData }: { initialData: any
           <Settings className="w-6 h-6 text-text" /> Dashboard Administration
         </h1>
         <p className="text-muted text-[15px] mt-2 max-w-xl">Vue d&apos;ensemble en temps réel de l&apos;activité, du trafic et du contenu du site.</p>
+        {isLoading && <div className="text-xs text-muted animate-pulse ml-2">Mise à jour des données...</div>}
       </section>
 
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -67,9 +65,9 @@ export default function AdminDashboardClient({ initialData }: { initialData: any
             <div className={`w-12 h-12 rounded-2xl grid place-items-center bg-bg-elev border border-border ${s.color}`}>
               <s.icon className="w-6 h-6" />
             </div>
-            <div>
-              <div className="text-2xl font-display font-bold tabular-nums">{s.value}</div>
-              <div className="text-xs text-muted font-medium">{s.label}</div>
+            <div className="overflow-hidden">
+              <div className="text-2xl font-display font-bold tabular-nums truncate">{s.value}</div>
+              <div className="text-xs text-muted font-medium truncate">{s.label}</div>
             </div>
           </div>
         ))}
@@ -84,18 +82,18 @@ export default function AdminDashboardClient({ initialData }: { initialData: any
             <div className="grid sm:grid-cols-3 gap-4 mb-6">
                 <div className="p-3 rounded-xl bg-bg-elev border border-border text-center">
                   <div className="text-xs text-muted mb-1">Pages vues (30j)</div>
-                  <div className="text-xl font-display font-bold text-text">{pv30d}</div>
+                  <div className="text-xl font-display font-bold text-text">{traffic.pv30d}</div>
                 </div>
                <div className="p-3 rounded-xl bg-bg-elev border border-border text-center">
                   <div className="text-xs text-muted mb-1">Uniques (30j)</div>
-                  <div className="text-xl font-display font-bold text-text">{uv30d}</div>
+                  <div className="text-xl font-display font-bold text-text">{traffic.uv30d}</div>
                 </div>
                <div className="p-3 rounded-xl bg-bg-elev border border-border text-center">
                  <div className="text-xs text-muted mb-1">Moyenne / jour</div>
-                 <div className="text-xl font-display font-bold text-text">{(pv30d / 30).toFixed(1)}</div>
+                 <div className="text-xl font-display font-bold text-text">{(traffic.pv30d / 30).toFixed(1)}</div>
                </div>
             </div>
-            
+
             <div className="space-y-3">
               <h3 className="text-xs font-semibold text-muted uppercase tracking-wider">Top 10 Pages Consultées</h3>
               <div className="overflow-hidden rounded-xl border border-border">
@@ -107,9 +105,9 @@ export default function AdminDashboardClient({ initialData }: { initialData: any
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
-                      {topPages.map((p: { url: string; count: number }) => (
+                      {traffic.topPages.map((p) => (
                        <tr key={p.url} className="hover:bg-bg-elev/50">
-                         <td className="p-2 font-mono text-xs">{p.url}</td>
+                         <td className="p-2 font-mono text-xs truncate max-w-[200px]">{p.url}</td>
                          <td className="p-2 text-right font-display font-semibold">{p.count}</td>
                        </tr>
                      ))}
@@ -130,7 +128,7 @@ export default function AdminDashboardClient({ initialData }: { initialData: any
                     <div className="w-8 h-8 rounded-lg grid place-items-center bg-bg-elev border border-border group-hover:border-text/30">
                       <i.icon className="w-4 h-4 text-text" />
                     </div>
-                    <div>
+                    <div className="flex flex-col">
                       <div className="text-sm font-semibold">{i.label}</div>
                       <div className="text-[11px] text-muted">{i.desc}</div>
                     </div>
@@ -150,19 +148,19 @@ export default function AdminDashboardClient({ initialData }: { initialData: any
             <div className="space-y-3">
                 <div className="flex justify-between items-center p-2 rounded-lg bg-bg-elev border border-border">
                   <span className="text-xs text-muted">Nouveaux (24h)</span>
-                  <span className="text-sm font-bold text-text">+{newUsers24h}</span>
+                  <span className="text-sm font-bold text-text">+{users.new24h}</span>
                 </div>
                 <div className="flex justify-between items-center p-2 rounded-lg bg-bg-elev border border-border">
                   <span className="text-xs text-muted">Nouveaux (7j)</span>
-                  <span className="text-sm font-bold text-text">+{newUsers7d}</span>
+                  <span className="text-sm font-bold text-text">+{users.new7d}</span>
                 </div>
                 <div className="flex justify-between items-center p-2 rounded-lg bg-bg-elev border border-border">
                   <span className="text-xs text-muted">Nouveaux (30j)</span>
-                  <span className="text-sm font-bold text-text">+{newUsers30d}</span>
+                  <span className="text-sm font-bold text-text">+{users.new30d}</span>
                 </div>
                 <div className="flex justify-between items-center p-2 rounded-lg bg-bg-elev border border-border">
                   <span className="text-xs text-muted">Actifs (24h)</span>
-                  <span className="text-sm font-bold text-text">{activeUsers24h}</span>
+                  <span className="text-sm font-bold text-text">{users.active24h}</span>
                 </div>
             </div>
           </div>
@@ -174,24 +172,24 @@ export default function AdminDashboardClient({ initialData }: { initialData: any
             <ul className="text-sm space-y-3 text-muted">
                <li className="flex justify-between">
                  <span>Score moyen Examens</span>
-                 <strong className="text-text">{Number(avgExamScore)?.toFixed(1) ?? '0'}%</strong>
+                 <strong className="text-text">{Number(performance.avgExamScore).toFixed(1)}%</strong>
                </li>
                <li className="flex justify-between">
                  <span>Score moyen Quiz</span>
-                 <strong className="text-text">{Number(avgQuizScore)?.toFixed(1) ?? '0'}%</strong>
+                 <strong className="text-text">{Number(performance.avgQuizScore).toFixed(1)}%</strong>
                </li>
-              <li className="flex justify-between">
-                <span>Badges débloqués</span>
-                <strong className="text-text">{totalBadges}</strong>
-              </li>
-              <li className="flex justify-between">
-                <span>Cartes de révision</span>
-                <strong className="text-text">{totalReviewCards}</strong>
-              </li>
-              <li className="flex justify-between">
-                <span>Avis clients</span>
-                <strong className="text-text">{totalReviews}</strong>
-              </li>
+               <li className="flex justify-between">
+                 <span>Badges débloqués</span>
+                 <strong className="text-text">{performance.totalBadges}</strong>
+               </li>
+               <li className="flex justify-between">
+                 <span>Cartes de révision</span>
+                 <strong className="text-text">{performance.totalReviewCards}</strong>
+               </li>
+               <li className="flex justify-between">
+                 <span>Avis clients</span>
+                 <strong className="text-text">{performance.totalReviews}</strong>
+               </li>
             </ul>
           </section>
 
@@ -200,19 +198,19 @@ export default function AdminDashboardClient({ initialData }: { initialData: any
               <Users className="w-4 h-4" /> Répartition Plans
             </h2>
                <div className="space-y-2">
-                {planCounts.map((p: { plan: string; count: number }) => (
+                {users.planDistribution.map((p) => (
                  <div key={p.plan} className="flex items-center gap-3">
-                   <span className="text-xs text-muted w-20">{p.plan}</span>
+                   <span className="text-xs text-muted w-20 truncate">{p.plan}</span>
                    <div className="flex-1 h-2 bg-bg-elev rounded-full overflow-hidden border border-border">
-                     <div 
-                       className="h-full bg-text" 
-                       style={{ width: `${(p.count / userCount) * 100}%` }} 
+                     <div
+                       className="h-full bg-text"
+                       style={{ width: `${(p.count / (users.total || 1)) * 100}%` }}
                      />
                    </div>
                    <span className="text-xs font-semibold tabular-nums w-8 text-right">{p.count}</span>
                  </div>
                ))}
-             </div>
+            </div>
           </section>
 
           <section className="module-frame anim-rise anim-rise-1">
@@ -222,17 +220,17 @@ export default function AdminDashboardClient({ initialData }: { initialData: any
              <div className="p-3 rounded-xl bg-bg-elev border border-border">
                <div className="text-xs text-muted mb-1">Messages Tuteur total</div>
                <div className="text-2xl font-display font-bold tabular-nums text-text">
-                   {totalAiMessages ?? 0}
+                   {aiSupport.totalMessages}
                </div>
              </div>
             <div className="grid grid-cols-2 gap-2 mt-3">
                 <div className="p-2 rounded-lg border border-border text-center">
                   <div className="text-[10px] text-muted">Entretiens (7j)</div>
-                  <div className="text-sm font-bold tabular-nums">{recentInterviews}</div>
+                  <div className="text-sm font-bold tabular-nums">{aiSupport.recentInterviews}</div>
                 </div>
                 <div className="p-2 rounded-lg border border-border text-center">
                   <div className="text-[10px] text-muted">Diagnostics (7j)</div>
-                  <div className="text-sm font-bold tabular-nums">{recentDiagnostics}</div>
+                  <div className="text-sm font-bold tabular-nums">{aiSupport.recentDiagnostics}</div>
                 </div>
             </div>
           </section>
