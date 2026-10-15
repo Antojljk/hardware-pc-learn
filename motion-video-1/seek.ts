@@ -85,7 +85,7 @@ function getPhase(t: number): { phase: PhaseId; progress: number; beat: number }
 }
 
 export function seek(t: number): SeekState {
-  const { phase, phaseProgress, beat } = getPhase(t);
+  const { phase, progress: phaseProgress, beat } = getPhase(t);
   const globalProgress = clamp(t / BEATMAP.totalDuration, 0, 1);
 
   // Default element states
