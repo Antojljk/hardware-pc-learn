@@ -3,13 +3,14 @@ import { prisma } from '@/lib/prisma';
 
 export async function POST(req: NextRequest) {
   try {
-    const { url, visitorId, userId } = await req.json();
+    const { url, visitorId, userId, email } = await req.json();
     
     await prisma.pageView.create({
       data: {
         url,
         visitorId,
         userId,
+        email,
       }
     });
 

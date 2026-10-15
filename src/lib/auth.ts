@@ -33,7 +33,8 @@ export async function verifyPassword(password: string, hash: string) {
 }
 
 export async function createSession(userId: string) {
-  const token = await new SignJWT({ uid: userId })
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  const token = await new SignJWT({ uid: userId, email: user?.email })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime(`${TTL_DAYS}d`)
