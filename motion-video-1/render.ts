@@ -294,7 +294,7 @@ async function renderFrames() {
 
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
-  await page.setViewportSize({ width: CONFIG.width, height: CONFIG.height, deviceScaleFactor: 2 });
+  await page.setViewportSize({ width: CONFIG.width, height: CONFIG.height });
 
   console.log(`🎬 Rendering ${CONFIG.totalFrames} frames @ ${CONFIG.fps}fps with ${CONFIG.motionBlurSamples}x motion blur...`);
   const startTime = Date.now();
