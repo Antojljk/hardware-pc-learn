@@ -1,143 +1,107 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireAdmin } from '@/lib/auth';
-import { AdminStats } from '@/types/admin';
 
 export const dynamic = 'force-dynamic';
-
-async function safeCount(promise: Promise<number>) {
-  try {
-    return await promise;
-  } catch (e) {
-    console.error('Stat count error:', e);
-    return 0;
-  }
-}
-
-async function safeAggregate<T>(promise: Promise<T>, defaultValue: T) {
-  try {
-    return await promise;
-  } catch (e) {
-    console.error('Stat aggregate error:', e);
-    return defaultValue;
-  }
-}
 
 export async function GET() {
   try {
     await requireAdmin();
-
+    console.log('Fetching admin stats...');
+    
     const now = new Date();
     const last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
     const last7d = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
     const last30d = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-    const [
-      content,
-      userStats,
-      performance,
-      traffic,
-      ai
-    ] = await Promise.all([
-      // CONTENT
-      (async () => ({
-        lessons: await safeCount(prisma.lesson.count()),
-        questions: await safeCount(prisma.quizQuestion.count()),
-        exams: await safeCount(prisma.exam.count()),
-        glossary: await safeCount(prisma.glossaryTerm.count()),
-        scenarios: await safeCount(prisma.diagnosticScenario.count()),
-        components: await safeCount(prisma.component.count()),
-      })(),
-
-      // USERS
-      (async () => {
-        const total = await safeCount(prisma.user.count());
-        const planDistribution = await safeAggregate(
-          prisma.user.groupBy({ by: ['plan'], _count: { _all: true } }),
-          []
-        );
-
-        return {
-          total,
-          new24h: await safeCount(prisma.user.count({ where: { createdAt: { gte: last24h } } })),
-          new7d: await safeCount(prisma.user.count({ where: { createdAt: { gte: last7d } } })),
-          new30d: await safeCount(prisma.user.count({ where: { createdAt: { gte: last30d } } })),
-          active24h: await safeCount(prisma.user.count({ where: { lastActiveAt: { gte: last24h } } })),
-          planDistribution: (planDistribution as any[]).map((p: any) => ({
-            plan: p.plan || 'UNKNOWN',
-            count: p._count?._all || 0,
-          })),
-        };
-      })(),
-
-      // PERFORMANCE
-      (async () => {
-        const examAvg = await safeAggregate(prisma.examAttempt.aggregate({ _avg: { score: true } }), { _avg: { score: 0 } });
-        const quizAvg = await safeAggregate(prisma.quizAttempt.aggregate({ _avg: { score: true } }), { _avg: { score: 0 } });
-
-        return {
-          avgExamScore: examAvg._avg?.score || 0,
-          avgQuizScore: quizAvg._avg?.score || 0,
-          totalBadges: await safeCount(prisma.badgesOnUsers.count()),
-          totalReviewCards: await safeCount(prisma.reviewCard.count()),
-          totalReviews: await safeCount(prisma.review.count()),
-        };
-      })(),
-
-      // TRAFFIC
-      (async () => {
-        const pv24h = await safeCount(prisma.pageView.count({ where: { createdAt: { gte: last24h } } }));
-        const pv7d = await safeCount(prisma.pageView.count({ where: { createdAt: { gte: last7d } } }));
-        const pv30d = await safeCount(prisma.pageView.count({ where: { createdAt: { gte: last30d } } }));
-
-        const uv24hRaw = await safeAggregate(prisma.pageView.groupBy({ where: { createdAt: { gte: last24h } }, by: ['visitorId'] }), []);
-        const uv7dRaw = await safeAggregate(prisma.pageView.groupBy({ where: { createdAt: { gte: last7d } }, by: ['visitorId'] }), []);
-        const uv30dRaw = await safeAggregate(prisma.pageView.groupBy({ where: { createdAt: { gte: last30d } }, by: ['visitorId'] }), []);
-
-        const topPages = await safeAggregate(
-          prisma.pageView.groupBy({
-            by: ['url'],
-            _count: { url: true },
-            orderBy: { _count: { url: 'desc' } },
-            take: 10,
-          }),
-          []
-        );
-
-        return {
-          pv24h,
-          uv24h: (uv24hRaw as any[]).length,
-          pv7d,
-          uv7d: (uv7dRaw as any[]).length,
-          pv30d,
-          uv30d: (uv30dRaw as any[]).length,
-          topPages: (topPages as any[]).map(p => ({
-            url: p.url || '',
-            count: p._count?.url || 0,
-          })),
-        };
-      })(),
-
-      // AI SUPPORT
-      (async () => {
-        const aiUsage = await safeAggregate(prisma.aiMessageUsage.aggregate({ _sum: { count: true } }), { _sum: { count: 0 } });
-        return {
-          totalMessages: aiUsage._sum?.count || 0,
-          recentInterviews: await safeCount(prisma.interviewAttempt.count({ where: { createdAt: { gte: last7d } } })),
-          recentDiagnostics: await safeCount(prisma.diagnosticAttempt.count({ where: { createdAt: { gte: last7d } } })),
-        };
-      })(),
+    const results = await Promise.allSettled([
+      prisma.track.count(),
+      prisma.lesson.count(),
+      prisma.quizQuestion.count(),
+      prisma.exam.count(),
+      prisma.glossaryTerm.count(),
+      prisma.diagnosticScenario.count(),
+      prisma.component.count(),
+      prisma.user.count(),
+      prisma.user.groupBy({ by: ['plan'], _count: { _all: true } }),
+      prisma.aiMessageUsage.aggregate({ _sum: { count: true } }),
+      prisma.examAttempt.aggregate({ _avg: { score: true } }),
+      prisma.user.count({ where: { createdAt: { gte: last24h } } }),
+      prisma.user.count({ where: { createdAt: { gte: last7d } } }),
+      prisma.user.count({ where: { createdAt: { gte: last30d } } }),
+      prisma.user.count({ where: { lastActiveAt: { gte: last24h } } }),
+      prisma.configBuild.count(),
+      prisma.reviewCard.count(),
+      prisma.badgesOnUsers.count(),
+      prisma.review.count(),
+      prisma.quizAttempt.aggregate({ _avg: { score: true } }),
+      prisma.interviewAttempt.count({ where: { createdAt: { gte: last7d } } }),
+      prisma.diagnosticAttempt.count({ where: { createdAt: { gte: last7d } } }),
+      prisma.pageView.count({ where: { createdAt: { gte: last24h } } }),
+      prisma.pageView.groupBy({ where: { createdAt: { gte: last24h } }, by: ['visitorId'], _count: { visitorId: true } }),
+      prisma.pageView.count({ where: { createdAt: { gte: last7d } } }),
+      prisma.pageView.groupBy({ where: { createdAt: { gte: last7d } }, by: ['visitorId'], _count: { visitorId: true } }),
+      prisma.pageView.count({ where: { createdAt: { gte: last30d } } }),
+      prisma.pageView.groupBy({ where: { createdAt: { gte: last30d } }, by: ['visitorId'], _count: { visitorId: true } }),
+      prisma.pageView.groupBy({
+        by: ['url'],
+        _count: { url: true },
+        orderBy: { _count: { url: 'desc' } },
+        take: 10,
+      }),
+      prisma.pageView.groupBy({
+          by: ['createdAt'],
+          _count: { url: true },
+          where: { createdAt: { gte: last30d } },
+        })
     ]);
 
-    const stats: AdminStats = {
-      content: content as any,
-      users: userStats as any,
-      performance: performance as any,
-      traffic: traffic as any,
-      aiSupport: ai as any,
+    const getValue = (index: number) => {
+      const res = results[index];
+      if (res?.status === 'fulfilled') return res.value;
+      console.error(`Stat index ${index} failed:`, res?.reason);
+      return null;
     };
 
-    return NextResponse.json(stats);
+    const uv24h = (getValue(41) as unknown as Array<unknown>)?.length || 0;
+    const uv7d = (getValue(43) as unknown as Array<unknown>)?.length || 0;
+    const uv30d = (getValue(45) as unknown as Array<unknown>)?.length || 0;
+
+    return NextResponse.json({
+      lessons: Number(getValue(1)) || 0,
+      questions: Number(getValue(2)) || 0,
+      exams: Number(getValue(3)) || 0,
+      glossary: Number(getValue(4)) || 0,
+      scenarios: Number(getValue(5)) || 0,
+      components: Number(getValue(6)) || 0,
+      userCount: Number(getValue(7)) || 0,
+      planCounts: (getValue(8) as unknown as Array<Record<string, unknown>>)?.map(p => ({ 
+        plan: String(p.plan || 'UNKNOWN'), 
+        count: (p._count as Record<string, unknown>)?.['_all' as string] ?? 0 
+      })) || [],
+      totalAiMessages: (getValue(9) as unknown as Record<string, Record<string, unknown>>)?._sum?.count ?? 0,
+      avgExamScore: (getValue(10) as unknown as Record<string, Record<string, unknown>>)?._avg?.score ?? 0,
+      newUsers24h: Number(getValue(11)) || 0,
+      newUsers7d: Number(getValue(12)) || 0,
+      newUsers30d: Number(getValue(13)) || 0,
+      activeUsers24h: Number(getValue(14)) || 0,
+      totalReviewCards: Number(getValue(15)) || 0,
+      totalBadges: Number(getValue(16)) || 0,
+      totalReviews: Number(getValue(17)) || 0,
+      avgQuizScore: (getValue(18) as unknown as Record<string, Record<string, unknown>>)?._avg?.score ?? 0,
+      recentInterviews: Number(getValue(19)) || 0,
+      recentDiagnostics: Number(getValue(20)) || 0,
+      pv24h: Number(getValue(40)) || 0,
+      uv24h: uv24h,
+      pv7d: Number(getValue(42)) || 0,
+      uv7d: uv7d,
+      pv30d: Number(getValue(44)) || 0,
+      uv30d: uv30d,
+      topPages: (getValue(46) as unknown as Array<Record<string, unknown>>)?.map(p => ({ 
+        url: String(p.url || ''), 
+        count: (p._count as Record<string, unknown>)?.url ?? 0 
+      })) || []
+    });
   } catch (e) {
     console.error('Stats API Error:', e);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
