@@ -31,7 +31,7 @@ const MODULES = [
   { icon: PcCase,        title: 'Boîtier',    tag: 'Airflow · Format',      accent: 'Refroidissement' },
 ];
 
-const DOMAIN_COLORS = ['text-accent', 'text-warning', 'text-success', 'text-text', 'text-muted'];
+const DOMAIN_COLORS = ['text-[#818CF8]', 'text-warning', 'text-success', 'text-text', 'text-muted'];
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
@@ -114,7 +114,7 @@ export default async function DashboardPage() {
           <div className="grid grid-cols-3 gap-2 sm:gap-3 w-full sm:w-auto sm:min-w-[360px]">
             <div className="rounded-2xl border border-border bg-bg-elev/70 backdrop-blur p-3">
               <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted">
-                <Flame className="w-3.5 h-3.5" /> Série
+                <Flame className="w-3.5 h-3.5" style={{ color: '#F59E0B' }} /> Série
               </div>
               <div className="mt-1.5 font-display text-2xl font-semibold tabular-nums text-text">
                 {user.streak} j
@@ -128,11 +128,12 @@ export default async function DashboardPage() {
                 {avgScore}%
               </div>
             </div>
-            <div className="rounded-2xl border border-text/30 bg-text/8 backdrop-blur p-3">
+            <div className="rounded-2xl backdrop-blur p-3"
+              style={{ border: '1px solid rgba(99,102,241,0.35)', background: 'rgba(91,95,238,0.12)' }}>
               <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted">
-                <Trophy className="w-3.5 h-3.5" /> Badges
+                <Trophy className="w-3.5 h-3.5" style={{ color: '#818CF8' }} /> Badges
               </div>
-              <div className="mt-1.5 font-display text-2xl font-semibold tabular-nums text-text">
+              <div className="mt-1.5 font-display text-2xl font-semibold tabular-nums" style={{ color: '#818CF8' }}>
                 {badges.length}
               </div>
             </div>
@@ -158,7 +159,11 @@ export default async function DashboardPage() {
               <span className="font-display text-lg text-muted">— {lvl.current.title}</span>
             </div>
             <div className="h-2 rounded-full bg-bg-elev overflow-hidden">
-              <div className="h-full bg-accent transition-all duration-700 ease-smooth" style={{ width: `${lvl.progress}%` }} />
+              <div className="h-full transition-all duration-700 ease-smooth" style={{
+                width: `${lvl.progress}%`,
+                background: 'linear-gradient(90deg, #5B5FEE, #818CF8)',
+                boxShadow: '0 0 8px rgba(91,95,238,0.45)',
+              }} />
             </div>
             <div className="flex justify-between mt-2 text-[11px] uppercase tracking-[0.1em]">
               <span className="text-text tabular-nums">{user.xp} XP</span>
@@ -192,7 +197,7 @@ export default async function DashboardPage() {
               <div
                 aria-hidden
                 className="pointer-events-none absolute -top-20 -right-20 w-48 h-48 rounded-full opacity-50 blur-3xl"
-                style={{ background: 'radial-gradient(closest-side, rgba(255,255,255,0.10), transparent 70%)' }}
+                style={{ background: 'radial-gradient(closest-side, rgba(99,102,241,0.12), transparent 70%)' }}
               />
               <div className="relative">
                 <div className="flex items-start justify-between gap-3 mb-4">
@@ -239,7 +244,7 @@ export default async function DashboardPage() {
           <div
             aria-hidden
             className="pointer-events-none absolute -top-20 -right-20 w-48 h-48 rounded-full opacity-40 blur-3xl"
-            style={{ background: 'radial-gradient(closest-side, rgba(255,255,255,0.10), transparent 70%)' }}
+            style={{ background: 'radial-gradient(closest-side, rgba(99,102,241,0.12), transparent 70%)' }}
           />
           <div className="relative">
             <div className="flex items-center justify-between mb-4">
@@ -251,7 +256,7 @@ export default async function DashboardPage() {
             {nextLesson ? (
               <Link href={`/cours/${nextLesson.slug}`} className="block group">
                 <div className="text-[11px] uppercase tracking-[0.1em] text-muted">{nextLesson.level}</div>
-                <div className="font-display text-xl font-semibold mt-1 group-hover:text-accent transition-colors text-text">
+                <div className="font-display text-xl font-semibold mt-1 group-hover:text-[#818CF8] transition-colors text-text">
                   {nextLesson.title}
                 </div>
                 <div className="text-[14px] text-muted mt-2 line-clamp-2 leading-relaxed">{nextLesson.objective}</div>
@@ -269,7 +274,7 @@ export default async function DashboardPage() {
           <div
             aria-hidden
             className="pointer-events-none absolute -top-20 -right-20 w-48 h-48 rounded-full opacity-40 blur-3xl"
-            style={{ background: 'radial-gradient(closest-side, rgba(255,255,255,0.10), transparent 70%)' }}
+            style={{ background: 'radial-gradient(closest-side, rgba(99,102,241,0.12), transparent 70%)' }}
           />
           <div className="relative">
             <div className="flex items-center justify-between mb-4">
@@ -378,7 +383,7 @@ function QuickLink({ href, icon: Icon, title, desc, num }: { href: string; icon:
       <div
         aria-hidden
         className="pointer-events-none absolute -top-16 -right-16 w-40 h-40 rounded-full opacity-30 blur-3xl"
-        style={{ background: 'radial-gradient(closest-side, rgba(255,255,255,0.10), transparent 70%)' }}
+        style={{ background: 'radial-gradient(closest-side, rgba(99,102,241,0.12), transparent 70%)' }}
       />
       <span className="relative text-[10px] uppercase tracking-[0.14em] text-faint w-6">{num}</span>
       <Icon className="relative w-5 h-5 text-text" />
