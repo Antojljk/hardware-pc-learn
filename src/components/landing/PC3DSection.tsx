@@ -1,7 +1,7 @@
 'use client';
 import { Suspense, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Float, ContactShadows } from '@react-three/drei';
+import { Float, ContactShadows, Environment } from '@react-three/drei';
 import type { Group } from 'three';
 
 function PCCase() {
@@ -17,13 +17,13 @@ function PCCase() {
       {/* Main chassis */}
       <mesh>
         <boxGeometry args={[1.2, 2.8, 0.6]} />
-        <meshStandardMaterial color="#0b0b12" metalness={0.85} roughness={0.15} />
+        <meshStandardMaterial color="#1a1a2e" metalness={0.4} roughness={0.65} />
       </mesh>
 
-      {/* Front panel glass */}
+      {/* Front panel */}
       <mesh position={[0, 0, 0.305]}>
         <boxGeometry args={[1.14, 2.74, 0.01]} />
-        <meshStandardMaterial color="#101020" metalness={0.9} roughness={0.05} opacity={0.95} transparent />
+        <meshStandardMaterial color="#16213e" metalness={0.5} roughness={0.4} />
       </mesh>
 
       {/* Top indigo LED strip */}
@@ -76,10 +76,12 @@ function PCCase() {
 function Scene() {
   return (
     <>
-      <ambientLight intensity={0.15} />
-      <pointLight position={[-3, 4, 3]} intensity={2.5} color="#818CF8" />
-      <pointLight position={[3, -2, 2]} intensity={1.2} color="#6366F1" />
-      <pointLight position={[0, 1, 5]} intensity={0.5} color="#ffffff" />
+      <ambientLight intensity={0.6} />
+      <hemisphereLight args={['#818CF8', '#000000', 0.8]} />
+      <pointLight position={[-3, 4, 3]} intensity={3} color="#818CF8" />
+      <pointLight position={[3, -2, 2]} intensity={2} color="#6366F1" />
+      <pointLight position={[0, 1, 5]} intensity={1} color="#ffffff" />
+      <Environment preset="city" background={false} />
       <Float speed={1.5} rotationIntensity={0.15} floatIntensity={0.5}>
         <PCCase />
       </Float>
