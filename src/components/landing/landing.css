@@ -17,9 +17,9 @@
   --l-color-btn-bg: #ffffff;
   --l-color-btn-text: #000000;
 
-  /* Typographie : Inter uniquement (importé via <link> dans le root) */
-  --l-font-display: 'Inter', system-ui, -apple-system, sans-serif;
-  --l-font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  /* Typographie : Space Grotesk (display) + Inter (body) via next/font CSS variables */
+  --l-font-display: var(--font-display, 'Space Grotesk', 'Inter', system-ui, -apple-system, sans-serif);
+  --l-font-body: var(--font-body, 'Inter', system-ui, -apple-system, sans-serif);
 
   /* Échelle typographique clampée responsive */
   --l-text-hero: clamp(2.5rem, 6vw, 5rem);
@@ -824,6 +824,36 @@
   color: var(--l-color-muted);
   font-size: 0.8125rem;
   letter-spacing: 0.02em;
+}
+.l-landing [data-l-section="pricing-cta"] .l-pricing-cta-features {
+  list-style: none;
+  padding: 0;
+  margin: 0.875rem 0 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+.l-landing [data-l-section="pricing-cta"] .l-pricing-cta-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--l-color-muted);
+  line-height: 1.45;
+}
+.l-landing [data-l-section="pricing-cta"] .l-pricing-cta-feature-icon {
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  opacity: 0.65;
+}
+.l-landing [data-l-section="pricing-cta"] .l-pricing-cta-card-btn {
+  margin-top: auto;
+  width: 100%;
+  justify-content: center;
+  text-align: center;
 }
 
 @media (max-width: 1024px) {

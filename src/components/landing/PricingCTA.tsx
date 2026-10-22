@@ -5,236 +5,125 @@ import { Check } from 'lucide-react';
 interface Plan {
   name: string;
   price: string;
+  hint: string;
   features: string[];
   highlight?: boolean;
+  tag?: string;
 }
 
 const PLANS: Plan[] = [
   {
     name: 'FREE',
     price: '0 €',
-    features: ['Accès limité aux cours', 'Quiz basiques', 'Support communauté', 'Accès public', 'Progression limitée'],
-    highlight: false,
+    hint: 'Pour débuter',
+    features: ['Accès limité aux cours', 'Quiz basiques', 'Support communauté'],
   },
   {
     name: 'ESSENTIEL',
-    price: '7,99 €/mois',
-    features: ['Tous les cours', 'Quiz complets', 'Certifications niveau 1', 'Accès prioritaire', 'Support forum'],
-    highlight: false,
+    price: '7,99 €',
+    hint: 'par mois',
+    features: ['Tous les cours', 'Quiz complets', 'Certifications niveau 1'],
   },
   {
     name: 'PRO',
-    price: '14,99 €/mois',
-    features: ['Tout d\'Essentiel', 'Simulations de diagnostic', 'Mode Technicien', 'Tuteur IA dédié', 'Accès Beta outils'],
+    price: '14,99 €',
+    hint: 'par mois',
+    features: ['Simulations diagnostic', 'Mode Technicien', 'Tuteur IA dédié'],
     highlight: true,
+    tag: 'Recommandé',
   },
   {
     name: 'ULTIMATE',
-    price: '24,99 €/mois',
-    features: ['Tout de Pro', 'Certifications avancées (bientôt)', 'Accès prioritaire au support', 'Support VIP'],
-    highlight: false,
+    price: '24,99 €',
+    hint: 'par mois',
+    features: ['Certifications avancées', 'Support VIP', 'Accès prioritaire'],
   },
 ];
 
 export function PricingCTA() {
   return (
-    <section 
-      data-l-section="pricing-cta" 
-      data-section="pricing" 
-      style={{ padding: '96px 24px', background: '#080B14' }} 
-      aria-labelledby="l-pricing-cta-title"
-    >
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        <header style={{ textAlign: 'center', marginBottom: '64px' }}>
-          <span style={{ 
-            display: 'inline-block', 
-            padding: '4px 12px', 
-            borderRadius: '9999px', 
-            background: 'rgba(6, 182, 212, 0.1)', 
-            color: '#22d3ee', 
-            fontSize: '12px', 
-            fontWeight: 'bold', 
-            textTransform: 'uppercase', 
-            letterSpacing: '0.05em', 
-            marginBottom: '16px' 
-          }}>
-            Offres & tarifs
-          </span>
-          <h2 id="l-pricing-cta-title" style={{ 
-            fontSize: '36px', 
-            fontWeight: 'bold', 
-            color: 'white', 
-            marginBottom: '16px',
-            fontFamily: 'var(--font-display, sans-serif)'
-          }}>
-            Deviens un véritable technicien PC.
-          </h2>
-           <p style={{ color: '#9ca3af', maxWidth: '672px', margin: '0 auto' }}>
-             Apprends à ton rythme. Progresse jusqu&apos;au niveau technicien.
-           </p>
-        </header>
+    <section data-l-section="pricing-cta" aria-labelledby="l-pricing-cta-title">
+      <div className="l-container">
+        <div className="l-pricing-cta-inner">
+          <header className="l-pricing-cta-header">
+            <span className="l-m-label">Offres &amp; tarifs</span>
+            <h2 id="l-pricing-cta-title" className="l-pricing-cta-title">
+              Deviens un véritable technicien PC.
+            </h2>
+            <p className="l-pricing-cta-lede">
+              Apprends à ton rythme. Progresse jusqu&apos;au niveau technicien.
+            </p>
+          </header>
 
-         <div style={{ 
-           display: 'grid', 
-           gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
-           gap: '24px', 
-           width: '100%',
-           marginBottom: '48px'
-         }}>
-           {PLANS.map((plan) => (
-             <div
-               key={plan.name}
-               style={{
-                 position: 'relative',
-                 padding: '32px',
-                 borderRadius: '16px',
-                 border: plan.highlight ? '1px solid #22d3ee' : '1px solid rgba(255,255,255,0.1)',
-                 background: 'rgba(255,255,255,0.05)',
-                 display: 'flex',
-                 flexDirection: 'column',
-                 transition: 'all 0.3s ease',
-                 transform: plan.highlight ? 'scale(1.05)' : 'scale(1)',
-                 boxShadow: plan.highlight ? '0 0 30px rgba(0,212,255,0.15)' : 'none',
-                 zIndex: plan.highlight ? 10 : 1
-               }}
-             >
-               {plan.highlight && (
-                 <span style={{ 
-                   position: 'absolute', 
-                   top: '-12px', 
-                   left: '50%', 
-                   transform: 'translateX(-50%)', 
-                   background: '#22d3ee', 
-                   color: 'black', 
-                   fontSize: '10px', 
-                   fontWeight: 'bold', 
-                   padding: '4px 12px', 
-                   borderRadius: '9999px', 
-                   textTransform: 'uppercase' 
-                 }}>
-                   Recommandé
-                 </span>
-               )}
-               <h3 style={{ color: 'white', fontWeight: 'bold', fontSize: '20px', marginBottom: '8px', fontFamily: 'var(--font-display, sans-serif)' }}>{plan.name}</h3>
-               <div style={{ fontSize: '30px', fontWeight: 'bold', color: 'white', marginBottom: '24px', fontFamily: 'var(--font-display, sans-serif)' }}>{plan.price}</div>
-               <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 32px 0', flex: 1 }}>
-                 {plan.features.map((f) => (
-                   <li key={f} style={{ display: 'flex', alignItems: 'start', gap: '12px', fontSize: '14px', color: '#9ca3af', marginBottom: '12px' }}>
-                     <Check style={{ width: '16px', height: '16px', color: '#22d3ee', marginTop: '2px', flexShrink: 0 }} />
-                     <span>{f}</span>
-                   </li>
-                 ))}
-               </ul>
-               <Link 
-                 href="/offres" 
-                 style={{ 
-                   display: 'block', 
-                   width: '100%', 
-                   padding: '12px 0', 
-                   textAlign: 'center', 
-                   borderRadius: '8px', 
-                   fontWeight: '500', 
-                   textDecoration: 'none',
-                   transition: 'all 0.3s ease',
-                   background: plan.highlight ? '#22d3ee' : 'transparent',
-                   color: plan.highlight ? 'black' : 'white',
-                   border: plan.highlight ? 'none' : '1px solid rgba(255,255,255,0.2)',
-                 }}
-               >
-                 Commencer
-               </Link>
-             </div>
-           ))}
-         </div>
+          <ul className="l-pricing-cta-grid">
+            {PLANS.map((plan) => (
+              <li
+                key={plan.name}
+                className={`l-pricing-cta-card${plan.highlight ? ' l-pricing-cta-card--highlight' : ''}`}
+              >
+                <div className="l-pricing-cta-card-top">
+                  <span className="l-pricing-cta-card-name">{plan.name}</span>
+                  {plan.tag && (
+                    <span className="l-pricing-cta-card-tag">{plan.tag}</span>
+                  )}
+                </div>
+                <div className="l-pricing-cta-card-price">{plan.price}</div>
+                <div className="l-pricing-cta-card-hint">{plan.hint}</div>
+                <ul className="l-pricing-cta-features">
+                  {plan.features.map((f) => (
+                    <li key={f} className="l-pricing-cta-feature">
+                      <Check className="l-pricing-cta-feature-icon" aria-hidden="true" />
+                      <span>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href="/offres"
+                  className={`l-pricing-cta-card-btn ${plan.highlight ? 'l-m-btn' : 'l-m-btn-outline'}`}
+                >
+                  Commencer
+                </Link>
+              </li>
+            ))}
 
-         <div style={{ 
-           maxWidth: '900px', 
-           margin: '0 auto 48px auto', 
-           padding: '32px', 
-           borderRadius: '24px', 
-           border: '2px solid #eab308', 
-           background: 'rgba(234, 179, 8, 0.05)', 
-           display: 'flex', 
-           flexDirection: 'column', 
-           gap: '24px',
-           position: 'relative'
-         }}>
-           <span style={{ 
-             position: 'absolute', 
-             top: '-12px', 
-             right: '24px', 
-             background: '#eab308', 
-             color: 'black', 
-             fontSize: '12px', 
-             fontWeight: 'bold', 
-             padding: '4px 12px', 
-             borderRadius: '9999px', 
-             textTransform: 'uppercase' 
-           }}>
-             Exclusif
-           </span>
-           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px', alignItems: 'center' }}>
-             <div style={{ textAlign: 'left' }}>
-               <h3 style={{ color: 'white', fontSize: '28px', fontWeight: 'bold', marginBottom: '12px', fontFamily: 'var(--font-display, sans-serif)' }}>Ultimate Lifetime</h3>
-               <p style={{ color: '#9ca3af', fontSize: '16px', marginBottom: '24px', lineHeight: '1.5' }}>
-                 Accès illimité et définitif à toutes les fonctionnalités HardwarePC. <br />
-                 Payez une fois, profitez à vie.
-               </p>
-               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                 {['Tout d\'Ultimate', 'Mises à jour incluses à vie', 'Accès anticipé aux nouvelles fonctionnalités', 'Support prioritaire à vie'].map((f) => (
-                   <li key={f} style={{ display: 'flex', alignItems: 'start', gap: '10px', fontSize: '14px', color: '#d1d5db' }}>
-                     <Check style={{ width: '16px', height: '16px', color: '#eab308', marginTop: '2px', flexShrink: 0 }} />
-                     <span>{f}</span>
-                   </li>
-                 ))}
-               </ul>
-             </div>
-             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', padding: '24px', background: 'rgba(255,255,255,0.03)', borderRadius: '16px' }}>
-               <div style={{ fontSize: '42px', fontWeight: 'bold', color: 'white', fontFamily: 'var(--font-display, sans-serif)' }}>499 €</div>
-               <div style={{ fontSize: '14px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Paiement unique</div>
-               <button 
-                 onClick={async () => {
-                   const res = await fetch('/api/stripe/lifetime', { method: 'POST' });
-                   const data = await res.json();
-                   if (data.url) window.location.href = data.url;
-                 }}
-                 style={{ 
-                   display: 'block', 
-                   width: '100%', 
-                   padding: '14px 0', 
-                   textAlign: 'center', 
-                   borderRadius: '8px', 
-                   fontWeight: 'bold', 
-                   textDecoration: 'none',
-                   background: '#eab308',
-                   color: 'black',
-                   transition: 'all 0.3s ease',
-                   border: 'none',
-                   cursor: 'pointer'
-                 }}
-               >
-                 Acheter à vie — 499€
-               </button>
-             </div>
-           </div>
-         </div>
+            {/* Lifetime */}
+            <li className="l-pricing-cta-card l-pricing-cta-card--highlight">
+              <div className="l-pricing-cta-card-top">
+                <span className="l-pricing-cta-card-name">LIFETIME</span>
+                <span className="l-pricing-cta-card-tag">Exclusif</span>
+              </div>
+              <div className="l-pricing-cta-card-price">499 €</div>
+              <div className="l-pricing-cta-card-hint">paiement unique</div>
+              <ul className="l-pricing-cta-features">
+                {["Tout d'Ultimate", 'Mises à jour à vie', 'Support prioritaire à vie'].map((f) => (
+                  <li key={f} className="l-pricing-cta-feature">
+                    <Check className="l-pricing-cta-feature-icon" aria-hidden="true" />
+                    <span>{f}</span>
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={async () => {
+                  const res = await fetch('/api/stripe/lifetime', { method: 'POST' });
+                  const data = await res.json();
+                  if (data.url) window.location.href = data.url;
+                }}
+                className="l-pricing-cta-card-btn l-m-btn"
+              >
+                Acheter — 499 €
+              </button>
+            </li>
+          </ul>
 
-
-        <div style={{ textAlign: 'center' }}>
-          <Link href="/offres" style={{ 
-            display: 'inline-flex', 
-            alignItems: 'center', 
-            gap: '8px', 
-            fontSize: '14px', 
-            color: '#9ca3af', 
-            textDecoration: 'none', 
-            transition: 'color 0.3s ease' 
-          }}>
-            Découvrir toutes les offres
-            <svg style={{ width: '16px', height: '16px' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M5 12h14M13 5l7 7-7 7" />
-            </svg>
-          </Link>
+          <div className="l-pricing-cta-actions">
+            <Link href="/offres" className="l-m-btn l-pricing-cta-primary">
+              Voir toutes les offres
+            </Link>
+            <Link href="/auth" className="l-m-btn-outline l-pricing-cta-secondary">
+              Commencer gratuitement
+            </Link>
+          </div>
+          <p className="l-pricing-cta-foot">Sans carte bancaire · Résiliable à tout moment</p>
         </div>
       </div>
     </section>
