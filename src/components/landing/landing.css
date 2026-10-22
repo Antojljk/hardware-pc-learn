@@ -360,6 +360,15 @@
    section02 — Features (4 cards + dots)
    ===================================================================== */
 .l-landing [data-l-section="section02"] { padding-top: 2rem; padding-bottom: 2rem; }
+.l-landing [data-l-section="section02"] .l-s02-line-wrap { position: relative; padding-left: 3rem; }
+.l-landing [data-l-section="section02"] .l-s02-line {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  z-index: 2;
+  overflow: visible;
+}
 .l-landing [data-l-section="section02"] .l-s02-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--l-gap-lg); }
 .l-landing [data-l-section="section02"] .l-s02-card { background: var(--l-color-surface); border: 1px solid var(--l-color-border); border-radius: var(--l-radius); overflow: hidden; }
 .l-landing [data-l-section="section02"] .l-s02-card-inner { display: grid; grid-template-columns: 1fr 1fr; min-height: 32rem; align-items: stretch; }
@@ -384,6 +393,8 @@
 .l-landing [data-l-section="section02"] .l-s02-dot span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .l-landing [data-l-section="section02"] .l-s02-dot--active, .l-landing [data-l-section="section02"] .l-s02-dot:hover { background: var(--l-color-text); }
 @media (max-width: 768px) {
+  .l-landing [data-l-section="section02"] .l-s02-line-wrap { padding-left: 0; }
+  .l-landing [data-l-section="section02"] .l-s02-line { display: none; }
   .l-landing [data-l-section="section02"] .l-s02-card-inner { grid-template-columns: 1fr; min-height: 0; }
   .l-landing [data-l-section="section02"] .l-s02-text { padding: 2.5rem 1.75rem; order: 2; }
   .l-landing [data-l-section="section02"] .l-s02-media { order: 1; aspect-ratio: 4 / 3; }
