@@ -1,1 +1,7 @@
-export { PC3DSection as PC3DLoader } from './PC3DSection';
+'use client';
+import dynamic from 'next/dynamic';
+
+export const PC3DLoader = dynamic(
+  () => import('./PC3DSection').then((m) => ({ default: m.PC3DSection })),
+  { ssr: false }
+);
