@@ -1191,53 +1191,51 @@
   border-radius: 12px;
 }
 
-/* Chip composant — positionné au centre, Framer Motion déplace avec x/y */
-.l-landing .l-xp-chip {
+/* Carte composant — photo + label, positionnée au centre, FM déplace avec x/y */
+.l-landing .l-xp-card {
   position: absolute;
   top: 50%;
   left: 50%;
-  /* CSS translate individuel = centrage, ne entre pas en conflit avec FM transform */
   translate: -50% -50%;
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  padding: 0.5rem 1rem 0.5rem 0.75rem;
-  background: rgba(10, 10, 16, 0.90);
+  width: 175px;
+  background: rgba(10, 10, 16, 0.92);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-left: 2px solid var(--chip-accent);
-  border-radius: 10px;
-  backdrop-filter: blur(14px);
-  white-space: nowrap;
+  border-top: 2px solid var(--card-accent);
+  border-radius: 12px;
+  overflow: hidden;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
   z-index: 3;
   pointer-events: none;
 }
-.l-landing .l-xp-chip-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--chip-accent);
-  box-shadow: 0 0 7px var(--chip-accent);
-  flex-shrink: 0;
+.l-landing .l-xp-card-img {
+  width: 100%;
+  height: 105px;
+  overflow: hidden;
 }
-.l-landing .l-xp-chip-text {
+.l-landing .l-xp-card-img img {
+  transition: transform 350ms ease;
+}
+.l-landing .l-xp-card-footer {
+  padding: 0.55rem 0.75rem 0.65rem;
   display: flex;
   flex-direction: column;
   gap: 0.1rem;
 }
-.l-landing .l-xp-chip-sub {
-  font-size: 0.625rem;
+.l-landing .l-xp-card-sub {
+  font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--chip-accent);
+  color: var(--card-accent);
   line-height: 1;
 }
-.l-landing .l-xp-chip-name {
+.l-landing .l-xp-card-name {
   font-family: var(--l-font-display);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 600;
   color: var(--l-color-text);
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 /* Scroll hint */
