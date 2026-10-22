@@ -9,6 +9,7 @@ interface Plan {
   features: string[];
   highlight?: boolean;
   tag?: string;
+  isPro?: boolean;
 }
 
 const PLANS: Plan[] = [
@@ -31,6 +32,7 @@ const PLANS: Plan[] = [
     features: ['Simulations diagnostic', 'Mode Technicien', 'Tuteur IA dédié'],
     highlight: true,
     tag: 'Recommandé',
+    isPro: true,
   },
   {
     name: 'ULTIMATE',
@@ -38,6 +40,13 @@ const PLANS: Plan[] = [
     hint: 'par mois',
     features: ['Certifications avancées', 'Support VIP', 'Accès prioritaire'],
   },
+];
+
+const LIFETIME_FEATURES = [
+  "Tout d'Ultimate, sans exception",
+  "Mises à jour incluses à vie",
+  "Accès anticipé aux nouvelles fonctionnalités",
+  "Support prioritaire à vie",
 ];
 
 export function PricingCTA() {
@@ -55,11 +64,15 @@ export function PricingCTA() {
             </p>
           </header>
 
+          {/* 4-plan grid */}
           <ul className="l-pricing-cta-grid">
             {PLANS.map((plan) => (
               <li
                 key={plan.name}
-                className={`l-pricing-cta-card${plan.highlight ? ' l-pricing-cta-card--highlight' : ''}`}
+                className={[
+                  'l-pricing-cta-card',
+                  plan.isPro ? 'l-pricing-cta-card--pro' : (plan.highlight ? 'l-pricing-cta-card--highlight' : ''),
+                ].filter(Boolean).join(' ')}
               >
                 <div className="l-pricing-cta-card-top">
                   <span className="l-pricing-cta-card-name">{plan.name}</span>
@@ -79,41 +92,56 @@ export function PricingCTA() {
                 </ul>
                 <Link
                   href="/offres"
-                  className={`l-pricing-cta-card-btn ${plan.highlight ? 'l-m-btn' : 'l-m-btn-outline'}`}
+                  className={`l-pricing-cta-card-btn ${plan.isPro ? 'l-m-btn' : 'l-m-btn-outline'}`}
                 >
                   Commencer
                 </Link>
               </li>
             ))}
+          </ul>
 
-            {/* Lifetime */}
-            <li className="l-pricing-cta-card l-pricing-cta-card--highlight">
-              <div className="l-pricing-cta-card-top">
-                <span className="l-pricing-cta-card-name">LIFETIME</span>
-                <span className="l-pricing-cta-card-tag">Exclusif</span>
-              </div>
-              <div className="l-pricing-cta-card-price">499 €</div>
-              <div className="l-pricing-cta-card-hint">paiement unique</div>
-              <ul className="l-pricing-cta-features">
-                {["Tout d'Ultimate", 'Mises à jour à vie', 'Support prioritaire à vie'].map((f) => (
-                  <li key={f} className="l-pricing-cta-feature">
-                    <Check className="l-pricing-cta-feature-icon" aria-hidden="true" />
+          {/* Lifetime banner — full width, amber/gold */}
+          <div className="l-pricing-cta-lifetime">
+            <div className="l-pricing-cta-lifetime-text">
+              <span className="l-pricing-cta-lifetime-eyebrow">
+                <span className="l-pricing-cta-lifetime-eyebrow-dot" aria-hidden="true" />
+                Exclusif — Meilleure valeur
+              </span>
+              <h3 className="l-pricing-cta-lifetime-title">
+                Accès <em>illimité</em> à vie.{' '}
+                <span style={{ color: 'var(--l-color-muted)', fontWeight: 400 }}>Payez une fois.</span>
+              </h3>
+              <p className="l-pricing-cta-lifetime-desc">
+                L&apos;offre la plus avantageuse sur le long terme. Un seul paiement pour un accès définitif à toutes les fonctionnalités HardwarePC, présentes et futures.
+              </p>
+              <ul className="l-pricing-cta-lifetime-features">
+                {LIFETIME_FEATURES.map((f) => (
+                  <li key={f} className="l-pricing-cta-lifetime-feature">
+                    <Check className="l-pricing-cta-lifetime-feature-check" aria-hidden="true" />
                     <span>{f}</span>
                   </li>
                 ))}
               </ul>
+            </div>
+
+            <div className="l-pricing-cta-lifetime-price-block">
+              <div className="l-pricing-cta-lifetime-amount">499 €</div>
+              <div className="l-pricing-cta-lifetime-period">Paiement unique · Accès à vie</div>
               <button
+                className="l-pricing-cta-lifetime-btn"
                 onClick={async () => {
                   const res = await fetch('/api/stripe/lifetime', { method: 'POST' });
                   const data = await res.json();
                   if (data.url) window.location.href = data.url;
                 }}
-                className="l-pricing-cta-card-btn l-m-btn"
               >
-                Acheter — 499 €
+                Acheter à vie — 499 €
               </button>
-            </li>
-          </ul>
+              <p className="l-pricing-cta-lifetime-guarantee">
+                Satisfait ou remboursé 30 jours
+              </p>
+            </div>
+          </div>
 
           <div className="l-pricing-cta-actions">
             <Link href="/offres" className="l-m-btn l-pricing-cta-primary">

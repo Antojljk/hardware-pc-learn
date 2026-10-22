@@ -25,6 +25,13 @@
     --color-accent-soft: #cfcfcf;
     --color-btn-bg: #ffffff;
     --color-btn-text: #000000;
+    --color-indigo: #5B5FEE;
+    --color-indigo-light: #818CF8;
+    --color-indigo-glow: rgba(91, 95, 238, 0.22);
+    --color-gold: #F59E0B;
+    --color-gold-glow: rgba(245, 158, 11, 0.22);
+    --color-success: #10B981;
+    --color-success-glow: rgba(16, 185, 129, 0.18);
 
     /* Tokens globaux */
     --radius: 16px;
@@ -125,15 +132,19 @@
            disabled:opacity-50 disabled:cursor-not-allowed select-none whitespace-nowrap;
   }
   .btn-primary {
-    @apply btn bg-white text-black border border-white;
-    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    @apply btn border;
+    background: linear-gradient(135deg, #6366F1, #5B5FEE);
+    color: #ffffff;
+    border-color: #6366F1;
+    box-shadow: 0 0 0 0 var(--color-indigo-glow), 0 4px 16px rgba(91, 95, 238, 0.30);
   }
   .btn-primary:hover {
-    filter: brightness(0.94);
+    filter: brightness(1.12);
     opacity: 1;
-    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.10);
+    box-shadow: 0 0 0 4px var(--color-indigo-glow), 0 8px 28px rgba(91, 95, 238, 0.40);
+    transform: translateY(-1px);
   }
-  .btn-primary:active { transform: translateY(1px); }
+  .btn-primary:active { transform: translateY(0px); }
   .btn-ghost {
     @apply btn bg-bg-soft text-text border border-border;
   }
@@ -156,16 +167,22 @@
     font-weight: 500;
   }
   .badge-accent {
-    @apply badge text-text border-border;
-    background: color-mix(in srgb, var(--color-text) 10%, transparent);
+    @apply badge;
+    color: var(--color-indigo-light);
+    border-color: color-mix(in srgb, var(--color-indigo) 35%, var(--color-border));
+    background: color-mix(in srgb, var(--color-indigo) 12%, transparent);
   }
   .badge-success {
-    @apply badge text-text border-border;
-    background: color-mix(in srgb, var(--color-text) 10%, transparent);
+    @apply badge;
+    color: var(--color-success);
+    border-color: color-mix(in srgb, var(--color-success) 30%, var(--color-border));
+    background: color-mix(in srgb, var(--color-success) 10%, transparent);
   }
   .badge-warning {
-    @apply badge text-text border-border;
-    background: color-mix(in srgb, var(--color-text) 10%, transparent);
+    @apply badge;
+    color: var(--color-gold);
+    border-color: color-mix(in srgb, var(--color-gold) 30%, var(--color-border));
+    background: color-mix(in srgb, var(--color-gold) 10%, transparent);
   }
   .badge-danger {
     @apply badge text-text border-border;
@@ -216,8 +233,8 @@
     border-radius: var(--radius);
     padding: 2.25rem 2rem;
     background:
-      radial-gradient(ellipse 60% 80% at 100% 0%, rgba(255, 255, 255, 0.06), transparent 60%),
-      radial-gradient(ellipse 50% 60% at 0% 100%, rgba(255, 255, 255, 0.04), transparent 60%),
+      radial-gradient(ellipse 60% 80% at 100% 0%, rgba(99, 102, 241, 0.08), transparent 60%),
+      radial-gradient(ellipse 50% 60% at 0% 100%, rgba(91, 95, 238, 0.05), transparent 60%),
       linear-gradient(180deg, var(--color-surface-soft), var(--color-surface));
     border: 1px solid var(--color-border);
     box-shadow: var(--shadow-md);
@@ -328,7 +345,7 @@
     position: absolute;
     left: 0; top: 1.25rem; bottom: 1.25rem;
     width: 2px;
-    background: linear-gradient(180deg, var(--color-text), transparent);
+    background: linear-gradient(180deg, var(--color-indigo), transparent);
     border-radius: 2px;
     opacity: 0.7;
   }
@@ -375,8 +392,8 @@
   }
   .segment > a:hover, .segment > button:hover { color: var(--color-text); }
   .segment > a[data-active="true"], .segment > button[data-active="true"] {
-    background: var(--color-text);
-    color: var(--color-btn-text);
+    background: var(--color-indigo);
+    color: #ffffff;
   }
 
   /* Bandeau "info" (warning subtle) */
@@ -397,7 +414,7 @@
     text-align: center;
     border-radius: var(--radius);
     background:
-      radial-gradient(ellipse 60% 80% at 50% 0%, rgba(255, 255, 255, 0.08), transparent 70%),
+      radial-gradient(ellipse 60% 80% at 50% 0%, rgba(99, 102, 241, 0.10), transparent 70%),
       linear-gradient(180deg, var(--color-surface-soft), var(--color-card));
     border: 1px solid var(--color-border);
     padding: 2rem 1.5rem;
@@ -430,8 +447,8 @@
     width: 0.6rem;
     height: 0.6rem;
     border-radius: 50%;
-    background: var(--color-text);
-    box-shadow: 0 0 0 4px var(--color-card);
+    background: var(--color-indigo);
+    box-shadow: 0 0 0 4px var(--color-card), 0 0 8px var(--color-indigo-glow);
   }
 }
 
@@ -446,7 +463,8 @@
     @apply h-2 rounded-full bg-bg-elev overflow-hidden;
   }
   .progress-bar > .progress-fill {
-    @apply h-full bg-accent transition-all duration-500 ease-smooth;
+    @apply h-full transition-all duration-500 ease-smooth;
+    background: linear-gradient(90deg, var(--color-indigo), var(--color-indigo-light));
   }
 
   /* ---------- Effets 3D / profondeur ---------- */
