@@ -1121,6 +1121,7 @@
   object-fit: contain;
   object-position: center center;
   display: block;
+  transform: scale(1.28);
 }
 /* Gradient gauche → texte lisible */
 .l-landing .l-s3d-overlay-left {
