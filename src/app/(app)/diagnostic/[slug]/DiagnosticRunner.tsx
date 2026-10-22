@@ -22,6 +22,7 @@ export function DiagnosticRunner({
   const [startTime, setStartTime] = useState<number | null>(null);
   const [errorCount, setErrorCount] = useState(0);
   const [result, setResult] = useState<{ score: number; xpAwarded: number; evaluation: { good: string[]; missed: string[]; wrong: string[] } } | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {
     setStartTime(Date.now());
@@ -30,6 +31,7 @@ export function DiagnosticRunner({
   async function submit() {
     setSubmitting(true);
     const timeSpent = startTime ? Math.floor((Date.now() - startTime) / 1000) : 0;
+    setSubmitError(null);
     try {
       const res = await fetch('/api/diagnostic', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -37,18 +39,18 @@ export function DiagnosticRunner({
       });
       const data = await res.json();
       if (data.error) {
-        alert(`Erreur : ${data.error}`);
+        setSubmitError(data.error);
         return;
       }
       if (!data.score || !data.evaluation) {
-        alert('Réponse invalide du serveur');
+        setSubmitError('Réponse invalide du serveur, réessaie.');
         return;
       }
       setResult(data);
       router.refresh();
     } catch (e) {
       console.error(e);
-      alert('Une erreur réseau est survenue');
+      setSubmitError('Erreur réseau, vérifie ta connexion.');
     } finally { setSubmitting(false); }
   }
 
@@ -288,6 +290,13 @@ export function DiagnosticRunner({
           ))}
         </div>
       </section>
+
+      {submitError && (
+        <div className="module-frame border-border flex items-center gap-3 text-sm">
+          <AlertTriangle className="w-4 h-4 text-muted shrink-0" />
+          <span className="text-muted">{submitError}</span>
+        </div>
+      )}
 
       <button
         onClick={submit}

@@ -51,12 +51,14 @@ export const metadata: Metadata = {
     title: 'HardwarePC — Apprends le hardware PC',
     description:
       "Plateforme d'apprentissage interactive du hardware informatique : cours, quiz, examens, entretiens blancs, diagnostics PC et constructeur de configuration.",
+    images: [{ url: `${SITE_URL}/og-image.png`, width: 1200, height: 630, alt: 'HardwarePC' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'HardwarePC — Apprends le hardware PC',
     description:
       "Plateforme d'apprentissage interactive du hardware informatique : cours, quiz, examens, entretiens blancs, diagnostics PC et constructeur de configuration.",
+    images: [`${SITE_URL}/og-image.png`],
   },
 };
 

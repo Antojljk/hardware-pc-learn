@@ -92,7 +92,7 @@ export const COURSES: Course[] = [
     durationMin: 10,
     objective: "Comprendre le rôle du GPU, VRAM et pipelines.",
     simple: "Le GPU calcule les images à afficher. Il est excellent pour faire la même opération sur des milliers de données en parallèle (pixels, vertices).",
-    technical: "Le GPU contient des centaines voire milliers de shaders (CUDA cores NVIDIA / Stream Processors AMD). Les architectures modernes (Ada Lovelace, RDNA 3) utilisent des unités matricielles pour加速er l'IA (DLSS, FSR) et le ray tracing (RT cores / Ray Accelerators).",
+    technical: "Le GPU contient des centaines voire milliers de shaders (CUDA cores NVIDIA / Stream Processors AMD). Les architectures modernes (Ada Lovelace, RDNA 3) utilisent des unités matricielles pour accélérer l'IA (DLSS, FSR) et le ray tracing (RT cores / Ray Accelerators).",
     examples: "Une RTX 4070 Super a 7168 CUDA cores, 224 Tensor cores (DLSS) et 56 RT cores. Une RX 7800 XT a 3840 Stream Processors et 60 Ray Accelerators.",
     mistakes: "Croire que plus de VRAM = GPU plus rapide (la VRAM est importante mais la puissance brute compte davantage). Confondre RAM système et VRAM.",
     keyTakeaways: [
@@ -422,7 +422,7 @@ export const COURSES: Course[] = [
     simple: "Le chipset détermine les fonctionnalités et le prix de la carte mère. Z/X = haut de gamme, B = milieu, H = entrée de gamme.",
     technical: "AMD AM5 : X870E (Extreme, 28 lanes PCIe 5.0 CPU + 12 chipset), X870 (24 + 8), B650 (24 + 8), B840 (entry). Intel LGA1851 : Z890 (haut de gamme, OC), B860 (milieu), H810 (entrée).",
     examples: "Une MSI MAG B650 Tomahawk WiFi = excellent rapport qualité/prix pour Ryzen 7000. Une ASUS ROG Maximus Z890 Hero = overclocking extrême Intel.",
-    mistakes: "Acheter une H610 pour un Core i9 : chipset trop faible, pas d'OC,供电 insuffisant.",
+    mistakes: "Acheter une H610 pour un Core i9 : chipset trop faible, pas d'OC, alimentation VRM insuffisante.",
     keyTakeaways: [
       "Chipset = fonctionnalités + prix",
       "Série Z/X = OC + plus de ports",
@@ -561,7 +561,7 @@ export const COURSES: Course[] = [
   {
     slug: 'thermal-throttling',
     trackSlug: 'avance',
-    title: 'Thermal throttling et散热',
+    title: 'Thermal throttling et dissipation',
     level: 'avance',
     durationMin: 8,
     objective: "Comprendre quand le CPU/GPU réduit ses performances pour se protéger.",

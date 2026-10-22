@@ -38,21 +38,15 @@ export function middleware(req: NextRequest): NextResponse {
   let visitorId = req.cookies.get(VISITOR_COOKIE)?.value;
 
   if (
-    !url.startsWith('/api') && 
-    !url.startsWith('/_next') && 
-    !url.startsWith('/static') && 
-    !url.startsWith('/admin') && 
+    !url.startsWith('/api') &&
+    !url.startsWith('/_next') &&
+    !url.startsWith('/static') &&
+    !url.startsWith('/admin') &&
     !url.includes('.')
   ) {
     if (!visitorId) {
       visitorId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     }
-
-    fetch(`${req.nextUrl.origin}/api/track`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url, visitorId, userId: null }),
-    }).catch(() => {}); 
   }
   // -----------------------
 

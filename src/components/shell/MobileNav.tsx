@@ -23,20 +23,20 @@ export function MobileNav() {
   const path = usePathname();
   return (
     <nav className="lg:hidden fixed bottom-0 inset-x-0 z-30 bg-bg-soft/95 backdrop-blur border-t border-border">
-      <ul className="grid grid-cols-9">
+      <ul className="flex overflow-x-auto scrollbar-none">
         {ITEMS.map(item => {
           const active = item.href === '/dashboard' ? path === '/dashboard' : path.startsWith(item.href);
           return (
-            <li key={item.href}>
+            <li key={item.href} className="shrink-0">
               <Link
                 href={item.href}
                 className={cn(
-                  'flex flex-col items-center justify-center py-2.5 text-[10px] transition-colors uppercase tracking-[0.08em]',
+                  'flex flex-col items-center justify-center py-2.5 px-3 min-w-[64px] text-[10px] transition-colors uppercase tracking-[0.08em]',
                   active ? 'text-accent' : 'text-faint'
                 )}
               >
-                <item.icon className="w-4 h-4 mb-0.5" />
-                <span className="leading-none">{item.label}</span>
+                <item.icon className="w-5 h-5 mb-0.5" />
+                <span className="leading-none whitespace-nowrap">{item.label}</span>
               </Link>
             </li>
           );

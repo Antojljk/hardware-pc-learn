@@ -7,6 +7,8 @@ type Q = { id: string; type: string; category: string; difficulty: string; promp
 
 export function QuizClient({ initialCategory, mode }: { initialCategory?: string; mode: 'free' | 'adaptive' }) {
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [questions, setQuestions] = useState<Q[]>([]);
   const [index, setIndex] = useState(0);
   const [chosen, setChosen] = useState<string | null>(null);
@@ -16,7 +18,7 @@ export function QuizClient({ initialCategory, mode }: { initialCategory?: string
   const [finalResult, setFinalResult] = useState<{ score: number; total: number; xpAwarded: number; newBadges: string[]; reviews: { questionId: string; prompt: string; explanation: string; correctAnswer: string; yourAnswer: string }[] } | null>(null);
 
   const load = useCallback(async () => {
-    setLoading(true); setDone(false); setIndex(0); setChosen(null); setFeedback(null); setResults([]); setFinalResult(null);
+    setLoading(true); setDone(false); setIndex(0); setChosen(null); setFeedback(null); setResults([]); setFinalResult(null); setLoadError(null); setSubmitError(null);
     try {
       const url = new URL('/api/quiz', window.location.origin);
       if (mode === 'adaptive') url.searchParams.set('mode', 'adaptive');
@@ -28,7 +30,7 @@ export function QuizClient({ initialCategory, mode }: { initialCategory?: string
       setQuestions(data.questions || []);
     } catch (e: unknown) {
       const message = e instanceof Error ? e.message : 'Une erreur inconnue est survenue';
-      alert(`Erreur de chargement : ${message}`);
+      setLoadError(`Impossible de charger le quiz : ${message}`);
     } finally {
       setLoading(false);
     }
@@ -50,7 +52,7 @@ export function QuizClient({ initialCategory, mode }: { initialCategory?: string
       setResults(r => [...r, { questionId: q.id, chosen, correct: data.correct, category: q.category }]);
     } catch (e: unknown) {
       const message = e instanceof Error ? e.message : 'Une erreur inconnue est survenue';
-      alert(`Erreur : ${message}`);
+      setSubmitError(`Erreur : ${message}`);
     }
   }
 
@@ -67,7 +69,7 @@ export function QuizClient({ initialCategory, mode }: { initialCategory?: string
         setDone(true);
       } catch (e: unknown) {
         const message = e instanceof Error ? e.message : 'Une erreur inconnue est survenue';
-        alert(`Erreur lors de la validation finale : ${message}`);
+        setSubmitError(`Erreur lors de la validation finale : ${message}`);
       }
     } else {
       setIndex(i => i + 1); setChosen(null); setFeedback(null);
@@ -81,6 +83,17 @@ export function QuizClient({ initialCategory, mode }: { initialCategory?: string
           <Loader2 className="w-7 h-7 animate-spin text-text" />
           <div className="text-sm text-muted">Préparation des questions…</div>
         </div>
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="card-depth p-8 sm:p-12 flex flex-col items-center gap-4 text-center anim-rise">
+        <div className="text-sm text-muted">{loadError}</div>
+        <button onClick={load} className="btn-outline gap-2">
+          <RefreshCw className="w-4 h-4" /> Réessayer
+        </button>
       </div>
     );
   }
@@ -275,14 +288,19 @@ export function QuizClient({ initialCategory, mode }: { initialCategory?: string
               </button>
             </div>
           ) : (
-            <button
-              onClick={submit}
-              disabled={!chosen}
-              className="btn-primary w-full mt-6 justify-center py-3"
-            >
-              Valider ma réponse
-              <ArrowRight className="w-4 h-4" />
-            </button>
+            <>
+              {submitError && (
+                <div className="mt-4 text-sm text-muted text-center">{submitError}</div>
+              )}
+              <button
+                onClick={submit}
+                disabled={!chosen}
+                className="btn-primary w-full mt-6 justify-center py-3"
+              >
+                Valider ma réponse
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </>
           )}
         </div>
       </div>

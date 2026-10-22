@@ -574,3 +574,13 @@
   .border-accent\/25, .border-accent\/30, .border-accent\/40 { border-color: rgba(255, 255, 255, 0.30); }
   .bg-accent\/5, .bg-accent\/10, .bg-accent\/15 { background-color: rgba(255, 255, 255, 0.10); }
 }
+
+@layer utilities {
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}

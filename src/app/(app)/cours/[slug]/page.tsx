@@ -4,6 +4,17 @@ import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
 import { Clock, CheckCircle2, ArrowLeft, ArrowRight, AlertTriangle, Lightbulb, Target, Settings, Sparkles, BookOpen } from 'lucide-react';
 import { CompleteButton } from './CompleteButton';
+import type { Metadata } from 'next';
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const lesson = await prisma.lesson.findUnique({ where: { slug: params.slug } });
+  if (!lesson) return { title: 'Cours introuvable' };
+  return {
+    title: lesson.title,
+    description: lesson.objective,
+    openGraph: { title: lesson.title, description: lesson.objective },
+  };
+}
 
 export default async function LessonPage({ params }: { params: { slug: string } }) {
   const user = await getCurrentUser();
