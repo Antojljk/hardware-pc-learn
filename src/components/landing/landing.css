@@ -14,8 +14,8 @@
   --l-color-muted: #9ca3af;
   --l-color-surface: #0f0f10;
   --l-color-border: #262626;
-  --l-color-btn-bg: #5B5FEE;
-  --l-color-btn-text: #ffffff;
+  --l-color-btn-bg: #ffffff;
+  --l-color-btn-text: #000000;
   --l-color-indigo: #818CF8;
   --l-color-gold: #F59E0B;
 
@@ -878,13 +878,14 @@
   border: 1px solid rgba(99, 102, 241, 0.30);
 }
 .l-landing [data-l-section="pricing-cta"] .l-pricing-cta-card--pro .l-m-btn {
-  background: linear-gradient(135deg, #6366F1, #5B5FEE);
-  border-color: #6366F1;
-  box-shadow: 0 8px 24px rgba(91, 95, 238, 0.35);
+  background: #ffffff;
+  color: #000000;
+  border-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.18);
 }
 .l-landing [data-l-section="pricing-cta"] .l-pricing-cta-card--pro .l-m-btn:hover {
-  filter: brightness(1.12);
-  box-shadow: 0 12px 32px rgba(91, 95, 238, 0.48);
+  background: #f0f0f0;
+  box-shadow: 0 12px 32px rgba(255, 255, 255, 0.25);
 }
 
 /* ── Lifetime Banner ── */
@@ -1094,6 +1095,103 @@
 @media (max-width: 480px) {
   .l-landing [data-l-section="pricing-cta"] .l-pricing-cta-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* =====================================================================
+   section-3d — Visualisation 3D PC (React Three Fiber)
+   ===================================================================== */
+.l-landing [data-l-section="section-3d"] {
+  padding: 5rem 0 6rem;
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid color-mix(in srgb, var(--l-color-border) 60%, transparent);
+}
+.l-landing .l-s3d-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 55% 65% at 70% 50%, rgba(99, 102, 241, 0.09) 0%, transparent 70%);
+  pointer-events: none;
+}
+.l-landing .l-s3d-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+.l-landing .l-s3d-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: relative;
+  z-index: 1;
+}
+.l-landing .l-s3d-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.l-landing .l-s3d-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--l-color-indigo);
+  box-shadow: 0 0 8px var(--l-color-indigo);
+  flex-shrink: 0;
+}
+.l-landing .l-s3d-heading {
+  font-family: var(--l-font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--l-color-text);
+  margin: 0;
+}
+.l-landing .l-s3d-em {
+  font-style: normal;
+  color: var(--l-color-indigo);
+}
+.l-landing .l-s3d-body {
+  color: var(--l-color-muted);
+  line-height: 1.65;
+  max-width: 44ch;
+  font-size: 1.0625rem;
+  margin: 0;
+}
+.l-landing .l-s3d-cta {
+  width: fit-content;
+  margin-top: 0.5rem;
+}
+.l-landing .l-s3d-canvas-wrap {
+  height: 520px;
+  position: relative;
+  border-radius: var(--l-radius);
+  overflow: hidden;
+  background: radial-gradient(ellipse 80% 80% at 50% 50%, rgba(99, 102, 241, 0.06) 0%, transparent 70%);
+}
+.l-landing .l-s3d-placeholder {
+  height: 520px;
+  border-radius: var(--l-radius);
+  background: rgba(99, 102, 241, 0.04);
+}
+@media (max-width: 900px) {
+  .l-landing .l-s3d-inner {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .l-landing .l-s3d-canvas-wrap,
+  .l-landing .l-s3d-placeholder {
+    height: 380px;
+  }
+  .l-landing .l-s3d-body { max-width: none; }
+}
+@media (max-width: 480px) {
+  .l-landing [data-l-section="section-3d"] { padding: 3.5rem 0 4rem; }
+  .l-landing .l-s3d-canvas-wrap,
+  .l-landing .l-s3d-placeholder {
+    height: 300px;
   }
 }
 

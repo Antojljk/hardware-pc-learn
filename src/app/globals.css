@@ -133,15 +133,15 @@
   }
   .btn-primary {
     @apply btn border;
-    background: linear-gradient(135deg, #6366F1, #5B5FEE);
-    color: #ffffff;
-    border-color: #6366F1;
-    box-shadow: 0 0 0 0 var(--color-indigo-glow), 0 4px 16px rgba(91, 95, 238, 0.30);
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+    box-shadow: 0 4px 16px rgba(255, 255, 255, 0.10);
   }
   .btn-primary:hover {
-    filter: brightness(1.12);
+    background: #f0f0f0;
     opacity: 1;
-    box-shadow: 0 0 0 4px var(--color-indigo-glow), 0 8px 28px rgba(91, 95, 238, 0.40);
+    box-shadow: 0 8px 28px rgba(255, 255, 255, 0.15);
     transform: translateY(-1px);
   }
   .btn-primary:active { transform: translateY(0px); }
